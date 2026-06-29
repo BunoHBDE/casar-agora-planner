@@ -129,9 +129,20 @@ function Landing() {
                   </select>
                 </Field>
               </div>
-              <Field label="Mês ou dia previsto">
-                <input required value={form.dataPrevista} onChange={update("dataPrevista")} className={inputCls} placeholder="Ex.: Outubro/2026" />
-              </Field>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="Mês previsto">
+                  <select required value={form.mes} onChange={update("mes")} className={inputCls}>
+                    <option value="">Selecione…</option>
+                    {MESES.map((m) => <option key={m} value={m}>{m}</option>)}
+                  </select>
+                </Field>
+                <Field label="Ano previsto">
+                  <select required value={form.ano} onChange={update("ano")} className={inputCls}>
+                    <option value="">Selecione…</option>
+                    {ANOS.map((a) => <option key={a} value={a}>{a}</option>)}
+                  </select>
+                </Field>
+              </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="Convidados">
                   <input required type="number" inputMode="numeric" min={1} value={form.convidados} onChange={update("convidados")} className={inputCls} placeholder="150" />
