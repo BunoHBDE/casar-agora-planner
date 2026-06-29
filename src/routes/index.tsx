@@ -59,27 +59,35 @@ function Landing() {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      {/* Hero strip */}
-      <section className="relative isolate overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <img src={heroImg} alt="" width={1600} height={1200} className="h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-primary/55" />
+      {/* Hero */}
+      <section className="relative isolate">
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <img
+            src={heroImg}
+            alt=""
+            width={1600}
+            height={1200}
+            className="h-full w-full scale-110 object-cover blur-md"
+          />
+          <div className="absolute inset-0 bg-primary/45" />
+          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-background" />
         </div>
-        <div className="mx-auto max-w-2xl px-6 py-16 text-center text-primary-foreground sm:py-24">
-          <span className="text-[11px] uppercase tracking-[0.24em] text-primary-foreground/75">
+        <div className="mx-auto max-w-2xl px-6 pt-20 pb-28 text-center text-primary-foreground sm:pt-28 sm:pb-36">
+          <span className="text-[11px] uppercase tracking-[0.24em] text-primary-foreground/80">
             Villa Bellatrix
           </span>
           <h1 className="mt-4 font-serif text-3xl leading-tight sm:text-5xl">
             Planeje o seu casamento com tranquilidade.
           </h1>
-          <p className="mx-auto mt-4 max-w-md text-sm text-primary-foreground/85 sm:text-base">
+          <p className="mx-auto mt-4 max-w-md text-sm text-primary-foreground/90 sm:text-base">
             Preencha o formulário e baixe gratuitamente a nossa planilha completa de organização.
           </p>
         </div>
       </section>
 
       {/* Form */}
-      <section className="mx-auto -mt-10 max-w-xl px-4 pb-16 sm:-mt-16 sm:px-6 sm:pb-24">
+      <section className="mx-auto -mt-20 max-w-xl px-4 pb-16 sm:-mt-24 sm:px-6 sm:pb-24">
+
         {!submitted ? (
           <form
             onSubmit={onSubmit}
