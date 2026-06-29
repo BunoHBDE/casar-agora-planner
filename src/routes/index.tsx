@@ -26,21 +26,33 @@ export const Route = createFileRoute("/")({
 
 type LeadForm = {
   nome: string; email: string; celular: string; cidade: string; estado: string;
-  dataPrevista: string; convidados: string; orcamento: string;
+  mes: string; ano: string; convidados: string; orcamento: string;
 };
 
 const ESTADOS = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
+const MESES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const ANOS = Array.from({ length: 12 }, (_, i) => String(2024 + i));
 const ORCAMENTOS = ["Até R$ 30 mil","R$ 30 mil – R$ 60 mil","R$ 60 mil – R$ 100 mil","R$ 100 mil – R$ 200 mil","Acima de R$ 200 mil"];
 
-const EMPTY: LeadForm = { nome:"",email:"",celular:"",cidade:"",estado:"",dataPrevista:"",convidados:"",orcamento:"" };
+const EMPTY: LeadForm = { nome:"",email:"",celular:"",cidade:"",estado:"",mes:"",ano:"",convidados:"",orcamento:"" };
 
 function Landing() {
   const [form, setForm] = useState<LeadForm>(EMPTY);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const update = (k: keyof LeadForm) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
-    setForm((f) => ({ ...f, [k]: e.target.value }));
+  const maskCelular = (raw: string) => {
+    const digits = raw.replace(/\D/g, "").slice(0, 11);
+    if (digits.length <= 2) return `(${digits}`;
+    if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  };
+
+  const update = (k: keyof LeadForm) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    let value = e.target.value;
+    if (k === "celular") value = maskCelular(value);
+    setForm((f) => ({ ...f, [k]: value }));
+  };
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -117,9 +129,20 @@ function Landing() {
                   </select>
                 </Field>
               </div>
-              <Field label="Mês ou dia previsto">
-                <input required value={form.dataPrevista} onChange={update("dataPrevista")} className={inputCls} placeholder="Ex.: Outubro/2026" />
-              </Field>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="Mês previsto">
+                  <select required value={form.mes} onChange={update("mes")} className={inputCls}>
+                    <option value="">Selecione…</option>
+                    {MESES.map((m) => <option key={m} value={m}>{m}</option>)}
+                  </select>
+                </Field>
+                <Field label="Ano previsto">
+                  <select required value={form.ano} onChange={update("ano")} className={inputCls}>
+                    <option value="">Selecione…</option>
+                    {ANOS.map((a) => <option key={a} value={a}>{a}</option>)}
+                  </select>
+                </Field>
+              </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="Convidados">
                   <input required type="number" inputMode="numeric" min={1} value={form.convidados} onChange={update("convidados")} className={inputCls} placeholder="150" />
