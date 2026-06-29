@@ -31,7 +31,7 @@ type LeadForm = {
 
 const ESTADOS = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
 const MESES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
-const ANOS = Array.from({ length: 12 }, (_, i) => String(2024 + i));
+const ANOS = Array.from({ length: 6 }, (_, i) => String(2026 + i));
 const ORCAMENTOS = ["Até R$ 30 mil","R$ 30 mil – R$ 60 mil","R$ 60 mil – R$ 100 mil","R$ 100 mil – R$ 200 mil","Acima de R$ 200 mil"];
 
 const EMPTY: LeadForm = { nome:"",email:"",celular:"",cidade:"",estado:"",mes:"",ano:"",convidados:"",orcamento:"" };
