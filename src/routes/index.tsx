@@ -54,19 +54,34 @@ function Landing() {
     setForm((f) => ({ ...f, [k]: value }));
   };
 
-  const onSubmit = (e: React.FormEvent) => {
+  const [loading, setLoading] = useState(false);
+
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     for (const k of Object.keys(EMPTY) as (keyof LeadForm)[]) {
       if (!form[k].toString().trim()) { setError("Preencha todos os campos."); return; }
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) { setError("Informe um e-mail válido."); return; }
+    setLoading(true);
     try {
-      const prev = JSON.parse(localStorage.getItem("wedding_leads") || "[]");
-      prev.push({ ...form, criadoEm: new Date().toISOString() });
-      localStorage.setItem("wedding_leads", JSON.stringify(prev));
-    } catch {}
-    setSubmitted(true);
+      const res = await fetch("/api/public/submit-lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error || "Não foi possível enviar. Tente novamente.");
+        setLoading(false);
+        return;
+      }
+      setSubmitted(true);
+    } catch {
+      setError("Falha de conexão. Tente novamente.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
