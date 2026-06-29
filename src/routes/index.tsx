@@ -5,13 +5,13 @@ import heroImg from "@/assets/hero-venue.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Villa Bellatrix — Espaço para Casamentos" },
+      { title: "SÍTIO CANTO DA MATA — Espaço para Casamentos" },
       {
         name: "description",
         content:
           "Preencha o formulário e baixe gratuitamente a planilha completa de organização do seu casamento.",
       },
-      { property: "og:title", content: "Villa Bellatrix — Espaço para Casamentos" },
+      { property: "og:title", content: "SÍTIO CANTO DA MATA — Espaço para Casamentos" },
       {
         property: "og:description",
         content: "Receba a planilha gratuita de organização do seu casamento.",
@@ -74,7 +74,7 @@ function Landing() {
         </div>
         <div className="mx-auto max-w-2xl px-6 pt-20 pb-28 text-center text-primary-foreground sm:pt-28 sm:pb-36">
           <span className="text-[11px] uppercase tracking-[0.24em] text-primary-foreground/80">
-            Villa Bellatrix
+            SÍTIO CANTO DA MATA
           </span>
           <h1 className="mt-4 font-serif text-3xl leading-tight sm:text-5xl">
             Planeje o seu casamento com tranquilidade.
@@ -175,7 +175,7 @@ function Landing() {
 
       <footer className="border-t border-border/60">
         <div className="mx-auto max-w-xl px-6 py-6 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Villa Bellatrix
+          © {new Date().getFullYear()} SÍTIO CANTO DA MATA
         </div>
       </footer>
     </main>
