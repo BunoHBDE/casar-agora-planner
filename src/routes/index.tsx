@@ -179,9 +179,10 @@ function Landing() {
 
             <button
               type="submit"
-              className="mt-6 w-full rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary/90"
+              disabled={loading}
+              className="mt-6 w-full rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
             >
-              Quero a planilha
+              {loading ? "Enviando…" : "Quero a planilha"}
             </button>
             <p className="mt-3 text-center text-xs text-muted-foreground">
               Seus dados são confidenciais. Sem spam.
