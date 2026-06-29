@@ -177,7 +177,7 @@ function Landing() {
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gold/20 text-xl">✓</div>
             <h2 className="mt-4 font-serif text-2xl text-primary">Obrigado, {form.nome.split(" ")[0]}!</h2>
             <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
-              Nosso time entrará em contato. Sua planilha está pronta:
+              Sua planilha está pronta para baixar:
             </p>
             <a
               href="/planilha-organizacao-casamento.xlsx"
