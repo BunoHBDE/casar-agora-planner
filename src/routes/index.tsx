@@ -83,9 +83,13 @@ function Landing() {
       {/* Form */}
       <section className="mx-auto -mt-20 max-w-xl px-4 pb-16 sm:-mt-24 sm:px-6 sm:pb-24">
         <form
+          action={WEBHOOK_URL}
+          method="post"
+          target="lead-sink"
           onSubmit={handleSubmit}
           className="rounded-2xl border border-border/60 bg-card p-5 shadow-soft sm:p-8"
         >
+
           <h2 className="font-serif text-xl text-primary sm:text-2xl">Receba a planilha gratuita</h2>
           <p className="mt-1 text-sm text-muted-foreground">Leva menos de 1 minuto.</p>
 
