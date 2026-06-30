@@ -21,14 +21,14 @@ function DownloadPage() {
           </div>
           <h1 className="mt-4 font-serif text-2xl text-primary sm:text-3xl">Obrigado!</h1>
           <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
-            Sua planilha está pronta para baixar:
+            Sua planilha está pronta:
           </p>
           <a
             href="/planilha-organizacao-casamento.xlsx"
             download
             className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary/90"
           >
-            ↓ Baixar planilha
+            ↓ ACESSAR PLANILHA
           </a>
           <Link
             to="/"
