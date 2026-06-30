@@ -69,27 +69,36 @@ function Landing() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const form = e.currentTarget;
     setLoading(true);
     try {
-      if (window.grecaptcha?.execute) {
-        const token = await new Promise<string>((resolve, reject) => {
-          window.grecaptcha!.ready(() => {
-            window
-              .grecaptcha!.execute(RECAPTCHA_SITE_KEY, { action: "submit" })
-              .then(resolve)
-              .catch(reject);
+      try {
+        if (window.grecaptcha?.execute) {
+          const tokenPromise = new Promise<string>((resolve, reject) => {
+            window.grecaptcha!.ready(() => {
+              window
+                .grecaptcha!.execute(RECAPTCHA_SITE_KEY, { action: "submit" })
+                .then(resolve)
+                .catch(reject);
+            });
           });
-        });
-        if (tokenInputRef.current) tokenInputRef.current.value = token;
+          const timeout = new Promise<string>((_, reject) =>
+            window.setTimeout(() => reject(new Error("recaptcha timeout")), 3000)
+          );
+          const token = await Promise.race([tokenPromise, timeout]);
+          if (tokenInputRef.current) tokenInputRef.current.value = token;
+        }
+      } catch (err) {
+        console.warn("reCAPTCHA execute falhou, seguindo sem token:", err);
       }
-    } catch (err) {
-      console.warn("reCAPTCHA execute falhou:", err);
+      form.submit();
+    } finally {
+      window.setTimeout(() => {
+        window.location.href = "/download";
+      }, 1200);
     }
-    formRef.current?.submit();
-    window.setTimeout(() => {
-      window.location.href = "/download";
-    }, 1200);
   }
+
 
 
   return (
@@ -130,7 +139,7 @@ function Landing() {
           onSubmit={handleSubmit}
           className="rounded-2xl border border-border/60 bg-card p-5 shadow-soft sm:p-8"
         >
-          <input ref={tokenInputRef} type="hidden" name="recaptcha_token" />
+          <input ref={tokenInputRef} type="hidden" name="g-recaptcha-response" />
 
           <h2 className="font-serif text-xl text-primary sm:text-2xl">Receba a planilha gratuita</h2>
           <p className="mt-1 text-sm text-muted-foreground">Leva menos de 1 minuto.</p>
