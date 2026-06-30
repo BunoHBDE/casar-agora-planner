@@ -25,7 +25,8 @@ function DownloadPage() {
           </p>
           <a
             href="https://bit.ly/PlanilhaOrganizandoOSeuCasamento"
-            download
+            target="_blank"
+            rel="noopener noreferrer"
             className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary/90"
           >
             ↓ ACESSAR PLANILHA
