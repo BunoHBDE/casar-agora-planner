@@ -26,6 +26,13 @@ export const Route = createFileRoute("/")({
 
 const WEBHOOK_URL =
   "https://script.google.com/macros/s/AKfycbzN1zm1OONAm8Nb1Q5SjRGNmH3gmuk3Pt15ASTqDffya0XysZAnQBwI8Z_xZIKdIJjF/exec";
+const RECAPTCHA_SITE_KEY = "6Ldrdz4tAAAAAFgIT_nPjD4mSBkNeGYxZY2Fe35B";
+
+declare global {
+  interface Window {
+    grecaptcha?: { getResponse: (widgetId?: number) => string; reset: (widgetId?: number) => void };
+  }
+}
 
 const ESTADOS = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
 const MESES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
