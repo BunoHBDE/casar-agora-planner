@@ -62,7 +62,7 @@ function Landing() {
             alt=""
             width={1600}
             height={1200}
-            className="h-full w-full scale-110 object-cover blur-md"
+            className="h-full w-full scale-110 object-cover blur-sm"
           />
           <div className="absolute inset-0 bg-primary/45" />
           <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-background" />
