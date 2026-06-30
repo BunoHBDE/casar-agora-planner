@@ -32,11 +32,8 @@ declare global {
   interface Window {
     grecaptcha?: {
       ready: (cb: () => void) => void;
-      render: (el: HTMLElement, opts: { sitekey: string }) => number;
-      getResponse: (widgetId?: number) => string;
-      reset: (widgetId?: number) => void;
+      execute: (siteKey: string, opts: { action: string }) => Promise<string>;
     };
-    onRecaptchaLoad?: () => void;
   }
 }
 
@@ -49,35 +46,18 @@ function Landing() {
   const [celular, setCelular] = useState("");
   const [consent, setConsent] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [captchaError, setCaptchaError] = useState(false);
-  const [captchaReady, setCaptchaReady] = useState(false);
-  const captchaRef = useRef<HTMLDivElement>(null);
-  const widgetIdRef = useRef<number | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const tokenInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const SCRIPT_ID = "recaptcha-script";
-    function renderWidget() {
-      if (!captchaRef.current || widgetIdRef.current !== null) return;
-      try {
-        widgetIdRef.current = window.grecaptcha!.render(captchaRef.current, {
-          sitekey: RECAPTCHA_SITE_KEY,
-        });
-        setCaptchaReady(true);
-      } catch (err) {
-        console.warn("reCAPTCHA render falhou:", err);
-      }
-    }
-    window.onRecaptchaLoad = () => window.grecaptcha?.ready(renderWidget);
-    if (window.grecaptcha?.render) {
-      window.grecaptcha.ready(renderWidget);
-    } else if (!document.getElementById(SCRIPT_ID)) {
-      const s = document.createElement("script");
-      s.id = SCRIPT_ID;
-      s.src = "https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit";
-      s.async = true;
-      s.defer = true;
-      document.head.appendChild(s);
-    }
+    const SCRIPT_ID = "recaptcha-v3-script";
+    if (document.getElementById(SCRIPT_ID)) return;
+    const s = document.createElement("script");
+    s.id = SCRIPT_ID;
+    s.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`;
+    s.async = true;
+    s.defer = true;
+    document.head.appendChild(s);
   }, []);
 
   const maskCelular = (raw: string) => {
@@ -87,19 +67,25 @@ function Landing() {
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
   };
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    // Só exige captcha se ele realmente carregou (evita travar em domínios
-    // ainda não autorizados no admin do reCAPTCHA, como preview do Lovable).
-    if (captchaReady) {
-      const token = window.grecaptcha?.getResponse?.(widgetIdRef.current ?? undefined) ?? "";
-      if (!token) {
-        e.preventDefault();
-        setCaptchaError(true);
-        return;
-      }
-    }
-    setCaptchaError(false);
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     setLoading(true);
+    try {
+      if (window.grecaptcha?.execute) {
+        const token = await new Promise<string>((resolve, reject) => {
+          window.grecaptcha!.ready(() => {
+            window
+              .grecaptcha!.execute(RECAPTCHA_SITE_KEY, { action: "submit" })
+              .then(resolve)
+              .catch(reject);
+          });
+        });
+        if (tokenInputRef.current) tokenInputRef.current.value = token;
+      }
+    } catch (err) {
+      console.warn("reCAPTCHA execute falhou:", err);
+    }
+    formRef.current?.submit();
     window.setTimeout(() => {
       window.location.href = "/download";
     }, 1200);
@@ -137,12 +123,14 @@ function Landing() {
       {/* Form */}
       <section className="mx-auto -mt-20 max-w-xl px-4 pb-16 sm:-mt-24 sm:px-6 sm:pb-24">
         <form
+          ref={formRef}
           action={WEBHOOK_URL}
           method="post"
           target="lead-sink"
           onSubmit={handleSubmit}
           className="rounded-2xl border border-border/60 bg-card p-5 shadow-soft sm:p-8"
         >
+          <input ref={tokenInputRef} type="hidden" name="recaptcha_token" />
 
           <h2 className="font-serif text-xl text-primary sm:text-2xl">Receba a planilha gratuita</h2>
           <p className="mt-1 text-sm text-muted-foreground">Leva menos de 1 minuto.</p>
@@ -230,14 +218,11 @@ function Landing() {
             </span>
           </label>
 
-          <div className="mt-5 flex justify-center">
-            <div ref={captchaRef} />
-          </div>
-          {captchaError && (
-            <p className="mt-2 text-center text-xs text-destructive">
-              Confirme o reCAPTCHA antes de enviar.
-            </p>
-          )}
+          <p className="mt-4 text-center text-[10px] leading-relaxed text-muted-foreground">
+            Protegido por reCAPTCHA · <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="underline">Privacidade</a> · <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" className="underline">Termos</a>
+          </p>
+
+
 
 
 
