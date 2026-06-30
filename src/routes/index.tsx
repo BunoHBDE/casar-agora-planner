@@ -34,6 +34,7 @@ const ORCAMENTOS = ["Até R$ 30 mil","R$ 30 mil – R$ 60 mil","R$ 60 mil – R$
 
 function Landing() {
   const [celular, setCelular] = useState("");
+  const [consent, setConsent] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const maskCelular = (raw: string) => {
