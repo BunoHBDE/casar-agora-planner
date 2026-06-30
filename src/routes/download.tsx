@@ -23,6 +23,9 @@ function DownloadPage() {
           <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
             Sua planilha está pronta:
           </p>
+          <p className="mx-auto mt-1 max-w-sm text-xs text-muted-foreground/80">
+            Também enviamos um link para o email fornecido.
+          </p>
           <a
             href="https://bit.ly/PlanilhaOrganizandoOSeuCasamento"
             target="_blank"
