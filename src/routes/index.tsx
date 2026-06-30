@@ -24,21 +24,17 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
-type LeadForm = {
-  nome: string; email: string; celular: string; cidade: string; estado: string;
-  mes: string; ano: string; convidados: string; orcamento: string;
-};
+const WEBHOOK_URL =
+  "https://script.google.com/macros/s/AKfycbzN1zm1OONAm8Nb1Q5SjRGNmH3gmuk3Pt15ASTqDffya0XysZAnQBwI8Z_xZIKdIJjF/exec";
 
 const ESTADOS = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
 const MESES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 const ANOS = Array.from({ length: 6 }, (_, i) => String(2026 + i));
 const ORCAMENTOS = ["Até R$ 30 mil","R$ 30 mil – R$ 60 mil","R$ 60 mil – R$ 100 mil","R$ 100 mil – R$ 200 mil","Acima de R$ 200 mil"];
 
-const EMPTY: LeadForm = { nome:"",email:"",celular:"",cidade:"",estado:"",mes:"",ano:"",convidados:"",orcamento:"" };
-
 function Landing() {
-  const [form, setForm] = useState<LeadForm>(EMPTY);
-  const [submitted, setSubmitted] = useState(false);
+  const [celular, setCelular] = useState("");
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const maskCelular = (raw: string) => {
@@ -48,41 +44,31 @@ function Landing() {
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
   };
 
-  const update = (k: keyof LeadForm) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    let value = e.target.value;
-    if (k === "celular") value = maskCelular(value);
-    setForm((f) => ({ ...f, [k]: value }));
-  };
-
-  const [loading, setLoading] = useState(false);
-
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     setError(null);
-    for (const k of Object.keys(EMPTY) as (keyof LeadForm)[]) {
-      if (!form[k].toString().trim()) { setError("Preencha todos os campos."); return; }
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) { setError("Informe um e-mail válido."); return; }
     setLoading(true);
+
+    const formData = new FormData(event.currentTarget);
+    const urlSearchParams = new URLSearchParams();
+    for (const [k, v] of formData.entries()) {
+      urlSearchParams.append(k, v.toString());
+    }
+
     try {
-      const res = await fetch("/api/public/submit-lead", {
+      await fetch(WEBHOOK_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        mode: "no-cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: urlSearchParams,
       });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        setError(data.error || "Não foi possível enviar. Tente novamente.");
-        setLoading(false);
-        return;
-      }
-      setSubmitted(true);
-    } catch {
-      setError("Falha de conexão. Tente novamente.");
-    } finally {
+      window.location.href = "/download";
+    } catch (err) {
+      console.error("Erro ao enviar os dados", err);
+      setError("Não foi possível enviar. Tente novamente.");
       setLoading(false);
     }
-  };
+  }
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -114,102 +100,87 @@ function Landing() {
 
       {/* Form */}
       <section className="mx-auto -mt-20 max-w-xl px-4 pb-16 sm:-mt-24 sm:px-6 sm:pb-24">
+        <form
+          onSubmit={handleSubmit}
+          className="rounded-2xl border border-border/60 bg-card p-5 shadow-soft sm:p-8"
+        >
+          <h2 className="font-serif text-xl text-primary sm:text-2xl">Receba a planilha gratuita</h2>
+          <p className="mt-1 text-sm text-muted-foreground">Leva menos de 1 minuto.</p>
 
-        {!submitted ? (
-          <form
-            onSubmit={onSubmit}
-            className="rounded-2xl border border-border/60 bg-card p-5 shadow-soft sm:p-8"
-          >
-            <h2 className="font-serif text-xl text-primary sm:text-2xl">Receba a planilha gratuita</h2>
-            <p className="mt-1 text-sm text-muted-foreground">Leva menos de 1 minuto.</p>
-
-            <div className="mt-6 grid gap-4">
-              <Field label="Nome completo">
-                <input required value={form.nome} onChange={update("nome")} className={inputCls} placeholder="Seu nome" />
+          <div className="mt-6 grid gap-4">
+            <Field label="Nome completo">
+              <input required name="nome" className={inputCls} placeholder="Seu nome" />
+            </Field>
+            <Field label="E-mail">
+              <input required type="email" inputMode="email" name="email" className={inputCls} placeholder="voce@email.com" />
+            </Field>
+            <Field label="Celular">
+              <input
+                required
+                type="tel"
+                inputMode="tel"
+                name="celular"
+                value={celular}
+                onChange={(e) => setCelular(maskCelular(e.target.value))}
+                className={inputCls}
+                placeholder="(11) 99999-9999"
+              />
+            </Field>
+            <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_110px]">
+              <Field label="Cidade">
+                <input required name="cidade" className={inputCls} placeholder="Cidade" />
               </Field>
-              <Field label="E-mail">
-                <input required type="email" inputMode="email" value={form.email} onChange={update("email")} className={inputCls} placeholder="voce@email.com" />
+              <Field label="Estado">
+                <select required name="estado" defaultValue="" className={inputCls}>
+                  <option value="">UF</option>
+                  {ESTADOS.map((uf) => <option key={uf} value={uf}>{uf}</option>)}
+                </select>
               </Field>
-              <Field label="Celular">
-                <input required type="tel" inputMode="tel" value={form.celular} onChange={update("celular")} className={inputCls} placeholder="(11) 99999-9999" />
-              </Field>
-              <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_110px]">
-                <Field label="Cidade">
-                  <input required value={form.cidade} onChange={update("cidade")} className={inputCls} placeholder="Cidade" />
-                </Field>
-                <Field label="Estado">
-                  <select required value={form.estado} onChange={update("estado")} className={inputCls}>
-                    <option value="">UF</option>
-                    {ESTADOS.map((uf) => <option key={uf} value={uf}>{uf}</option>)}
-                  </select>
-                </Field>
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Mês previsto">
-                  <select required value={form.mes} onChange={update("mes")} className={inputCls}>
-                    <option value="">Selecione…</option>
-                    {MESES.map((m) => <option key={m} value={m}>{m}</option>)}
-                  </select>
-                </Field>
-                <Field label="Ano previsto">
-                  <select required value={form.ano} onChange={update("ano")} className={inputCls}>
-                    <option value="">Selecione…</option>
-                    {ANOS.map((a) => <option key={a} value={a}>{a}</option>)}
-                  </select>
-                </Field>
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Convidados">
-                  <input required type="number" inputMode="numeric" min={1} value={form.convidados} onChange={update("convidados")} className={inputCls} placeholder="150" />
-                </Field>
-                <Field label="Orçamento">
-                  <select required value={form.orcamento} onChange={update("orcamento")} className={inputCls}>
-                    <option value="">Selecione…</option>
-                    {ORCAMENTOS.map((o) => <option key={o} value={o}>{o}</option>)}
-                  </select>
-                </Field>
-              </div>
             </div>
-
-            {error && (
-              <p className="mt-4 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-                {error}
-              </p>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="mt-6 w-full rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
-            >
-              {loading ? "Enviando…" : "Quero a planilha"}
-            </button>
-            <p className="mt-3 text-center text-xs text-muted-foreground">
-              Seus dados são confidenciais. Sem spam.
-            </p>
-          </form>
-        ) : (
-          <div className="rounded-2xl border border-gold/40 bg-card p-6 text-center shadow-soft sm:p-10">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gold/20 text-xl">✓</div>
-            <h2 className="mt-4 font-serif text-2xl text-primary">Obrigado, {form.nome.split(" ")[0]}!</h2>
-            <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
-              Sua planilha está pronta para baixar:
-            </p>
-            <a
-              href="/planilha-organizacao-casamento.xlsx"
-              download
-              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary/90"
-            >
-              ↓ Baixar planilha
-            </a>
-            <button
-              onClick={() => { setSubmitted(false); setForm(EMPTY); }}
-              className="mt-3 text-xs text-muted-foreground underline-offset-4 hover:underline"
-            >
-              Enviar outro formulário
-            </button>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Mês previsto">
+                <select required name="mes" defaultValue="" className={inputCls}>
+                  <option value="">Selecione…</option>
+                  {MESES.map((m) => <option key={m} value={m}>{m}</option>)}
+                </select>
+              </Field>
+              <Field label="Ano previsto">
+                <select required name="ano" defaultValue="" className={inputCls}>
+                  <option value="">Selecione…</option>
+                  {ANOS.map((a) => <option key={a} value={a}>{a}</option>)}
+                </select>
+              </Field>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Convidados">
+                <input required type="number" inputMode="numeric" min={1} name="convidados" className={inputCls} placeholder="150" />
+              </Field>
+              <Field label="Orçamento">
+                <select required name="orcamento" defaultValue="" className={inputCls}>
+                  <option value="">Selecione…</option>
+                  {ORCAMENTOS.map((o) => <option key={o} value={o}>{o}</option>)}
+                </select>
+              </Field>
+            </div>
           </div>
-        )}
+
+          {error && (
+            <p className="mt-4 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              {error}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-6 w-full rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
+          >
+            {loading ? "Enviando…" : "Quero a planilha"}
+          </button>
+          <p className="mt-3 text-center text-xs text-muted-foreground">
+            Seus dados são confidenciais. Sem spam.
+          </p>
+        </form>
       </section>
 
       <footer className="border-t border-border/60">
