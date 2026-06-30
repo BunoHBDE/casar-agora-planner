@@ -35,7 +35,6 @@ const ORCAMENTOS = ["Até R$ 30 mil","R$ 30 mil – R$ 60 mil","R$ 60 mil – R$
 function Landing() {
   const [celular, setCelular] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const maskCelular = (raw: string) => {
     const digits = raw.replace(/\D/g, "").slice(0, 11);
@@ -44,31 +43,14 @@ function Landing() {
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
   };
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError(null);
+  function handleSubmit() {
+    // Deixa o form submeter nativamente para o iframe oculto.
     setLoading(true);
-
-    const formData = new FormData(event.currentTarget);
-    const urlSearchParams = new URLSearchParams();
-    for (const [k, v] of formData.entries()) {
-      urlSearchParams.append(k, v.toString());
-    }
-
-    try {
-      await fetch(WEBHOOK_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: urlSearchParams,
-      });
+    window.setTimeout(() => {
       window.location.href = "/download";
-    } catch (err) {
-      console.error("Erro ao enviar os dados", err);
-      setError("Não foi possível enviar. Tente novamente.");
-      setLoading(false);
-    }
+    }, 1200);
   }
+
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -101,9 +83,13 @@ function Landing() {
       {/* Form */}
       <section className="mx-auto -mt-20 max-w-xl px-4 pb-16 sm:-mt-24 sm:px-6 sm:pb-24">
         <form
+          action={WEBHOOK_URL}
+          method="post"
+          target="lead-sink"
           onSubmit={handleSubmit}
           className="rounded-2xl border border-border/60 bg-card p-5 shadow-soft sm:p-8"
         >
+
           <h2 className="font-serif text-xl text-primary sm:text-2xl">Receba a planilha gratuita</h2>
           <p className="mt-1 text-sm text-muted-foreground">Leva menos de 1 minuto.</p>
 
@@ -164,12 +150,6 @@ function Landing() {
             </div>
           </div>
 
-          {error && (
-            <p className="mt-4 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-              {error}
-            </p>
-          )}
-
           <button
             type="submit"
             disabled={loading}
@@ -181,7 +161,9 @@ function Landing() {
             Seus dados são confidenciais. Sem spam.
           </p>
         </form>
+        <iframe name="lead-sink" title="lead-sink" hidden />
       </section>
+
 
       <footer className="border-t border-border/60">
         <div className="mx-auto max-w-xl px-6 py-6 text-center text-xs text-muted-foreground">
