@@ -67,7 +67,7 @@ function Landing() {
           <div className="absolute inset-0 bg-primary/45" />
           <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-background" />
         </div>
-        <div className="mx-auto max-w-2xl px-6 pt-20 pb-28 text-center text-primary-foreground sm:pt-28 sm:pb-36">
+        <div className="mx-auto max-w-2xl px-6 pt-20 pb-28 text-center text-primary-foreground sm:pt-28 sm:pb-36" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.45)' }}>
           <span className="text-[11px] uppercase tracking-[0.24em] text-primary-foreground/80">
             SÍTIO CANTO DA MATA
           </span>
