@@ -102,9 +102,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
     ],
-    scripts: [
-      { src: "https://www.google.com/recaptcha/api.js", async: true, defer: true },
-    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,

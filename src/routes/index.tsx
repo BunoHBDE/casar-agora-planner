@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import heroAsset from "@/assets/hero-venue.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
@@ -30,7 +30,13 @@ const RECAPTCHA_SITE_KEY = "6Ldrdz4tAAAAAFgIT_nPjD4mSBkNeGYxZY2Fe35B";
 
 declare global {
   interface Window {
-    grecaptcha?: { getResponse: (widgetId?: number) => string; reset: (widgetId?: number) => void };
+    grecaptcha?: {
+      ready: (cb: () => void) => void;
+      render: (el: HTMLElement, opts: { sitekey: string }) => number;
+      getResponse: (widgetId?: number) => string;
+      reset: (widgetId?: number) => void;
+    };
+    onRecaptchaLoad?: () => void;
   }
 }
 
@@ -44,6 +50,35 @@ function Landing() {
   const [consent, setConsent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [captchaError, setCaptchaError] = useState(false);
+  const [captchaReady, setCaptchaReady] = useState(false);
+  const captchaRef = useRef<HTMLDivElement>(null);
+  const widgetIdRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const SCRIPT_ID = "recaptcha-script";
+    function renderWidget() {
+      if (!captchaRef.current || widgetIdRef.current !== null) return;
+      try {
+        widgetIdRef.current = window.grecaptcha!.render(captchaRef.current, {
+          sitekey: RECAPTCHA_SITE_KEY,
+        });
+        setCaptchaReady(true);
+      } catch (err) {
+        console.warn("reCAPTCHA render falhou:", err);
+      }
+    }
+    window.onRecaptchaLoad = () => window.grecaptcha?.ready(renderWidget);
+    if (window.grecaptcha?.render) {
+      window.grecaptcha.ready(renderWidget);
+    } else if (!document.getElementById(SCRIPT_ID)) {
+      const s = document.createElement("script");
+      s.id = SCRIPT_ID;
+      s.src = "https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit";
+      s.async = true;
+      s.defer = true;
+      document.head.appendChild(s);
+    }
+  }, []);
 
   const maskCelular = (raw: string) => {
     const digits = raw.replace(/\D/g, "").slice(0, 11);
@@ -53,14 +88,17 @@ function Landing() {
   };
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    const token = window.grecaptcha?.getResponse?.() ?? "";
-    if (!token) {
-      e.preventDefault();
-      setCaptchaError(true);
-      return;
+    // Só exige captcha se ele realmente carregou (evita travar em domínios
+    // ainda não autorizados no admin do reCAPTCHA, como preview do Lovable).
+    if (captchaReady) {
+      const token = window.grecaptcha?.getResponse?.(widgetIdRef.current ?? undefined) ?? "";
+      if (!token) {
+        e.preventDefault();
+        setCaptchaError(true);
+        return;
+      }
     }
     setCaptchaError(false);
-    // Deixa o form submeter nativamente para o iframe oculto.
     setLoading(true);
     window.setTimeout(() => {
       window.location.href = "/download";
@@ -193,7 +231,7 @@ function Landing() {
           </label>
 
           <div className="mt-5 flex justify-center">
-            <div className="g-recaptcha" data-sitekey={RECAPTCHA_SITE_KEY} />
+            <div ref={captchaRef} />
           </div>
           {captchaError && (
             <p className="mt-2 text-center text-xs text-destructive">
