@@ -34,6 +34,7 @@ const ORCAMENTOS = ["Até R$ 30 mil","R$ 30 mil – R$ 60 mil","R$ 60 mil – R$
 
 function Landing() {
   const [celular, setCelular] = useState("");
+  const [consent, setConsent] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const maskCelular = (raw: string) => {
@@ -150,10 +151,24 @@ function Landing() {
             </div>
           </div>
 
+          <label className="mt-5 flex cursor-pointer items-start gap-3">
+            <input
+              type="checkbox"
+              name="consentimento_lgpd"
+              required
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+              className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-primary"
+            />
+            <span className="text-xs leading-relaxed text-muted-foreground">
+              Concordo em receber conteúdo sobre casamentos e autorizo o uso dos meus dados para contato, conforme a <strong>LGPD</strong>.
+            </span>
+          </label>
+
           <button
             type="submit"
-            disabled={loading}
-            className="mt-6 w-full rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
+            disabled={loading || !consent}
+            className="mt-5 w-full rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
           >
             {loading ? "Enviando…" : "Quero a planilha"}
           </button>
