@@ -213,12 +213,12 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-function RadioOption({ value, label }: { value: string; label: string }) {
+function RadioOption({ value, label, name = "fase" }: { value: string; label: string; name?: string }) {
   return (
     <label className="flex cursor-pointer items-start gap-3 rounded-md border border-input bg-background p-3 transition hover:bg-muted/30 has-[:checked]:border-primary has-[:checked]:ring-1 has-[:checked]:ring-primary/30">
       <input
         type="radio"
-        name="fase_planejamento"
+        name={name}
         value={value}
         required
         className="mt-0.5 h-4 w-4 shrink-0 accent-primary"
