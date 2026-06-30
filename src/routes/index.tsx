@@ -26,6 +26,13 @@ export const Route = createFileRoute("/")({
 
 const WEBHOOK_URL =
   "https://script.google.com/macros/s/AKfycbzN1zm1OONAm8Nb1Q5SjRGNmH3gmuk3Pt15ASTqDffya0XysZAnQBwI8Z_xZIKdIJjF/exec";
+const RECAPTCHA_SITE_KEY = "6Ldrdz4tAAAAAFgIT_nPjD4mSBkNeGYxZY2Fe35B";
+
+declare global {
+  interface Window {
+    grecaptcha?: { getResponse: (widgetId?: number) => string; reset: (widgetId?: number) => void };
+  }
+}
 
 const ESTADOS = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
 const MESES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
@@ -36,6 +43,7 @@ function Landing() {
   const [celular, setCelular] = useState("");
   const [consent, setConsent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [captchaError, setCaptchaError] = useState(false);
 
   const maskCelular = (raw: string) => {
     const digits = raw.replace(/\D/g, "").slice(0, 11);
@@ -44,7 +52,14 @@ function Landing() {
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
   };
 
-  function handleSubmit() {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    const token = window.grecaptcha?.getResponse?.() ?? "";
+    if (!token) {
+      e.preventDefault();
+      setCaptchaError(true);
+      return;
+    }
+    setCaptchaError(false);
     // Deixa o form submeter nativamente para o iframe oculto.
     setLoading(true);
     window.setTimeout(() => {
@@ -176,6 +191,17 @@ function Landing() {
               Concordo em receber conteúdo sobre casamentos e autorizo o uso dos meus dados para contato, conforme a <strong>LGPD</strong>.
             </span>
           </label>
+
+          <div className="mt-5 flex justify-center">
+            <div className="g-recaptcha" data-sitekey={RECAPTCHA_SITE_KEY} />
+          </div>
+          {captchaError && (
+            <p className="mt-2 text-center text-xs text-destructive">
+              Confirme o reCAPTCHA antes de enviar.
+            </p>
+          )}
+
+
 
           <button
             type="submit"

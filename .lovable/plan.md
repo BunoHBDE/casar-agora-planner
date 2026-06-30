@@ -1,30 +1,48 @@
-## Problema
+# Instalar reCAPTCHA v2 no formulário
 
-O envio para o Google Apps Script não está sendo registrado. O snapshot de network não mostra nenhuma chamada para `script.google.com`, então o `fetch` provavelmente nem chegou a sair (ou o Apps Script rejeitou silenciosamente o `Content-Type: application/x-www-form-urlencoded` enviado via `no-cors`, que em alguns navegadores é tratado de forma inconsistente em redirecionamentos 302 — típico de Apps Script).
+## Contexto
+O formulário envia direto para o Google Apps Script via iframe oculto. Por isso, a **chave do site** entra no frontend e a **chave secreta** precisa ser usada **dentro do Apps Script** para validar o token — não há backend nosso no caminho do envio.
 
-## Plano de correção
+A chave secreta NÃO deve ir para o código do site. Ela fica no Apps Script (Project Settings → Script Properties).
 
-Trocar o `fetch(..., { mode: "no-cors" })` por uma submissão clássica via **form + iframe oculto**. Esse é o padrão recomendado para Google Apps Script Web Apps porque:
+## Mudanças no código (frontend)
 
-- Não dispara preflight CORS.
-- Lida nativamente com o redirect 302 do Apps Script (`script.google.com` → `script.googleusercontent.com`).
-- Funciona igual em desktop e mobile, sem depender de `no-cors`.
-- Garante que o POST realmente sai — visível na aba Network como `POST exec`.
+**`src/routes/__root.tsx`**
+- Adicionar `<script src="https://www.google.com/recaptcha/api.js" async defer>` via `scripts` no `head()`.
 
-### Mudanças (somente em `src/routes/index.tsx`)
+**`src/routes/index.tsx`**
+- Adicionar a chave pública como constante:
+  `const RECAPTCHA_SITE_KEY = "6Ldrdz4tAAAAAFgIT_nPjD4mSBkNeGYxZY2Fe35B"`
+- Inserir o widget logo acima do botão de envio:
+  `<div className="g-recaptcha" data-sitekey={RECAPTCHA_SITE_KEY} />`
+  (o input gerado tem `name="g-recaptcha-response"` automaticamente, então já vai no POST junto com os demais campos).
+- No `handleSubmit`, antes de disparar o redirect, ler `grecaptcha.getResponse()` e bloquear o envio se estiver vazio (mostrar mensagem "Confirme o reCAPTCHA").
+- Desabilitar o botão enquanto `consent` for falso (já existe) — manter.
 
-1. Adicionar um `<iframe name="lead-sink" hidden />` no JSX.
-2. No `<form>`, definir `action={WEBHOOK_URL}`, `method="post"`, `target="lead-sink"`.
-3. Em `handleSubmit`:
-   - Remover o `event.preventDefault()` (deixar o form submeter de fato para o iframe).
-   - Apenas ativar `setLoading(true)` e agendar o redirect para `/download` após ~800 ms (tempo do POST completar no iframe).
-   - Manter a máscara de celular e validação HTML5 dos `required`.
-4. Remover a lógica de `fetch` e o estado de `error` (não há mais ramo de falha visível ao usuário, já que a resposta do Apps Script é opaca pelo iframe — comportamento idêntico ao `no-cors` anterior, porém mais confiável).
+## Passos que você faz no Google Apps Script
 
-### Validação
+1. Em **Project Settings → Script Properties**, criar a propriedade:
+   - `RECAPTCHA_SECRET` = `6Ldrdz4tAAAAAMPl0dHzr6CECj96QpdO1oVHMInq`
+2. No início da função `doPost(e)`, antes de gravar na planilha, validar o token:
 
-- Após a mudança, preencher o formulário no preview e confirmar na aba Network do navegador um `POST` para `script.google.com/macros/.../exec` retornando 302 → 200.
-- Confirmar redirecionamento para `/download`.
-- Verificar na planilha do Apps Script que a nova linha foi gravada.
+```js
+var token = e.parameter['g-recaptcha-response'];
+var secret = PropertiesService.getScriptProperties().getProperty('RECAPTCHA_SECRET');
+var verify = UrlFetchApp.fetch('https://www.google.com/recaptcha/api/siteverify', {
+  method: 'post',
+  payload: { secret: secret, response: token }
+});
+var ok = JSON.parse(verify.getContentText()).success;
+if (!ok) {
+  return ContentService.createTextOutput(JSON.stringify({result:'error', reason:'captcha'}))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+// ... segue com SpreadsheetApp.append etc.
+```
 
-Nenhuma outra parte do projeto é alterada (banco, design, demais rotas permanecem como estão).
+3. Salvar e publicar nova versão do Web App (Deploy → Manage deployments → editar → nova versão).
+
+## Observações
+- Usaremos **reCAPTCHA v2 "Não sou um robô"** (checkbox). Suas chaves servem; se você tiver registrado como v3 ou Invisible, me avise que ajusto.
+- O domínio `sitiocantodamata.com.br` precisa estar listado nas configurações da chave reCAPTCHA (já está, pelo que você passou). Para testar no preview Lovable, adicione também `lovable.app` na lista de domínios da chave.
+- A chave secreta nunca entra no repositório nem em variáveis do Lovable — fica só no Apps Script.
