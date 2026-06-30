@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import heroImg from "@/assets/hero-venue.jpg";
+import heroAsset from "@/assets/hero-venue.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -16,9 +16,9 @@ export const Route = createFileRoute("/")({
         property: "og:description",
         content: "Receba a planilha gratuita de organização do seu casamento.",
       },
-      { property: "og:image", content: heroImg },
+      { property: "og:image", content: heroAsset.url },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: heroImg },
+      { name: "twitter:image", content: heroAsset.url },
     ],
   }),
   component: Landing,
@@ -58,7 +58,7 @@ function Landing() {
       <section className="relative isolate">
         <div className="absolute inset-0 -z-10 overflow-hidden">
           <img
-            src={heroImg}
+            src={heroAsset.url}
             alt=""
             width={1600}
             height={1200}
