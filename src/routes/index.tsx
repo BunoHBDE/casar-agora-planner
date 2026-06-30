@@ -35,7 +35,6 @@ const ORCAMENTOS = ["Até R$ 30 mil","R$ 30 mil – R$ 60 mil","R$ 60 mil – R$
 function Landing() {
   const [celular, setCelular] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const maskCelular = (raw: string) => {
     const digits = raw.replace(/\D/g, "").slice(0, 11);
@@ -44,31 +43,14 @@ function Landing() {
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
   };
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError(null);
+  function handleSubmit() {
+    // Deixa o form submeter nativamente para o iframe oculto.
     setLoading(true);
-
-    const formData = new FormData(event.currentTarget);
-    const urlSearchParams = new URLSearchParams();
-    for (const [k, v] of formData.entries()) {
-      urlSearchParams.append(k, v.toString());
-    }
-
-    try {
-      await fetch(WEBHOOK_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: urlSearchParams,
-      });
+    window.setTimeout(() => {
       window.location.href = "/download";
-    } catch (err) {
-      console.error("Erro ao enviar os dados", err);
-      setError("Não foi possível enviar. Tente novamente.");
-      setLoading(false);
-    }
+    }, 1200);
   }
+
 
   return (
     <main className="min-h-screen bg-background text-foreground">
