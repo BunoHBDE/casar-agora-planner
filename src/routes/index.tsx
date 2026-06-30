@@ -155,7 +155,7 @@ function Landing() {
                 Em qual fase do planejamento você está?
               </legend>
               <div className="grid gap-2.5">
-                <RadioOption value="inicial" label="Estou na fase inicial, apenas pesquisando valores" name="fase" />
+                <RadioOption value="inicial" label="Estou na fase inicial, apenas pesquisando valores" />
                 <RadioOption value="visitas" label="Já comecei as visitas, mas continuo pesquisando os locais" />
                 <RadioOption value="ultimas_visitas" label="Estou fazendo as últimas visitas e pronta para fechar" />
                 <RadioOption value="contratado" label="Já contratei o espaço, seguindo com o restante da organização" />
