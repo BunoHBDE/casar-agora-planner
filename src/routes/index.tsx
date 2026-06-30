@@ -43,6 +43,7 @@ function Landing() {
   const [celular, setCelular] = useState("");
   const [consent, setConsent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [captchaError, setCaptchaError] = useState(false);
 
   const maskCelular = (raw: string) => {
     const digits = raw.replace(/\D/g, "").slice(0, 11);
@@ -51,7 +52,14 @@ function Landing() {
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
   };
 
-  function handleSubmit() {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    const token = window.grecaptcha?.getResponse?.() ?? "";
+    if (!token) {
+      e.preventDefault();
+      setCaptchaError(true);
+      return;
+    }
+    setCaptchaError(false);
     // Deixa o form submeter nativamente para o iframe oculto.
     setLoading(true);
     window.setTimeout(() => {
