@@ -149,6 +149,18 @@ function Landing() {
                 </select>
               </Field>
             </div>
+
+            <fieldset className="mt-2">
+              <legend className="mb-2 block text-xs font-medium uppercase tracking-[0.1em] text-muted-foreground">
+                Em qual fase do planejamento você está?
+              </legend>
+              <div className="grid gap-2.5">
+                <RadioOption value="inicial" label="Estou na fase inicial, apenas pesquisando valores" />
+                <RadioOption value="visitas" label="Já comecei as visitas, mas continuo pesquisando os locais" />
+                <RadioOption value="ultimas_visitas" label="Estou fazendo as últimas visitas e pronta para fechar" />
+                <RadioOption value="contratado" label="Já contratei o espaço, seguindo com o restante da organização" />
+              </div>
+            </fieldset>
           </div>
 
           <label className="mt-5 flex cursor-pointer items-start gap-3">
@@ -197,6 +209,21 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
     <label className="block">
       <span className="mb-1.5 block text-xs font-medium uppercase tracking-[0.1em] text-muted-foreground">{label}</span>
       {children}
+    </label>
+  );
+}
+
+function RadioOption({ value, label }: { value: string; label: string }) {
+  return (
+    <label className="flex cursor-pointer items-start gap-3 rounded-md border border-input bg-background p-3 transition hover:bg-muted/30 has-[:checked]:border-primary has-[:checked]:ring-1 has-[:checked]:ring-primary/30">
+      <input
+        type="radio"
+        name="fase_planejamento"
+        value={value}
+        required
+        className="mt-0.5 h-4 w-4 shrink-0 accent-primary"
+      />
+      <span className="text-sm text-foreground">{label}</span>
     </label>
   );
 }
