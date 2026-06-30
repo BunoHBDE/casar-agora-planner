@@ -150,12 +150,6 @@ function Landing() {
             </div>
           </div>
 
-          {error && (
-            <p className="mt-4 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-              {error}
-            </p>
-          )}
-
           <button
             type="submit"
             disabled={loading}
@@ -167,7 +161,9 @@ function Landing() {
             Seus dados são confidenciais. Sem spam.
           </p>
         </form>
+        <iframe name="lead-sink" title="lead-sink" hidden />
       </section>
+
 
       <footer className="border-t border-border/60">
         <div className="mx-auto max-w-xl px-6 py-6 text-center text-xs text-muted-foreground">
