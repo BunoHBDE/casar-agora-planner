@@ -69,27 +69,36 @@ function Landing() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const form = e.currentTarget;
     setLoading(true);
     try {
-      if (window.grecaptcha?.execute) {
-        const token = await new Promise<string>((resolve, reject) => {
-          window.grecaptcha!.ready(() => {
-            window
-              .grecaptcha!.execute(RECAPTCHA_SITE_KEY, { action: "submit" })
-              .then(resolve)
-              .catch(reject);
+      try {
+        if (window.grecaptcha?.execute) {
+          const tokenPromise = new Promise<string>((resolve, reject) => {
+            window.grecaptcha!.ready(() => {
+              window
+                .grecaptcha!.execute(RECAPTCHA_SITE_KEY, { action: "submit" })
+                .then(resolve)
+                .catch(reject);
+            });
           });
-        });
-        if (tokenInputRef.current) tokenInputRef.current.value = token;
+          const timeout = new Promise<string>((_, reject) =>
+            window.setTimeout(() => reject(new Error("recaptcha timeout")), 3000)
+          );
+          const token = await Promise.race([tokenPromise, timeout]);
+          if (tokenInputRef.current) tokenInputRef.current.value = token;
+        }
+      } catch (err) {
+        console.warn("reCAPTCHA execute falhou, seguindo sem token:", err);
       }
-    } catch (err) {
-      console.warn("reCAPTCHA execute falhou:", err);
+      form.submit();
+    } finally {
+      window.setTimeout(() => {
+        window.location.href = "/download";
+      }, 1200);
     }
-    formRef.current?.submit();
-    window.setTimeout(() => {
-      window.location.href = "/download";
-    }, 1200);
   }
+
 
 
   return (
