@@ -1,48 +1,33 @@
-# Instalar reCAPTCHA v2 no formulário
+## Diagnóstico
 
-## Contexto
-O formulário envia direto para o Google Apps Script via iframe oculto. Por isso, a **chave do site** entra no frontend e a **chave secreta** precisa ser usada **dentro do Apps Script** para validar o token — não há backend nosso no caminho do envio.
+A mensagem **"Invalid key type"** do reCAPTCHA significa que a chave que você cadastrou (`6Ldrdz4t...`) **não é do tipo v2 "Não sou um robô" (checkbox)**, que é o que o código atual está tentando renderizar.
 
-A chave secreta NÃO deve ir para o código do site. Ela fica no Apps Script (Project Settings → Script Properties).
+Pelo prefixo e pelo fato do erro aparecer, a chave foi criada provavelmente como **reCAPTCHA v3** (ou Enterprise) no admin do Google. v3 não mostra checkbox — funciona de forma invisível, com score de 0 a 1, e exige integração diferente no frontend e no backend.
 
-## Mudanças no código (frontend)
+## Caminhos possíveis
 
-**`src/routes/__root.tsx`**
-- Adicionar `<script src="https://www.google.com/recaptcha/api.js" async defer>` via `scripts` no `head()`.
+Você precisa escolher um dos dois:
 
-**`src/routes/index.tsx`**
-- Adicionar a chave pública como constante:
-  `const RECAPTCHA_SITE_KEY = "6Ldrdz4tAAAAAFgIT_nPjD4mSBkNeGYxZY2Fe35B"`
-- Inserir o widget logo acima do botão de envio:
-  `<div className="g-recaptcha" data-sitekey={RECAPTCHA_SITE_KEY} />`
-  (o input gerado tem `name="g-recaptcha-response"` automaticamente, então já vai no POST junto com os demais campos).
-- No `handleSubmit`, antes de disparar o redirect, ler `grecaptcha.getResponse()` e bloquear o envio se estiver vazio (mostrar mensagem "Confirme o reCAPTCHA").
-- Desabilitar o botão enquanto `consent` for falso (já existe) — manter.
+### Opção A — Criar uma nova chave v2 Checkbox (recomendado, mais simples)
+1. Acessar https://www.google.com/recaptcha/admin
+2. Criar um **novo site** escolhendo **reCAPTCHA v2 → "Não sou um robô" Checkbox**
+3. Adicionar domínios: `sitiocantodamata.com.br`, `www.sitiocantodamata.com.br`, `lovable.app`
+4. Me passar a nova **chave de site** e a nova **chave secreta**
+5. Eu troco as chaves no código (frontend) e te passo o snippet atualizado do Apps Script (backend)
 
-## Passos que você faz no Google Apps Script
+Nada muda no comportamento atual: o usuário marca o checkbox antes de enviar.
 
-1. Em **Project Settings → Script Properties**, criar a propriedade:
-   - `RECAPTCHA_SECRET` = `6Ldrdz4tAAAAAMPl0dHzr6CECj96QpdO1oVHMInq`
-2. No início da função `doPost(e)`, antes de gravar na planilha, validar o token:
+### Opção B — Manter a chave atual (v3) e migrar o código para v3
+- Remover o widget visível.
+- Executar `grecaptcha.execute(siteKey, { action: 'submit' })` no submit para gerar um token invisível.
+- Enviar o token no POST como hoje.
+- No Apps Script, validar o token e checar `score >= 0.5` (você descarta envios suspeitos).
+- Sem checkbox na tela — proteção fica invisível.
 
-```js
-var token = e.parameter['g-recaptcha-response'];
-var secret = PropertiesService.getScriptProperties().getProperty('RECAPTCHA_SECRET');
-var verify = UrlFetchApp.fetch('https://www.google.com/recaptcha/api/siteverify', {
-  method: 'post',
-  payload: { secret: secret, response: token }
-});
-var ok = JSON.parse(verify.getContentText()).success;
-if (!ok) {
-  return ContentService.createTextOutput(JSON.stringify({result:'error', reason:'captcha'}))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-// ... segue com SpreadsheetApp.append etc.
-```
+## O que eu preciso de você
 
-3. Salvar e publicar nova versão do Web App (Deploy → Manage deployments → editar → nova versão).
+Me confirme qual opção seguir:
+- **A:** crie a chave v2 Checkbox e me envie as duas novas chaves.
+- **B:** mantenho as chaves atuais e migro tudo para v3 invisível.
 
-## Observações
-- Usaremos **reCAPTCHA v2 "Não sou um robô"** (checkbox). Suas chaves servem; se você tiver registrado como v3 ou Invisible, me avise que ajusto.
-- O domínio `sitiocantodamata.com.br` precisa estar listado nas configurações da chave reCAPTCHA (já está, pelo que você passou). Para testar no preview Lovable, adicione também `lovable.app` na lista de domínios da chave.
-- A chave secreta nunca entra no repositório nem em variáveis do Lovable — fica só no Apps Script.
+Assim que você confirmar, eu aplico as alterações no `src/routes/index.tsx` (e no `__root.tsx` se necessário) e te entrego o trecho atualizado do Apps Script para colar.
