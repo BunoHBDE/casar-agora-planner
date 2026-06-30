@@ -32,11 +32,8 @@ declare global {
   interface Window {
     grecaptcha?: {
       ready: (cb: () => void) => void;
-      render: (el: HTMLElement, opts: { sitekey: string }) => number;
-      getResponse: (widgetId?: number) => string;
-      reset: (widgetId?: number) => void;
+      execute: (siteKey: string, opts: { action: string }) => Promise<string>;
     };
-    onRecaptchaLoad?: () => void;
   }
 }
 
