@@ -192,6 +192,17 @@ function Landing() {
             </span>
           </label>
 
+          <div className="mt-5 flex justify-center">
+            <div className="g-recaptcha" data-sitekey={RECAPTCHA_SITE_KEY} />
+          </div>
+          {captchaError && (
+            <p className="mt-2 text-center text-xs text-destructive">
+              Confirme o reCAPTCHA antes de enviar.
+            </p>
+          )}
+
+
+
           <button
             type="submit"
             disabled={loading || !consent}
