@@ -139,7 +139,7 @@ function Landing() {
           onSubmit={handleSubmit}
           className="rounded-2xl border border-border/60 bg-card p-5 shadow-soft sm:p-8"
         >
-          <input ref={tokenInputRef} type="hidden" name="recaptcha_token" />
+          <input ref={tokenInputRef} type="hidden" name="g-recaptcha-response" />
 
           <h2 className="font-serif text-xl text-primary sm:text-2xl">Receba a planilha gratuita</h2>
           <p className="mt-1 text-sm text-muted-foreground">Leva menos de 1 minuto.</p>
