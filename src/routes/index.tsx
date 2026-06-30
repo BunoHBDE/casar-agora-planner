@@ -123,12 +123,14 @@ function Landing() {
       {/* Form */}
       <section className="mx-auto -mt-20 max-w-xl px-4 pb-16 sm:-mt-24 sm:px-6 sm:pb-24">
         <form
+          ref={formRef}
           action={WEBHOOK_URL}
           method="post"
           target="lead-sink"
           onSubmit={handleSubmit}
           className="rounded-2xl border border-border/60 bg-card p-5 shadow-soft sm:p-8"
         >
+          <input ref={tokenInputRef} type="hidden" name="recaptcha_token" />
 
           <h2 className="font-serif text-xl text-primary sm:text-2xl">Receba a planilha gratuita</h2>
           <p className="mt-1 text-sm text-muted-foreground">Leva menos de 1 minuto.</p>
@@ -216,14 +218,11 @@ function Landing() {
             </span>
           </label>
 
-          <div className="mt-5 flex justify-center">
-            <div ref={captchaRef} />
-          </div>
-          {captchaError && (
-            <p className="mt-2 text-center text-xs text-destructive">
-              Confirme o reCAPTCHA antes de enviar.
-            </p>
-          )}
+          <p className="mt-4 text-center text-[10px] leading-relaxed text-muted-foreground">
+            Protegido por reCAPTCHA · <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="underline">Privacidade</a> · <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" className="underline">Termos</a>
+          </p>
+
+
 
 
 
