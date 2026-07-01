@@ -190,7 +190,7 @@ function Landing() {
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Convidados">
-                <input required type="number" inputMode="numeric" min={1} name="convidados" className={inputCls} placeholder="150" />
+                <input required type="number" inputMode="numeric" min={1} name="convidados" className={inputCls} placeholder="80" />
               </Field>
               <Field label="Orçamento">
                 <select required name="orcamento" defaultValue="" className={inputCls}>
