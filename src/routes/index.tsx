@@ -25,7 +25,7 @@ export const Route = createFileRoute("/")({
 });
 
 const WEBHOOK_URL =
-  "https://script.google.com/macros/s/AKfycbyuzwTUxgkdejXX0_o0mZN1TS4ImA1pqWUbYZczZ9jd0NyXQ61Is9GoJEYaC7mTOMTr/exec";
+  "https://script.google.com/macros/s/AKfycbwyBLQ-qOJptRYAFhJZQOweCFh1PyYjuxerbkxUnnSKVxTc__YTduQB1H2bwymNjRdZ/exec";
 const RECAPTCHA_SITE_KEY = "6Ldrdz4tAAAAAFgIT_nPjD4mSBkNeGYxZY2Fe35B";
 
 declare global {
