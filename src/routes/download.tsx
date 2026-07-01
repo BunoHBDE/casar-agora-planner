@@ -3,8 +3,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 export const Route = createFileRoute("/download")({
   head: () => ({
     meta: [
-      { title: "Sua planilha — SÍTIO CANTO DA MATA" },
-      { name: "description", content: "Baixe sua planilha de organização de casamento." },
+      { title: "Sua planilha de organização de casamento — Sítio Canto da Mata" },
+      { name: "description", content: "Baixe agora a planilha gratuita para organizar seu casamento no Sítio Canto da Mata — orçamento, convidados, cronograma e fornecedores em um só lugar." },
+      { property: "og:title", content: "Baixe sua planilha de organização de casamento" },
+      { property: "og:description", content: "Planilha gratuita com orçamento, convidados, cronograma e fornecedores para organizar seu casamento no Sítio Canto da Mata." },
+      { property: "og:type", content: "website" },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -19,7 +22,7 @@ function DownloadPage() {
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gold/20 text-xl">
             ✓
           </div>
-          <h1 className="mt-4 font-serif text-2xl text-primary sm:text-3xl">Obrigado!</h1>
+          <h1 className="mt-4 font-serif text-2xl text-primary sm:text-3xl">Sua planilha de organização de casamento está pronta</h1>
           <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
             Sua planilha está pronta:
           </p>

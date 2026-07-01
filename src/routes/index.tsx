@@ -111,6 +111,8 @@ function Landing() {
             alt=""
             width={1600}
             height={1200}
+            fetchPriority="high"
+            decoding="async"
             className="h-full w-full scale-110 object-cover blur-sm"
           />
           <div className="absolute inset-0 bg-primary/45" />

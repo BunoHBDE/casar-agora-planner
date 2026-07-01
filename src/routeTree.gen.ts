@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as DownloadRouteImport } from './routes/download'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPublicSubmitLeadRouteImport } from './routes/api/public/submit-lead'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DownloadRoute = DownloadRouteImport.update({
   id: '/download',
   path: '/download',
@@ -32,35 +38,51 @@ const ApiPublicSubmitLeadRoute = ApiPublicSubmitLeadRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/download': typeof DownloadRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/public/submit-lead': typeof ApiPublicSubmitLeadRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/download': typeof DownloadRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/public/submit-lead': typeof ApiPublicSubmitLeadRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/download': typeof DownloadRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/public/submit-lead': typeof ApiPublicSubmitLeadRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/download' | '/api/public/submit-lead'
+  fullPaths: '/' | '/download' | '/sitemap.xml' | '/api/public/submit-lead'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/download' | '/api/public/submit-lead'
-  id: '__root__' | '/' | '/download' | '/api/public/submit-lead'
+  to: '/' | '/download' | '/sitemap.xml' | '/api/public/submit-lead'
+  id:
+    | '__root__'
+    | '/'
+    | '/download'
+    | '/sitemap.xml'
+    | '/api/public/submit-lead'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DownloadRoute: typeof DownloadRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiPublicSubmitLeadRoute: typeof ApiPublicSubmitLeadRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/download': {
       id: '/download'
       path: '/download'
@@ -88,6 +110,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DownloadRoute: DownloadRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiPublicSubmitLeadRoute: ApiPublicSubmitLeadRoute,
 }
 export const routeTree = rootRouteImport
