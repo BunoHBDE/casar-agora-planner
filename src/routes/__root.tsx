@@ -85,33 +85,46 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Sítio Canto da Mata — Espaço para Casamentos no Campo" },
-      { name: "twitter:description", content: "Espaço para casamentos no campo. Baixe gratuitamente a planilha completa de organização do seu casamento." },
-    ],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@graph": [
-            {
-              "@type": "WebSite",
-              name: "Sítio Canto da Mata",
-              url: "https://sitiocantodamata.com.br",
-              description: "Espaço para casamentos no campo — Sítio Canto da Mata.",
-            },
-            {
-              "@type": "LocalBusiness",
-              "@id": "https://sitiocantodamata.com.br/#localbusiness",
-              name: "Sítio Canto da Mata",
-              description: "Espaço para casamentos no campo, cercado pela natureza.",
-              url: "https://sitiocantodamata.com.br",
-              image: "https://sitiocantodamata.com.br/og-image.jpg",
-              priceRange: "$$",
-            },
-          ],
-        }),
-      },
-    ],
+        { name: "twitter:description", content: "Espaço para casamentos no campo. Baixe gratuitamente a planilha completa de organização do seu casamento." },
+      ],
+      scripts: [
+        {
+          async: true,
+          src: "https://www.googletagmanager.com/gtag/js?id=G-RGH172N6HB",
+        },
+        {
+          type: "text/javascript",
+          children: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-RGH172N6HB');
+          `,
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "WebSite",
+                name: "Sítio Canto da Mata",
+                url: "https://sitiocantodamata.com.br",
+                description: "Espaço para casamentos no campo — Sítio Canto da Mata.",
+              },
+              {
+                "@type": "LocalBusiness",
+                "@id": "https://sitiocantodamata.com.br/#localbusiness",
+                name: "Sítio Canto da Mata",
+                description: "Espaço para casamentos no campo, cercado pela natureza.",
+                url: "https://sitiocantodamata.com.br",
+                image: "https://sitiocantodamata.com.br/og-image.jpg",
+                priceRange: "$$",
+              },
+            ],
+          }),
+        },
+      ],
     links: [
       { rel: "icon", type: "image/png", href: "/__l5e/assets-v1/d187e4ca-28bd-46db-ac48-8124e38124e1/favicon.png" },
       { rel: "apple-touch-icon", href: "/__l5e/assets-v1/d187e4ca-28bd-46db-ac48-8124e38124e1/favicon.png" },
