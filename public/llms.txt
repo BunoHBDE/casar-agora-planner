@@ -1,0 +1,7 @@
+# Sítio Canto da Mata
+
+> Espaço para casamentos no campo. Landing page para captura de leads qualificados e download da planilha gratuita de organização de casamento.
+
+## Pages
+
+- [Home](/): Formulário para receber a planilha gratuita de organização do casamento no Sítio Canto da Mata.
