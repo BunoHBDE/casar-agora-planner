@@ -92,8 +92,8 @@ function Landing() {
       } catch (err) {
         console.warn("reCAPTCHA execute falhou, seguindo sem token:", err);
       }
-      if (typeof fbq !== "undefined") {
-        fbq("track", "Lead");
+      if (typeof window.fbq !== "undefined") {
+        window.fbq("track", "Lead");
       }
       form.submit();
     } finally {
