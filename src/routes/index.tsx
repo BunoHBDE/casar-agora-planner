@@ -248,7 +248,16 @@ function Landing() {
             Seus dados são confidenciais. Sem spam.
           </p>
         </form>
-        <iframe name="lead-sink" title="lead-sink" hidden />
+        <iframe
+          name="lead-sink"
+          title="lead-sink"
+          hidden
+          onLoad={() => {
+            if (typeof fbq !== "undefined") {
+              fbq("track", "Lead");
+            }
+          }}
+        />
       </section>
 
 
