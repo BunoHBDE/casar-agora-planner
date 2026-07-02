@@ -254,8 +254,8 @@ function Landing() {
           title="lead-sink"
           hidden
           onLoad={() => {
-            if (typeof fbq !== "undefined") {
-              fbq("track", "Lead");
+            if (typeof window.fbq !== "undefined") {
+              window.fbq("track", "Lead");
             }
           }}
         />
