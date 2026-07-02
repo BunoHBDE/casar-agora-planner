@@ -34,6 +34,7 @@ declare global {
       ready: (cb: () => void) => void;
       execute: (siteKey: string, opts: { action: string }) => Promise<string>;
     };
+    fbq?: (...args: any[]) => void;
   }
 }
 
