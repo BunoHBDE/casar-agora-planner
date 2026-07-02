@@ -93,7 +93,6 @@ function Landing() {
         console.warn("reCAPTCHA execute falhou, seguindo sem token:", err);
       }
       if (typeof fbq !== "undefined") {
-        fb, err => {
         fbq("track", "Lead");
       }
       form.submit();
