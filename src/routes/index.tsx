@@ -34,6 +34,7 @@ declare global {
       ready: (cb: () => void) => void;
       execute: (siteKey: string, opts: { action: string }) => Promise<string>;
     };
+    fbq?: (...args: any[]) => void;
   }
 }
 
@@ -248,7 +249,16 @@ function Landing() {
             Seus dados são confidenciais. Sem spam.
           </p>
         </form>
-        <iframe name="lead-sink" title="lead-sink" hidden />
+        <iframe
+          name="lead-sink"
+          title="lead-sink"
+          hidden
+          onLoad={() => {
+            if (typeof window.fbq !== "undefined") {
+              window.fbq("track", "Lead");
+            }
+          }}
+        />
       </section>
 
 
