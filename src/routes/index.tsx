@@ -92,6 +92,10 @@ function Landing() {
       } catch (err) {
         console.warn("reCAPTCHA execute falhou, seguindo sem token:", err);
       }
+      if (typeof fbq !== "undefined") {
+        fb, err => {
+        fbq("track", "Lead");
+      }
       form.submit();
     } finally {
       window.setTimeout(() => {
@@ -253,11 +257,6 @@ function Landing() {
           name="lead-sink"
           title="lead-sink"
           hidden
-          onLoad={() => {
-            if (typeof window.fbq !== "undefined") {
-              window.fbq("track", "Lead");
-            }
-          }}
         />
       </section>
 
