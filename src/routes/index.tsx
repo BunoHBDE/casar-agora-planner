@@ -30,6 +30,15 @@ export const Route = createFileRoute("/")({
 const WHATSAPP_URL = "https://wa.me/5500000000000?text=Ol%C3%A1%2C%20quero%20agendar%20uma%20visita%20ao%20S%C3%ADtio%20Canto%20da%20Mata";
 const INSTAGRAM_URL = "#";
 
+// TODO: preencher com o endereço completo real (rua, número, bairro, CEP)
+const SITIO_ENDERECO = "Rua Exemplo, 000 — Bairro, São Lourenço da Serra - SP, CEP 06655-000";
+// TODO: se tiver o link do Google Maps do local (ex: pelo botão "Compartilhar" no app), me envie
+// para eu trocar por coordenadas exatas — fica mais preciso do que buscar só pelo texto do endereço.
+const SITIO_MAPS_QUERY = encodeURIComponent(SITIO_ENDERECO);
+const GOOGLE_MAPS_EMBED_URL = `https://www.google.com/maps?q=${SITIO_MAPS_QUERY}&output=embed`;
+const GOOGLE_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${SITIO_MAPS_QUERY}`;
+const WAZE_URL = `https://waze.com/ul?q=${SITIO_MAPS_QUERY}&navigate=yes`;
+
 const DIFERENCIAIS = [
   { titulo: "O altar sobre o lago", desc: "O cenário para um \"sim\" inesquecível, com o abraço da natureza." },
   { titulo: "Área gourmet e piscina", desc: "Espaço amplo e integrado para recepções leves." },
@@ -238,18 +247,43 @@ function Localizacao() {
         Fácil de chegar, longe da correria.
       </h2>
       <p className="mt-4 text-base text-foreground/80">
-        {/* TODO: preencher endereço completo */}
-        A 60 minutos de São Paulo, em São Lourenço da Serra. Entre em contato pelo
-        WhatsApp para receber a rota completa.
+        A 60 minutos de São Paulo, em São Lourenço da Serra.
       </p>
-      <a
-        href={WHATSAPP_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-8 inline-flex rounded-full border border-primary px-6 py-3 text-sm font-medium uppercase tracking-[0.14em] text-primary transition hover:bg-primary hover:text-primary-foreground"
-      >
-        Falar no WhatsApp
-      </a>
+
+      <div className="mt-8 overflow-hidden rounded-2xl border border-border/60">
+        <iframe
+          title="Localização do Sítio Canto da Mata"
+          src={GOOGLE_MAPS_EMBED_URL}
+          className="h-72 w-full sm:h-80"
+          style={{ border: 0 }}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+        />
+      </div>
+
+      <p className="mt-5 text-sm text-foreground/75">
+        {/* TODO: preencher endereço completo (rua, número, bairro, CEP) */}
+        {SITIO_ENDERECO}
+      </p>
+
+      <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <a
+          href={GOOGLE_MAPS_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full rounded-full bg-primary px-6 py-3 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary/90 sm:w-auto"
+        >
+          Abrir no Google Maps
+        </a>
+        <a
+          href={WAZE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full rounded-full border border-primary px-6 py-3 text-sm font-medium uppercase tracking-[0.14em] text-primary transition hover:bg-primary hover:text-primary-foreground sm:w-auto"
+        >
+          Abrir no Waze
+        </a>
+      </div>
     </section>
   );
 }
