@@ -1,297 +1,298 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import heroAsset from "@/assets/hero-venue.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "SÍTIO CANTO DA MATA — Espaço para Casamentos" },
+      { title: "Sítio Canto da Mata — Espaço para Casamentos no Campo" },
       {
         name: "description",
         content:
-          "Preencha o formulário e baixe gratuitamente a planilha completa de organização do seu casamento.",
+          "Sítio Canto da Mata: espaço para casamentos ao ar livre, cercado pela natureza. Estrutura completa, capela e hospedagem. Agende sua visita.",
       },
-      { property: "og:title", content: "SÍTIO CANTO DA MATA — Espaço para Casamentos" },
+      { property: "og:title", content: "Sítio Canto da Mata — Espaço para Casamentos no Campo" },
       {
         property: "og:description",
-        content: "Receba a planilha gratuita de organização do seu casamento.",
+        content:
+          "Casamentos ao ar livre, com estrutura completa em meio à natureza. Agende sua visita ao Sítio Canto da Mata.",
       },
+      { property: "og:url", content: "https://sitiocantodamata.com.br/" },
       { property: "og:image", content: heroAsset.url },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:image", content: heroAsset.url },
     ],
+    links: [{ rel: "canonical", href: "https://sitiocantodamata.com.br/" }],
   }),
-  component: Landing,
+  component: Home,
 });
 
-const WEBHOOK_URL =
-  "https://script.google.com/macros/s/AKfycbwyBLQ-qOJptRYAFhJZQOweCFh1PyYjuxerbkxUnnSKVxTc__YTduQB1H2bwymNjRdZ/exec";
-const RECAPTCHA_SITE_KEY = "6Ldrdz4tAAAAAFgIT_nPjD4mSBkNeGYxZY2Fe35B";
+// TODO: substituir por WhatsApp real
+const WHATSAPP_URL = "https://wa.me/5500000000000?text=Ol%C3%A1%2C%20quero%20agendar%20uma%20visita%20ao%20S%C3%ADtio%20Canto%20da%20Mata";
+const INSTAGRAM_URL = "#";
 
-declare global {
-  interface Window {
-    grecaptcha?: {
-      ready: (cb: () => void) => void;
-      execute: (siteKey: string, opts: { action: string }) => Promise<string>;
-    };
-    fbq?: (...args: any[]) => void;
-  }
+const DIFERENCIAIS = [
+  { titulo: "Cerimônia ao ar livre", desc: "Altar em meio à natureza, com vista para a mata." },
+  { titulo: "Salão coberto", desc: "Estrutura para receber convidados em qualquer estação." },
+  { titulo: "Hospedagem no local", desc: "Suítes para os noivos e familiares próximos." },
+  { titulo: "Área verde ampla", desc: "Jardins e espaços para fotos inesquecíveis." },
+  { titulo: "Estacionamento", desc: "Espaço amplo e sinalizado para os convidados." },
+  { titulo: "Suporte à produção", desc: "Infraestrutura para fornecedores e cerimonial." },
+];
+
+// Placeholder — trocar por fotos reais depois
+const GALERIA = Array.from({ length: 6 }, () => heroAsset.url);
+
+function Home() {
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <Header />
+      <Hero />
+      <Sobre />
+      <Estrutura />
+      <Galeria />
+      <Planilha />
+      <Localizacao />
+      <CTAFinal />
+      <Footer />
+    </div>
+  );
 }
 
-const ESTADOS = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
-const MESES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
-const ANOS = Array.from({ length: 6 }, (_, i) => String(2026 + i));
-const ORCAMENTOS = ["Até R$ 30 mil","R$ 30 mil – R$ 60 mil","R$ 60 mil – R$ 100 mil","R$ 100 mil – R$ 200 mil","Acima de R$ 200 mil"];
-
-function Landing() {
-  const [celular, setCelular] = useState("");
-  const [consent, setConsent] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
-  const tokenInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    const SCRIPT_ID = "recaptcha-v3-script";
-    if (document.getElementById(SCRIPT_ID)) return;
-    const s = document.createElement("script");
-    s.id = SCRIPT_ID;
-    s.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`;
-    s.async = true;
-    s.defer = true;
-    document.head.appendChild(s);
-  }, []);
-
-  const maskCelular = (raw: string) => {
-    const digits = raw.replace(/\D/g, "").slice(0, 11);
-    if (digits.length <= 2) return `(${digits}`;
-    if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
-    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
-  };
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const form = e.currentTarget;
-    setLoading(true);
-    try {
-      try {
-        if (window.grecaptcha?.execute) {
-          const tokenPromise = new Promise<string>((resolve, reject) => {
-            window.grecaptcha!.ready(() => {
-              window
-                .grecaptcha!.execute(RECAPTCHA_SITE_KEY, { action: "submit" })
-                .then(resolve)
-                .catch(reject);
-            });
-          });
-          const timeout = new Promise<string>((_, reject) =>
-            window.setTimeout(() => reject(new Error("recaptcha timeout")), 3000)
-          );
-          const token = await Promise.race([tokenPromise, timeout]);
-          if (tokenInputRef.current) tokenInputRef.current.value = token;
-        }
-      } catch (err) {
-        console.warn("reCAPTCHA execute falhou, seguindo sem token:", err);
-      }
-      if (typeof window.fbq !== "undefined") {
-        window.fbq("track", "Lead");
-      }
-      form.submit();
-    } finally {
-      window.setTimeout(() => {
-        window.location.href = "/download";
-      }, 1200);
-    }
-  }
-
-
-
+function Header() {
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      {/* Hero */}
-      <section className="relative isolate">
-        <div className="absolute inset-0 -z-10 overflow-hidden">
-          <img
-            src={heroAsset.url}
-            alt=""
-            width={1600}
-            height={1200}
-            fetchPriority="high"
-            decoding="async"
-            className="h-full w-full scale-110 object-cover blur-sm"
-          />
-          <div className="absolute inset-0 bg-primary/45" />
-          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-background" />
-        </div>
-        <div className="mx-auto max-w-2xl px-6 pt-20 pb-28 text-center text-primary-foreground sm:pt-28 sm:pb-36" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.45)' }}>
-          <span className="text-[11px] uppercase tracking-[0.24em] text-primary-foreground/80">
-            SÍTIO CANTO DA MATA
-          </span>
-          <h1 className="mt-4 font-serif text-3xl leading-tight sm:text-5xl">
-            Planeje o seu casamento com tranquilidade.
-          </h1>
-          <p className="mx-auto mt-4 max-w-md text-sm text-primary-foreground/90 sm:text-base">
-            Preencha o formulário e baixe gratuitamente a nossa planilha completa de organização.
-          </p>
-        </div>
-      </section>
-
-      {/* Form */}
-      <section className="mx-auto -mt-20 max-w-xl px-4 pb-16 sm:-mt-24 sm:px-6 sm:pb-24">
-        <form
-          ref={formRef}
-          action={WEBHOOK_URL}
-          method="post"
-          target="lead-sink"
-          onSubmit={handleSubmit}
-          className="rounded-2xl border border-border/60 bg-card p-5 shadow-soft sm:p-8"
+    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/85 backdrop-blur">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <a href="#top" className="font-serif text-lg tracking-wide text-primary">
+          Sítio Canto da Mata
+        </a>
+        <nav className="hidden gap-7 text-sm text-foreground/80 md:flex">
+          <a href="#sobre" className="hover:text-primary">Sobre</a>
+          <a href="#estrutura" className="hover:text-primary">Estrutura</a>
+          <a href="#galeria" className="hover:text-primary">Galeria</a>
+          <a href="#localizacao" className="hover:text-primary">Localização</a>
+        </nav>
+        <Link
+          to="/lp"
+          className="hidden rounded-full bg-primary px-4 py-2 text-xs font-medium uppercase tracking-[0.14em] text-primary-foreground hover:bg-primary/90 sm:inline-flex"
         >
-          <input ref={tokenInputRef} type="hidden" name="g-recaptcha-response" />
+          Planilha grátis
+        </Link>
+      </div>
+    </header>
+  );
+}
 
-          <h2 className="font-serif text-xl text-primary sm:text-2xl">Receba a planilha gratuita</h2>
-          <p className="mt-1 text-sm text-muted-foreground">Leva menos de 1 minuto.</p>
-
-          <div className="mt-6 grid gap-4">
-            <Field label="Nome completo">
-              <input required name="nome" className={inputCls} placeholder="Seu nome" />
-            </Field>
-            <Field label="E-mail">
-              <input required type="email" inputMode="email" name="email" className={inputCls} placeholder="voce@email.com" />
-            </Field>
-            <Field label="Celular">
-              <input
-                required
-                type="tel"
-                inputMode="tel"
-                name="celular"
-                value={celular}
-                onChange={(e) => setCelular(maskCelular(e.target.value))}
-                className={inputCls}
-                placeholder="(11) 99999-9999"
-              />
-            </Field>
-            <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_110px]">
-              <Field label="Cidade">
-                <input required name="cidade" className={inputCls} placeholder="Cidade" />
-              </Field>
-              <Field label="Estado">
-                <select required name="estado" defaultValue="" className={inputCls}>
-                  <option value="">UF</option>
-                  {ESTADOS.map((uf) => <option key={uf} value={uf}>{uf}</option>)}
-                </select>
-              </Field>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Mês previsto">
-                <select required name="mes" defaultValue="" className={inputCls}>
-                  <option value="">Selecione…</option>
-                  {MESES.map((m) => <option key={m} value={m}>{m}</option>)}
-                </select>
-              </Field>
-              <Field label="Ano previsto">
-                <select required name="ano" defaultValue="" className={inputCls}>
-                  <option value="">Selecione…</option>
-                  {ANOS.map((a) => <option key={a} value={a}>{a}</option>)}
-                </select>
-              </Field>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Convidados">
-                <input required type="number" inputMode="numeric" min={1} name="convidados" className={inputCls} placeholder="80" />
-              </Field>
-              <Field label="Orçamento">
-                <select required name="orcamento" defaultValue="" className={inputCls}>
-                  <option value="">Selecione…</option>
-                  {ORCAMENTOS.map((o) => <option key={o} value={o}>{o}</option>)}
-                </select>
-              </Field>
-            </div>
-
-            <fieldset className="mt-2">
-              <legend className="mb-2 block text-xs font-medium uppercase tracking-[0.1em] text-muted-foreground">
-                Em qual fase do planejamento você está?
-              </legend>
-              <div className="grid gap-2.5">
-                <RadioOption value="inicial" label="Estou na fase inicial, apenas pesquisando valores" />
-                <RadioOption value="visitas" label="Já comecei as visitas, mas continuo pesquisando os locais" />
-                <RadioOption value="ultimas_visitas" label="Estou fazendo as últimas visitas e pronta para fechar" />
-                <RadioOption value="contratado" label="Já contratei o espaço, seguindo com o restante da organização" />
-              </div>
-            </fieldset>
-          </div>
-
-          <label className="mt-5 flex cursor-pointer items-start gap-3">
-            <input
-              type="checkbox"
-              name="consentimento_lgpd"
-              required
-              checked={consent}
-              onChange={(e) => setConsent(e.target.checked)}
-              className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-primary"
-            />
-            <span className="text-xs leading-relaxed text-muted-foreground">
-              Concordo em receber conteúdo sobre casamentos e autorizo o uso dos meus dados para contato, conforme a <strong>LGPD</strong>.
-            </span>
-          </label>
-
-          <p className="mt-4 text-center text-[10px] leading-relaxed text-muted-foreground">
-            Protegido por reCAPTCHA · <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="underline">Privacidade</a> · <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" className="underline">Termos</a>
-          </p>
-
-
-
-
-
-          <button
-            type="submit"
-            disabled={loading || !consent}
-            className="mt-5 w-full rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
-          >
-            {loading ? "Enviando…" : "Quero a planilha"}
-          </button>
-          <p className="mt-3 text-center text-xs text-muted-foreground">
-            Seus dados são confidenciais. Sem spam.
-          </p>
-        </form>
-        <iframe
-          name="lead-sink"
-          title="lead-sink"
-          hidden
+function Hero() {
+  return (
+    <section id="top" className="relative isolate">
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <img
+          src={heroAsset.url}
+          alt="Sítio Canto da Mata"
+          className="h-full w-full object-cover"
+          fetchPriority="high"
         />
-      </section>
-
-
-      <footer className="border-t border-border/60">
-        <div className="mx-auto max-w-xl px-6 py-6 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} SÍTIO CANTO DA MATA
+        <div className="absolute inset-0 bg-primary/50" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-background" />
+      </div>
+      <div
+        className="mx-auto max-w-3xl px-6 pt-32 pb-40 text-center text-primary-foreground sm:pt-40 sm:pb-48"
+        style={{ textShadow: "0 2px 16px rgba(0,0,0,0.45)" }}
+      >
+        <span className="text-[11px] uppercase tracking-[0.28em] text-primary-foreground/85">
+          Espaço para casamentos
+        </span>
+        <h1 className="mt-5 font-serif text-4xl leading-tight sm:text-6xl">
+          Um refúgio no campo para o seu grande dia.
+        </h1>
+        <p className="mx-auto mt-5 max-w-xl text-sm text-primary-foreground/90 sm:text-base">
+          Cerimônias ao ar livre, estrutura completa e hospedagem em meio à natureza.
+          Um lugar preparado para transformar o seu casamento em memória para a vida toda.
+        </p>
+        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full rounded-full bg-primary-foreground px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary transition hover:bg-primary-foreground/90 sm:w-auto"
+          >
+            Agende uma visita
+          </a>
+          <Link
+            to="/lp"
+            className="w-full rounded-full border border-primary-foreground/70 px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary-foreground/10 sm:w-auto"
+          >
+            Baixe a planilha grátis
+          </Link>
         </div>
-      </footer>
-    </main>
+      </div>
+    </section>
   );
 }
 
-const inputCls =
-  "h-11 w-full rounded-md border border-input bg-background px-3 text-base text-foreground outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/20 sm:text-sm";
-
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Sobre() {
   return (
-    <label className="block">
-      <span className="mb-1.5 block text-xs font-medium uppercase tracking-[0.1em] text-muted-foreground">{label}</span>
-      {children}
-    </label>
+    <section id="sobre" className="mx-auto max-w-3xl px-6 py-20 text-center sm:py-28">
+      <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">Sobre o espaço</span>
+      <h2 className="mt-4 font-serif text-3xl text-primary sm:text-4xl">
+        Natureza, acolhimento e liberdade para celebrar.
+      </h2>
+      <p className="mt-6 text-base leading-relaxed text-foreground/80">
+        O Sítio Canto da Mata é um espaço pensado para casais que sonham com um
+        casamento no campo, longe do barulho da cidade e cercado por verde. Aqui,
+        cada detalhe da estrutura foi preparado para que você, sua família e seus
+        convidados vivam um dia leve, bonito e memorável.
+      </p>
+    </section>
   );
 }
 
-function RadioOption({ value, label, name = "fase" }: { value: string; label: string; name?: string }) {
+function Estrutura() {
   return (
-    <label className="flex cursor-pointer items-start gap-3 rounded-md border border-input bg-background p-3 transition hover:bg-muted/30 has-[:checked]:border-primary has-[:checked]:ring-1 has-[:checked]:ring-primary/30">
-      <input
-        type="radio"
-        name={name}
-        value={value}
-        required
-        className="mt-0.5 h-4 w-4 shrink-0 accent-primary"
-      />
-      <span className="text-sm text-foreground">{label}</span>
-    </label>
+    <section id="estrutura" className="border-y border-border/60 bg-secondary/40 py-20 sm:py-28">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="text-center">
+          <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">Estrutura</span>
+          <h2 className="mt-4 font-serif text-3xl text-primary sm:text-4xl">
+            Tudo o que o seu casamento precisa em um só lugar.
+          </h2>
+        </div>
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {DIFERENCIAIS.map((d) => (
+            <article
+              key={d.titulo}
+              className="rounded-2xl border border-border/60 bg-card p-6 shadow-soft/40"
+            >
+              <h3 className="font-serif text-xl text-primary">{d.titulo}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-foreground/75">{d.desc}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Galeria() {
+  return (
+    <section id="galeria" className="mx-auto max-w-6xl px-6 py-20 sm:py-28">
+      <div className="text-center">
+        <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">Galeria</span>
+        <h2 className="mt-4 font-serif text-3xl text-primary sm:text-4xl">
+          Um passeio pelo sítio.
+        </h2>
+        <p className="mt-3 text-sm text-muted-foreground">
+          Em breve, mais fotos do espaço, cerimônias e detalhes.
+        </p>
+      </div>
+      <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {GALERIA.map((src, i) => (
+          <div key={i} className="aspect-[4/3] overflow-hidden rounded-xl bg-muted">
+            <img
+              src={src}
+              alt={`Sítio Canto da Mata — foto ${i + 1}`}
+              loading="lazy"
+              className="h-full w-full object-cover transition duration-500 hover:scale-105"
+            />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Planilha() {
+  return (
+    <section className="bg-primary text-primary-foreground">
+      <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 px-6 py-16 text-center sm:flex-row sm:justify-between sm:text-left">
+        <div className="max-w-lg">
+          <span className="text-[11px] uppercase tracking-[0.24em] text-primary-foreground/70">
+            Planilha gratuita
+          </span>
+          <h2 className="mt-3 font-serif text-2xl sm:text-3xl">
+            Baixe a planilha completa de organização do seu casamento.
+          </h2>
+          <p className="mt-2 text-sm text-primary-foreground/85">
+            Checklists, cronograma, orçamento e tudo que você precisa em um só lugar.
+          </p>
+        </div>
+        <Link
+          to="/lp"
+          className="rounded-full bg-primary-foreground px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary transition hover:bg-primary-foreground/90"
+        >
+          Quero a planilha
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+function Localizacao() {
+  return (
+    <section id="localizacao" className="mx-auto max-w-3xl px-6 py-20 text-center sm:py-28">
+      <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">Localização</span>
+      <h2 className="mt-4 font-serif text-3xl text-primary sm:text-4xl">
+        Fácil de chegar, longe da correria.
+      </h2>
+      <p className="mt-4 text-base text-foreground/80">
+        {/* TODO: preencher endereço real */}
+        Endereço em breve. Entre em contato pelo WhatsApp para receber a rota completa.
+      </p>
+      <a
+        href={WHATSAPP_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-8 inline-flex rounded-full border border-primary px-6 py-3 text-sm font-medium uppercase tracking-[0.14em] text-primary transition hover:bg-primary hover:text-primary-foreground"
+      >
+        Falar no WhatsApp
+      </a>
+    </section>
+  );
+}
+
+function CTAFinal() {
+  return (
+    <section className="relative isolate overflow-hidden">
+      <div className="absolute inset-0 -z-10">
+        <img src={heroAsset.url} alt="" className="h-full w-full object-cover" loading="lazy" />
+        <div className="absolute inset-0 bg-primary/70" />
+      </div>
+      <div
+        className="mx-auto max-w-2xl px-6 py-24 text-center text-primary-foreground"
+        style={{ textShadow: "0 2px 14px rgba(0,0,0,0.45)" }}
+      >
+        <h2 className="font-serif text-3xl sm:text-4xl">Vamos conhecer o seu sonho?</h2>
+        <p className="mx-auto mt-4 max-w-md text-sm text-primary-foreground/90">
+          Agende uma visita e sinta a atmosfera do Sítio Canto da Mata.
+        </p>
+        <a
+          href={WHATSAPP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-8 inline-flex rounded-full bg-primary-foreground px-8 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary transition hover:bg-primary-foreground/90"
+        >
+          Agendar visita
+        </a>
+      </div>
+    </section>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="border-t border-border/60 bg-background">
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-xs text-muted-foreground sm:flex-row">
+        <p>© {new Date().getFullYear()} Sítio Canto da Mata</p>
+        <div className="flex gap-5">
+          <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="hover:text-primary">
+            Instagram
+          </a>
+          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="hover:text-primary">
+            WhatsApp
+          </a>
+          <Link to="/lp" className="hover:text-primary">Planilha grátis</Link>
+        </div>
+      </div>
+    </footer>
   );
 }
