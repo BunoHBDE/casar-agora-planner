@@ -30,14 +30,12 @@ export const Route = createFileRoute("/")({
 const WHATSAPP_URL = "https://wa.me/5500000000000?text=Ol%C3%A1%2C%20quero%20agendar%20uma%20visita%20ao%20S%C3%ADtio%20Canto%20da%20Mata";
 const INSTAGRAM_URL = "#";
 
-// TODO: preencher com o endereço completo real (rua, número, bairro, CEP)
-const SITIO_ENDERECO = "Rua Exemplo, 000 — Bairro, São Lourenço da Serra - SP, CEP 06655-000";
-// TODO: se tiver o link do Google Maps do local (ex: pelo botão "Compartilhar" no app), me envie
-// para eu trocar por coordenadas exatas — fica mais preciso do que buscar só pelo texto do endereço.
-const SITIO_MAPS_QUERY = encodeURIComponent(SITIO_ENDERECO);
-const GOOGLE_MAPS_EMBED_URL = `https://www.google.com/maps?q=${SITIO_MAPS_QUERY}&output=embed`;
-const GOOGLE_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${SITIO_MAPS_QUERY}`;
-const WAZE_URL = `https://waze.com/ul?q=${SITIO_MAPS_QUERY}&navigate=yes`;
+const SITIO_ENDERECO = "Dos Tigres, 100 - Pereiras, São Lourenço da Serra - SP, 06890-000";
+const SITIO_LAT = -23.8464778;
+const SITIO_LNG = -46.9028855;
+const GOOGLE_MAPS_EMBED_URL = `https://www.google.com/maps?q=${SITIO_LAT},${SITIO_LNG}&hl=pt-BR&z=15&output=embed`;
+const GOOGLE_MAPS_URL = "https://maps.app.goo.gl/Hi3gP8wreiHrvFAP8";
+const WAZE_URL = "https://www.waze.com/en/live-map/directions/sitio-canto-da-mata-sao-lourenco-da-serra?place=w.205194778.2051947775.41039786";
 
 const DIFERENCIAIS = [
   { titulo: "O altar sobre o lago", desc: "O cenário para um \"sim\" inesquecível, com o abraço da natureza." },
@@ -262,7 +260,6 @@ function Localizacao() {
       </div>
 
       <p className="mt-5 text-sm text-foreground/75">
-        {/* TODO: preencher endereço completo (rua, número, bairro, CEP) */}
         {SITIO_ENDERECO}
       </p>
 
