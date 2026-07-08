@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroAsset from "@/assets/hero-venue.jpg.asset.json";
+import { GOOGLE_MAPS_ICON, WAZE_ICON } from "@/assets/map-icons";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -263,22 +264,26 @@ function Localizacao() {
         {SITIO_ENDERECO}
       </p>
 
-      <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+      <div className="mt-6 flex items-center justify-center gap-4">
         <a
           href={GOOGLE_MAPS_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full rounded-full bg-primary px-6 py-3 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary/90 sm:w-auto"
+          aria-label="Abrir no Google Maps"
+          title="Abrir no Google Maps"
+          className="flex h-14 w-14 items-center justify-center rounded-full border border-border/60 bg-card shadow-soft/40 transition hover:scale-105 hover:border-primary"
         >
-          Abrir no Google Maps
+          <img src={GOOGLE_MAPS_ICON} alt="Google Maps" className="h-8 w-8" />
         </a>
         <a
           href={WAZE_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full rounded-full border border-primary px-6 py-3 text-sm font-medium uppercase tracking-[0.14em] text-primary transition hover:bg-primary hover:text-primary-foreground sm:w-auto"
+          aria-label="Abrir no Waze"
+          title="Abrir no Waze"
+          className="flex h-14 w-14 items-center justify-center rounded-full border border-border/60 bg-card shadow-soft/40 transition hover:scale-105 hover:border-primary"
         >
-          Abrir no Waze
+          <img src={WAZE_ICON} alt="Waze" className="h-8 w-8" />
         </a>
       </div>
     </section>
