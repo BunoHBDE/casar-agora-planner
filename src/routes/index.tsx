@@ -31,12 +31,12 @@ const WHATSAPP_URL = "https://wa.me/5500000000000?text=Ol%C3%A1%2C%20quero%20age
 const INSTAGRAM_URL = "#";
 
 const DIFERENCIAIS = [
-  { titulo: "Cerimônia ao ar livre", desc: "Altar em meio à natureza, com vista para a mata." },
-  { titulo: "Salão coberto", desc: "Estrutura para receber convidados em qualquer estação." },
-  { titulo: "Hospedagem no local", desc: "Suítes para os noivos e familiares próximos." },
-  { titulo: "Área verde ampla", desc: "Jardins e espaços para fotos inesquecíveis." },
-  { titulo: "Estacionamento", desc: "Espaço amplo e sinalizado para os convidados." },
-  { titulo: "Suporte à produção", desc: "Infraestrutura para fornecedores e cerimonial." },
+  { titulo: "O altar sobre o lago", desc: "Um altar orgânico para um \"sim\" inesquecível, sob o céu aberto e a moldura da mata." },
+  { titulo: "Área gourmet e piscina", desc: "A \"sala de estar\" da celebração — espaço amplo e integrado para recepções leves e descontraídas." },
+  { titulo: "Exclusividade total", desc: "Apenas um evento por dia. O sítio é inteiramente seu, garantindo privacidade absoluta." },
+  { titulo: "Varandas e decks", desc: "Cantinhos de contemplação para conversas íntimas e registros fotográficos espontâneos." },
+  { titulo: "Estacionamento privativo", desc: "Espaço amplo e seguro para os convidados." },
+  { titulo: "Mobiliário e equipe de apoio", desc: "Bancos de madeira, mesas rústicas e equipe de apoio no dia do seu casamento." },
 ];
 
 // Placeholder — trocar por fotos reais depois
@@ -103,11 +103,11 @@ function Hero() {
           Espaço para casamentos
         </span>
         <h1 className="mt-5 font-serif text-4xl leading-tight sm:text-6xl">
-          Um refúgio no campo para o seu grande dia.
+          Onde a história de vocês floresce no aconchego de um lar.
         </h1>
         <p className="mx-auto mt-5 max-w-xl text-sm text-primary-foreground/90 sm:text-base">
-          Cerimônias ao ar livre, estrutura completa e hospedagem em meio à natureza.
-          Um lugar preparado para transformar o seu casamento em memória para a vida toda.
+          Casamentos diurnos e intimistas, para até 100 convidados, em meio à
+          Mata Atlântica — a apenas 60 minutos de São Paulo.
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <a
@@ -130,19 +130,35 @@ function Hero() {
   );
 }
 
+const SOBRE_DESTAQUES = [
+  { titulo: "50 mil m² de mata", desc: "Natureza preservada como moldura para o seu \"sim\"." },
+  { titulo: "60 min de São Paulo", desc: "Um refúgio de paz a poucos quilômetros da capital." },
+  { titulo: "Um lar aberto", desc: "Onde a intimidade e a autenticidade florescem." },
+];
+
 function Sobre() {
   return (
     <section id="sobre" className="mx-auto max-w-3xl px-6 py-20 text-center sm:py-28">
       <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">Sobre o espaço</span>
       <h2 className="mt-4 font-serif text-3xl text-primary sm:text-4xl">
-        Natureza, acolhimento e liberdade para celebrar.
+        Um refúgio com alma e memórias.
       </h2>
       <p className="mt-6 text-base leading-relaxed text-foreground/80">
-        O Sítio Canto da Mata é um espaço pensado para casais que sonham com um
-        casamento no campo, longe do barulho da cidade e cercado por verde. Aqui,
-        cada detalhe da estrutura foi preparado para que você, sua família e seus
-        convidados vivam um dia leve, bonito e memorável.
+        Este pedaço de paraíso, uma antiga fazenda da década de 1980, é cultivado
+        com o carinho de quem cuida do próprio quintal. No Sítio Canto da Mata, o
+        tempo desacelera e cada detalhe sussurra memórias: o cheiro da terra se
+        mistura ao do café fresco, e a brisa da Mata Atlântica embala sonhos. Para
+        nós, celebrar o amor é um ato simples, sincero e profundamente
+        significativo — é permitir que a natureza seja a grande anfitriã.
       </p>
+      <div className="mt-10 grid gap-6 text-left sm:grid-cols-3">
+        {SOBRE_DESTAQUES.map((d) => (
+          <div key={d.titulo}>
+            <p className="font-serif text-lg text-primary">{d.titulo}</p>
+            <p className="mt-1 text-sm leading-relaxed text-foreground/75">{d.desc}</p>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }
@@ -235,8 +251,9 @@ function Localizacao() {
         Fácil de chegar, longe da correria.
       </h2>
       <p className="mt-4 text-base text-foreground/80">
-        {/* TODO: preencher endereço real */}
-        Endereço em breve. Entre em contato pelo WhatsApp para receber a rota completa.
+        {/* TODO: preencher endereço completo */}
+        A 60 minutos de São Paulo, em São Lourenço da Serra. Entre em contato pelo
+        WhatsApp para receber a rota completa.
       </p>
       <a
         href={WHATSAPP_URL}
