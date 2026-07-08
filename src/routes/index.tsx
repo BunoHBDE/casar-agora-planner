@@ -31,12 +31,12 @@ const WHATSAPP_URL = "https://wa.me/5500000000000?text=Ol%C3%A1%2C%20quero%20age
 const INSTAGRAM_URL = "#";
 
 const DIFERENCIAIS = [
-  { titulo: "O altar sobre o lago", desc: "Um altar orgânico para um \"sim\" inesquecível, sob o céu aberto e a moldura da mata." },
-  { titulo: "Área gourmet e piscina", desc: "A \"sala de estar\" da celebração — espaço amplo e integrado para recepções leves e descontraídas." },
-  { titulo: "Exclusividade total", desc: "Apenas um evento por dia. O sítio é inteiramente seu, garantindo privacidade absoluta." },
-  { titulo: "Varandas e decks", desc: "Cantinhos de contemplação para conversas íntimas e registros fotográficos espontâneos." },
-  { titulo: "Estacionamento privativo", desc: "Espaço amplo e seguro para os convidados." },
-  { titulo: "Mobiliário e equipe de apoio", desc: "Bancos de madeira, mesas rústicas e equipe de apoio no dia do seu casamento." },
+  { titulo: "O altar sobre o lago", desc: "O cenário para um \"sim\" inesquecível, com o abraço da natureza." },
+  { titulo: "Área gourmet e piscina", desc: "Espaço amplo e integrado para recepções leves." },
+  { titulo: "Exclusividade total", desc: "Apenas um evento por dia, privacidade absoluta." },
+  { titulo: "Varandas e decks", desc: "Cantinhos de contemplação e fotos espontâneas." },
+  { titulo: "Estacionamento privativo", desc: "Espaço amplo e seguro." },
+  { titulo: "Mobiliário e equipe de apoio", desc: "Bancos, mesas, cadeiras e equipe no dia." },
 ];
 
 // Placeholder — trocar por fotos reais depois
@@ -106,7 +106,6 @@ function Hero() {
           Um refúgio no campo para o seu grande dia.
         </h1>
         <p className="mx-auto mt-5 max-w-xl text-sm text-primary-foreground/90 sm:text-base">
-          Cerimônias ao ar livre, estrutura completa e hospedagem em meio à natureza.
           Um lugar preparado para transformar o seu casamento em memória para a vida toda.
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -135,13 +134,17 @@ function Sobre() {
     <section id="sobre" className="mx-auto max-w-3xl px-6 py-20 text-center sm:py-28">
       <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">Sobre o espaço</span>
       <h2 className="mt-4 font-serif text-3xl text-primary sm:text-4xl">
-        Natureza, acolhimento e liberdade para celebrar.
+        O Sítio Canto da Mata
       </h2>
       <p className="mt-6 text-base leading-relaxed text-foreground/80">
-        O Sítio Canto da Mata é um espaço pensado para casais que sonham com um
-        casamento no campo, longe do barulho da cidade e cercado por verde. Aqui,
-        cada detalhe da estrutura foi preparado para que você, sua família e seus
-        convidados vivam um dia leve, bonito e memorável.
+        Este pedaço de paraíso, uma antiga fazenda da década de 1980, e o
+        cultivamos com o carinho de quem cuida do próprio quintal. No Sítio
+        Canto da Mata, o tempo desacelera e cada detalhe sussurra memórias.
+        Aqui, o cheiro da terra se mistura ao do café fresco, e a brisa da
+        Mata Atlântica embala sonhos. Para nós, celebrar o amor é um ato
+        simples, sincero e profundamente significativo. É permitir que a
+        natureza seja a grande anfitriã, preparando o cenário perfeito para o
+        seu sonho.
       </p>
     </section>
   );
@@ -154,7 +157,7 @@ function Estrutura() {
         <div className="text-center">
           <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">Estrutura</span>
           <h2 className="mt-4 font-serif text-3xl text-primary sm:text-4xl">
-            Tudo o que o seu casamento precisa em um só lugar.
+            Estrutura
           </h2>
         </div>
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
