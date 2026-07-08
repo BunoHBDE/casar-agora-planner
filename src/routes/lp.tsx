@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import heroAsset from "@/assets/hero-venue.jpg.asset.json";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/lp")({
   head: () => ({
     meta: [
       { title: "SÍTIO CANTO DA MATA — Espaço para Casamentos" },
