@@ -156,19 +156,17 @@ function Hero() {
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#contato"
             className="w-full rounded-full bg-primary-foreground px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary transition hover:bg-primary-foreground/90 sm:w-auto"
           >
             Agende uma visita
           </a>
-          <Link
-            to="/lp"
+          <a
+            href="#planilha"
             className="w-full rounded-full border border-primary-foreground/70 px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary-foreground/10 sm:w-auto"
           >
-            Baixe a planilha grátis
-          </Link>
+            Dicas e Materiais
+          </a>
         </div>
       </div>
     </section>
@@ -251,7 +249,7 @@ function Galeria() {
 
 function Planilha() {
   return (
-    <section className="bg-primary text-primary-foreground">
+    <section id="planilha" className="bg-primary text-primary-foreground">
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 px-6 py-16 text-center sm:flex-row sm:justify-between sm:text-left">
         <div className="max-w-lg">
           <span className="text-[11px] uppercase tracking-[0.24em] text-primary-foreground/70">
