@@ -79,12 +79,6 @@ function Header() {
           <a href="#galeria" className="hover:text-primary">Galeria</a>
           <a href="#localizacao" className="hover:text-primary">Localização</a>
         </nav>
-        <Link
-          to="/lp"
-          className="hidden rounded-full bg-primary px-4 py-2 text-xs font-medium uppercase tracking-[0.14em] text-primary-foreground hover:bg-primary/90 sm:inline-flex"
-        >
-          Planilha grátis
-        </Link>
       </div>
     </header>
   );
