@@ -1,4 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
 import heroAsset from "@/assets/hero-venue.jpg.asset.json";
 import { GOOGLE_MAPS_ICON, WAZE_ICON } from "@/assets/map-icons";
 
@@ -66,20 +68,58 @@ function Home() {
   );
 }
 
+const NAV_LINKS = [
+  { href: "#sobre", label: "Sobre" },
+  { href: "#estrutura", label: "Estrutura" },
+  { href: "#galeria", label: "Galeria" },
+  { href: "#localizacao", label: "Localização" },
+];
+
 function Header() {
+  const [open, setOpen] = useState(false);
+
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/85 backdrop-blur">
-      <div className="mx-auto grid max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 py-4">
-        <a href="#top" className="justify-self-start font-serif text-lg tracking-wide text-primary">
+      <div className="relative mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <a href="#top" className="font-serif text-lg tracking-wide text-primary">
           Sítio Canto da Mata
         </a>
-        <nav className="col-start-2 hidden gap-7 text-sm text-foreground/80 md:flex">
-          <a href="#sobre" className="hover:text-primary">Sobre</a>
-          <a href="#estrutura" className="hover:text-primary">Estrutura</a>
-          <a href="#galeria" className="hover:text-primary">Galeria</a>
-          <a href="#localizacao" className="hover:text-primary">Localização</a>
+
+        <nav className="absolute left-1/2 hidden -translate-x-1/2 gap-7 text-sm text-foreground/80 md:flex">
+          {NAV_LINKS.map((link) => (
+            <a key={link.href} href={link.href} className="hover:text-primary">
+              {link.label}
+            </a>
+          ))}
         </nav>
+
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-label={open ? "Fechar menu" : "Abrir menu"}
+          aria-expanded={open}
+          className="flex h-9 w-9 items-center justify-center text-primary md:hidden"
+        >
+          {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
       </div>
+
+      {open && (
+        <nav className="border-t border-border/60 bg-background px-6 py-4 md:hidden">
+          <div className="flex flex-col gap-4 text-sm text-foreground/80">
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={() => setOpen(false)}
+                className="hover:text-primary"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </nav>
+      )}
     </header>
   );
 }
