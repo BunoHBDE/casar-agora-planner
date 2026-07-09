@@ -76,6 +76,7 @@ const NAV_LINKS = [
   { href: "#estrutura", label: "Estrutura" },
   { href: "#galeria", label: "Galeria" },
   { href: "#localizacao", label: "Localização" },
+  { href: "#contato", label: "Contato" },
 ];
 
 function Header() {
