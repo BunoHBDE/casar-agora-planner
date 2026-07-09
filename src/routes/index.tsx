@@ -197,7 +197,6 @@ function Estrutura() {
     <section id="estrutura" className="border-y border-border/60 bg-secondary/40 py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-6">
         <div className="text-center">
-          <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">Estrutura</span>
           <h2 className="mt-4 font-serif text-3xl text-primary sm:text-4xl">
             Estrutura
           </h2>
