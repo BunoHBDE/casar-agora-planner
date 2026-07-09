@@ -69,11 +69,11 @@ function Home() {
 function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/85 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <a href="#top" className="font-serif text-lg tracking-wide text-primary">
+      <div className="mx-auto grid max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 py-4">
+        <a href="#top" className="justify-self-start font-serif text-lg tracking-wide text-primary">
           Sítio Canto da Mata
         </a>
-        <nav className="hidden gap-7 text-sm text-foreground/80 md:flex">
+        <nav className="col-start-2 hidden gap-7 text-sm text-foreground/80 md:flex">
           <a href="#sobre" className="hover:text-primary">Sobre</a>
           <a href="#estrutura" className="hover:text-primary">Estrutura</a>
           <a href="#galeria" className="hover:text-primary">Galeria</a>
