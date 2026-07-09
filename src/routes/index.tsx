@@ -36,7 +36,7 @@ const INSTAGRAM_URL = "#";
 const MESES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 const ANOS = Array.from({ length: 6 }, (_, i) => String(2026 + i));
 
-const SITIO_ENDERECO = "Dos Tigres, 100 - Pereiras, São Lourenço da Serra - SP, 06890-000";
+const SITIO_ENDERECO = "Estrada Dos Tigres, 100 - Pereiras, São Lourenço da Serra - SP, 06890-000";
 const SITIO_LAT = -23.8464778;
 const SITIO_LNG = -46.9028855;
 const GOOGLE_MAPS_EMBED_URL = `https://www.google.com/maps?q=${SITIO_LAT},${SITIO_LNG}&hl=pt-BR&z=15&output=embed`;
@@ -148,7 +148,7 @@ function Hero() {
           Espaço para casamentos
         </span>
         <h1 className="mt-5 font-serif text-4xl leading-tight sm:text-6xl">
-          Um refúgio no campo para o seu grande dia.
+          Um refúgio no campo para o seu grande dia
         </h1>
         <p className="mx-auto mt-5 max-w-xl text-sm text-primary-foreground/90 sm:text-base">
           Um lugar preparado para transformar o seu casamento em memória para a vida toda.
@@ -185,8 +185,8 @@ function Sobre() {
         Este pedaço de paraíso, uma antiga fazenda da década de 1980, e o
         cultivamos com o carinho de quem cuida do próprio quintal. No Sítio
         Canto da Mata, o tempo desacelera e cada detalhe sussurra memórias.
-        Aqui, o cheiro da terra se mistura ao do café fresco, e a brisa da
-        Mata Atlântica embala sonhos. Para nós, celebrar o amor é um ato
+        Aqui, o cheiro da terra se mistura ao do café fresco, e a brisa do
+        vento embala sonhos. Para nós, celebrar o amor é um ato
         simples, sincero e profundamente significativo. É permitir que a
         natureza seja a grande anfitriã, preparando o cenário perfeito para o
         seu sonho.
@@ -229,7 +229,7 @@ function Galeria() {
           Um passeio pelo sítio.
         </h2>
         <p className="mt-3 text-sm text-muted-foreground">
-          Em breve, mais fotos do espaço, cerimônias e detalhes.
+          {"\n"}
         </p>
       </div>
       <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -260,7 +260,7 @@ function Planilha() {
             Baixe a planilha completa de organização do seu casamento.
           </h2>
           <p className="mt-2 text-sm text-primary-foreground/85">
-            Checklists, cronograma, orçamento e tudo que você precisa em um só lugar.
+            Organize tudo que você precisa em um só lugar.
           </p>
         </div>
         <Link
@@ -359,7 +359,8 @@ function CTAFinal() {
             Receba uma proposta personalizada
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Preencha seus dados e comece a planejar o seu casamento no Sítio Canto da Mata.
+            Preencha seus dados e comece a planejar o seu casamento com o{"\n"}
+            Sítio Canto da Mata
           </p>
 
           {enviado ? (
