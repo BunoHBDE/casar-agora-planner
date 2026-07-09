@@ -42,9 +42,9 @@ const WAZE_URL = "https://www.waze.com/en/live-map/directions/sitio-canto-da-mat
 
 const DIFERENCIAIS = [
   { titulo: "O altar sobre o lago", desc: "O cenário para um \"sim\" inesquecível, com o abraço da natureza." },
-  { titulo: "Área gourmet e piscina", desc: "Espaço amplo e integrado para recepções leves." },
+  { titulo: "Buffet completo", desc: "Serviço contínuo com alimentação garantida do início ao fim da festa." },
+  { titulo: "Decoração", desc: "Arranjos com flores naturais e preservadas, personalizados com o nosso acervo." },
   { titulo: "Exclusividade total", desc: "Apenas um evento por dia, privacidade absoluta." },
-  { titulo: "Varandas e decks", desc: "Cantinhos de contemplação e fotos espontâneas." },
   { titulo: "Estacionamento privativo", desc: "Espaço amplo e seguro." },
   { titulo: "Mobiliário e equipe de apoio", desc: "Bancos, mesas, cadeiras e equipe no dia." },
 ];
