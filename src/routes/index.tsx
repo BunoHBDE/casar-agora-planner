@@ -1,4 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { MessageCircle } from "lucide-react";
 import heroAsset from "@/assets/hero-venue.jpg.asset.json";
 import { GOOGLE_MAPS_ICON, WAZE_ICON } from "@/assets/map-icons";
 
@@ -30,6 +32,9 @@ export const Route = createFileRoute("/")({
 // TODO: substituir por WhatsApp real
 const WHATSAPP_URL = "https://wa.me/5500000000000?text=Ol%C3%A1%2C%20quero%20agendar%20uma%20visita%20ao%20S%C3%ADtio%20Canto%20da%20Mata";
 const INSTAGRAM_URL = "#";
+
+const MESES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const ANOS = Array.from({ length: 6 }, (_, i) => String(2026 + i));
 
 const SITIO_ENDERECO = "Dos Tigres, 100 - Pereiras, São Lourenço da Serra - SP, 06890-000";
 const SITIO_LAT = -23.8464778;
@@ -291,30 +296,170 @@ function Localizacao() {
 }
 
 function CTAFinal() {
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [telefone, setTelefone] = useState("");
+  const [mes, setMes] = useState("");
+  const [ano, setAno] = useState("");
+  const [convidados, setConvidados] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  const maskTelefone = (raw: string) => {
+    const digits = raw.replace(/\D/g, "").slice(0, 11);
+    if (digits.length <= 2) return `(${digits}`;
+    if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  };
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setStatus("loading");
+    try {
+      const res = await fetch("/api/public/submit-lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nome, email, celular: telefone, mes, ano, convidados }),
+      });
+      if (!res.ok) throw new Error("submit failed");
+      setStatus("success");
+      if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
+        (window as any).fbq("track", "Lead");
+      }
+    } catch (err) {
+      console.error("[CTAFinal] erro ao enviar lead", err);
+      setStatus("error");
+    }
+  }
+
   return (
-    <section className="relative isolate overflow-hidden">
-      <div className="absolute inset-0 -z-10">
-        <img src={heroAsset.url} alt="" className="h-full w-full object-cover" loading="lazy" />
-        <div className="absolute inset-0 bg-primary/70" />
-      </div>
-      <div
-        className="mx-auto max-w-2xl px-6 py-24 text-center text-primary-foreground"
-        style={{ textShadow: "0 2px 14px rgba(0,0,0,0.45)" }}
-      >
-        <h2 className="font-serif text-3xl sm:text-4xl">Vamos conhecer o seu sonho?</h2>
-        <p className="mx-auto mt-4 max-w-md text-sm text-primary-foreground/90">
-          Agende uma visita e sinta a atmosfera do Sítio Canto da Mata.
-        </p>
+    <section id="contato" className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-24">
+      <div className="grid overflow-hidden rounded-2xl border border-border/60 bg-card shadow-soft sm:grid-cols-[1.4fr_1fr]">
+        {/* Formulário */}
+        <div className="p-6 sm:p-10">
+          <h2 className="font-serif text-2xl text-primary sm:text-3xl">
+            Receba uma proposta personalizada
+          </h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Preencha seus dados e comece a planejar o seu casamento no Sítio Canto da Mata.
+          </p>
+
+          {status === "success" ? (
+            <p className="mt-8 rounded-md bg-primary/10 p-4 text-sm text-primary">
+              Recebemos seus dados! Em breve entraremos em contato.
+            </p>
+          ) : (
+            <form onSubmit={handleSubmit} className="mt-6 grid gap-4">
+              <Field label="Nome *">
+                <input
+                  required
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                  className={inputCls}
+                  placeholder="Informe seu nome completo"
+                />
+              </Field>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="E-mail *">
+                  <input
+                    required
+                    type="email"
+                    inputMode="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className={inputCls}
+                    placeholder="Informe seu melhor e-mail"
+                  />
+                </Field>
+                <Field label="Telefone *">
+                  <input
+                    required
+                    type="tel"
+                    inputMode="tel"
+                    value={telefone}
+                    onChange={(e) => setTelefone(maskTelefone(e.target.value))}
+                    className={inputCls}
+                    placeholder="Informe seu telefone"
+                  />
+                </Field>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="Data desejada">
+                  <div className="grid grid-cols-2 gap-2">
+                    <select value={mes} onChange={(e) => setMes(e.target.value)} className={inputCls}>
+                      <option value="">Mês</option>
+                      {MESES.map((m) => (
+                        <option key={m} value={m}>{m}</option>
+                      ))}
+                    </select>
+                    <select value={ano} onChange={(e) => setAno(e.target.value)} className={inputCls}>
+                      <option value="">Ano</option>
+                      {ANOS.map((a) => (
+                        <option key={a} value={a}>{a}</option>
+                      ))}
+                    </select>
+                  </div>
+                </Field>
+                <Field label="Número de convidados">
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    min={1}
+                    value={convidados}
+                    onChange={(e) => setConvidados(e.target.value)}
+                    className={inputCls}
+                    placeholder="Digite o número"
+                  />
+                </Field>
+              </div>
+
+              {status === "error" && (
+                <p className="text-sm text-destructive">
+                  Não foi possível enviar agora. Tente novamente ou fale com a gente pelo WhatsApp.
+                </p>
+              )}
+
+              <button
+                type="submit"
+                disabled={status === "loading"}
+                className="mt-2 w-full rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
+              >
+                {status === "loading" ? "Enviando…" : "Quero minha proposta"}
+              </button>
+            </form>
+          )}
+        </div>
+
+        {/* Banner WhatsApp */}
         <a
           href={WHATSAPP_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-8 inline-flex rounded-full bg-primary-foreground px-8 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary transition hover:bg-primary-foreground/90"
+          className="flex flex-col items-center justify-center gap-3 bg-primary p-8 text-center text-primary-foreground transition hover:bg-primary/90"
         >
-          Agendar visita
+          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-foreground/15">
+            <MessageCircle className="h-7 w-7" strokeWidth={1.75} />
+          </span>
+          <p className="font-serif text-lg leading-snug">Prefere falar direto no WhatsApp?</p>
+          <p className="text-sm text-primary-foreground/85">Clique aqui e fale agora com nosso time.</p>
         </a>
       </div>
     </section>
+  );
+}
+
+const inputCls =
+  "h-11 w-full rounded-md border border-input bg-background px-3 text-base text-foreground outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/20 sm:text-sm";
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="block">
+      <span className="mb-1.5 block text-xs font-medium uppercase tracking-[0.1em] text-muted-foreground">
+        {label}
+      </span>
+      {children}
+    </label>
   );
 }
 

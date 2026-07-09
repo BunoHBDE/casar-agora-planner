@@ -5,12 +5,12 @@ const LeadSchema = z.object({
   nome: z.string().trim().min(1).max(120),
   email: z.string().trim().email().max(255),
   celular: z.string().trim().min(8).max(30),
-  cidade: z.string().trim().min(1).max(120),
-  estado: z.string().trim().min(2).max(2),
+  cidade: z.string().trim().max(120).optional().default(""),
+  estado: z.string().trim().max(2).optional().default(""),
   mes: z.string().trim().min(1).max(20),
   ano: z.string().trim().regex(/^\d{4}$/),
   convidados: z.string().trim().min(1).max(10),
-  orcamento: z.string().trim().min(1).max(60),
+  orcamento: z.string().trim().max(60).optional().default("Não informado"),
 });
 
 const corsHeaders = {
