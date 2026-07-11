@@ -459,6 +459,7 @@ function CTAFinal() {
                       startMonth={new Date(2026, 0)}
                       endMonth={new Date(2031, 11)}
                       locale={ptBR}
+                      classNames={{ nav: "hidden" }}
                     />
                   </PopoverContent>
                 </Popover>
