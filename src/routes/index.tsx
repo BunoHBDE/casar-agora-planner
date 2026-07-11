@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Menu, X, MessageCircle } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
@@ -328,6 +328,10 @@ function Localizacao() {
   );
 }
 
+// TODO: substituir pela URL do Web App do Google Apps Script (termina em /exec),
+// depois de implantar o script apps-script-proposta.gs na planilha de destino.
+const WEBHOOK_URL_PROPOSTA = "https://script.google.com/macros/s/AKfycbwCy1aeWJnLT9uaZEUrWRteGTUQA4nsAOAub_oK2XThfR92FMk_ctonoIif11d7BenyGA/exec";
+
 function CTAFinal() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
@@ -339,6 +343,7 @@ function CTAFinal() {
   const [dataModo, setDataModo] = useState<"aproximado" | "exata">("aproximado");
   const [fase, setFase] = useState("");
   const [enviado, setEnviado] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const maskTelefone = (raw: string) => {
     const digits = raw.replace(/\D/g, "").slice(0, 11);
@@ -347,16 +352,27 @@ function CTAFinal() {
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
   };
 
-  // TODO: este formulário é só visual por enquanto — não envia para nenhum
-  // backend/API. Assim que o time definir onde os leads devem ser salvos,
-  // conectamos o envio de verdade aqui.
+  const dataExataStr = dataExata
+    ? dataExata.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" })
+    : "";
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!WEBHOOK_URL_PROPOSTA) {
+      console.warn("[CTAFinal] WEBHOOK_URL_PROPOSTA ainda não configurado — envio não realizado.");
+      setEnviado(true);
+      return;
+    }
+    if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
+      (window as any).fbq("track", "Lead");
+    }
+    formRef.current?.submit();
     setEnviado(true);
   }
 
   return (
     <section id="contato" className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-24">
+      <iframe name="proposta-sink" title="proposta-sink" style={{ display: "none" }} />
       <div className="grid overflow-hidden rounded-2xl border border-border/60 bg-card shadow-soft sm:grid-cols-[1.4fr_1fr]">
         {/* Formulário */}
         <div className="p-6 sm:p-10">
@@ -373,10 +389,20 @@ function CTAFinal() {
               Recebemos seus dados! Em breve entraremos em contato.
             </p>
           ) : (
-            <form onSubmit={handleSubmit} className="mt-6 grid gap-4">
+            <form
+              ref={formRef}
+              action={WEBHOOK_URL_PROPOSTA}
+              method="post"
+              target="proposta-sink"
+              onSubmit={handleSubmit}
+              className="mt-6 grid gap-4"
+            >
+              <input type="hidden" name="data_exata" value={dataExataStr} />
+
               <Field label="Nome *">
                 <input
                   required
+                  name="nome"
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
                   className={inputCls}
@@ -390,6 +416,7 @@ function CTAFinal() {
                     required
                     type="email"
                     inputMode="email"
+                    name="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className={inputCls}
@@ -401,6 +428,7 @@ function CTAFinal() {
                     required
                     type="tel"
                     inputMode="tel"
+                    name="celular"
                     value={telefone}
                     onChange={(e) => setTelefone(maskTelefone(e.target.value))}
                     className={inputCls}
@@ -438,13 +466,13 @@ function CTAFinal() {
 
                   {dataModo === "aproximado" ? (
                     <div className="grid grid-cols-2 gap-2">
-                      <select value={mes} onChange={(e) => setMes(e.target.value)} className={inputCls}>
+                      <select name="mes" value={mes} onChange={(e) => setMes(e.target.value)} className={inputCls}>
                         <option value="">Mês</option>
                         {MESES.map((m) => (
                           <option key={m} value={m}>{m}</option>
                         ))}
                       </select>
-                      <select value={ano} onChange={(e) => setAno(e.target.value)} className={inputCls}>
+                      <select name="ano" value={ano} onChange={(e) => setAno(e.target.value)} className={inputCls}>
                         <option value="">Ano</option>
                         {ANOS.map((a) => (
                           <option key={a} value={a}>{a}</option>
@@ -483,6 +511,7 @@ function CTAFinal() {
                     type="number"
                     inputMode="numeric"
                     min={1}
+                    name="convidados"
                     value={convidados}
                     onChange={(e) => setConvidados(e.target.value)}
                     className={inputCls}
@@ -492,7 +521,7 @@ function CTAFinal() {
               </div>
 
               <Field label="Em qual fase do planejamento você está?">
-                <select value={fase} onChange={(e) => setFase(e.target.value)} className={inputCls}>
+                <select name="fase" value={fase} onChange={(e) => setFase(e.target.value)} className={inputCls}>
                   <option value="">Selecione uma opção</option>
                   <option value="inicial">Estou na fase inicial, apenas pesquisando valores</option>
                   <option value="visitas">Já comecei as visitas, mas continuo pesquisando os locais</option>
