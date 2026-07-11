@@ -328,9 +328,7 @@ function Localizacao() {
   );
 }
 
-// TODO: substituir pela URL do Web App do Google Apps Script (termina em /exec),
-// depois de implantar o script apps-script-proposta.gs na planilha de destino.
-const WEBHOOK_URL_PROPOSTA = "https://script.google.com/macros/s/AKfycbwCy1aeWJnLT9uaZEUrWRteGTUQA4nsAOAub_oK2XThfR92FMk_ctonoIif11d7BenyGA/exec";
+const WEBHOOK_URL_PROPOSTA = "https://script.google.com/macros/s/AKfycbxSNqMil3-Cp2zTJDgNWW7QMa7WDHhzleqp_iUgwzcqzm7R1oYCjlP5whqhCTkwuMu0_g/exec";
 
 function CTAFinal() {
   const [nome, setNome] = useState("");
