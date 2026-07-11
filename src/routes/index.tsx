@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X, MessageCircle } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { ptBR } from "date-fns/locale";
 import heroAsset from "@/assets/hero-venue.jpg.asset.json";
 import { GOOGLE_MAPS_ICON, WAZE_ICON } from "@/assets/map-icons";
 
@@ -332,7 +335,7 @@ function CTAFinal() {
   const [mes, setMes] = useState("");
   const [ano, setAno] = useState("");
   const [convidados, setConvidados] = useState("");
-  const [dataExata, setDataExata] = useState("");
+  const [dataExata, setDataExata] = useState<Date | undefined>(undefined);
   const [fase, setFase] = useState("");
   const [enviado, setEnviado] = useState(false);
 
@@ -436,12 +439,29 @@ function CTAFinal() {
               </div>
 
               <Field label="Data exata prevista (se já souber)">
-                <input
-                  type="date"
-                  value={dataExata}
-                  onChange={(e) => setDataExata(e.target.value)}
-                  className={inputCls}
-                />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button
+                      type="button"
+                      className={`${inputCls} flex items-center text-left ${!dataExata ? "text-muted-foreground" : ""}`}
+                    >
+                      {dataExata
+                        ? dataExata.toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })
+                        : "Selecione uma data"}
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={dataExata}
+                      onSelect={setDataExata}
+                      captionLayout="dropdown"
+                      startMonth={new Date(2026, 0)}
+                      endMonth={new Date(2031, 11)}
+                      locale={ptBR}
+                    />
+                  </PopoverContent>
+                </Popover>
               </Field>
 
               <Field label="Em qual fase do planejamento você está?">
