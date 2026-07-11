@@ -336,6 +336,7 @@ function CTAFinal() {
   const [ano, setAno] = useState("");
   const [convidados, setConvidados] = useState("");
   const [dataExata, setDataExata] = useState<Date | undefined>(undefined);
+  const [dataModo, setDataModo] = useState<"aproximado" | "exata">("aproximado");
   const [fase, setFase] = useState("");
   const [enviado, setEnviado] = useState(false);
 
@@ -410,20 +411,72 @@ function CTAFinal() {
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="Data desejada">
-                  <div className="grid grid-cols-2 gap-2">
-                    <select value={mes} onChange={(e) => setMes(e.target.value)} className={inputCls}>
-                      <option value="">Mês</option>
-                      {MESES.map((m) => (
-                        <option key={m} value={m}>{m}</option>
-                      ))}
-                    </select>
-                    <select value={ano} onChange={(e) => setAno(e.target.value)} className={inputCls}>
-                      <option value="">Ano</option>
-                      {ANOS.map((a) => (
-                        <option key={a} value={a}>{a}</option>
-                      ))}
-                    </select>
+                  <div className="mb-2 inline-flex rounded-full border border-input p-0.5 text-xs">
+                    <button
+                      type="button"
+                      onClick={() => setDataModo("aproximado")}
+                      className={`rounded-full px-3 py-1.5 font-medium transition ${
+                        dataModo === "aproximado"
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      Mês e ano
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDataModo("exata")}
+                      className={`rounded-full px-3 py-1.5 font-medium transition ${
+                        dataModo === "exata"
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      Já sei a data exata
+                    </button>
                   </div>
+
+                  {dataModo === "aproximado" ? (
+                    <div className="grid grid-cols-2 gap-2">
+                      <select value={mes} onChange={(e) => setMes(e.target.value)} className={inputCls}>
+                        <option value="">Mês</option>
+                        {MESES.map((m) => (
+                          <option key={m} value={m}>{m}</option>
+                        ))}
+                      </select>
+                      <select value={ano} onChange={(e) => setAno(e.target.value)} className={inputCls}>
+                        <option value="">Ano</option>
+                        {ANOS.map((a) => (
+                          <option key={a} value={a}>{a}</option>
+                        ))}
+                      </select>
+                    </div>
+                  ) : (
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <button
+                          type="button"
+                          className={`${inputCls} flex items-center text-left ${!dataExata ? "text-muted-foreground" : ""}`}
+                        >
+                          {dataExata
+                            ? dataExata.toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })
+                            : "Selecione uma data"}
+                        </button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={dataExata}
+                          onSelect={setDataExata}
+                          captionLayout="dropdown"
+                          startMonth={new Date(2026, 0)}
+                          endMonth={new Date(2031, 11)}
+                          locale={ptBR}
+                          classNames={{ nav: "hidden" }}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  )}
                 </Field>
                 <Field label="Número de convidados">
                   <input
@@ -437,33 +490,6 @@ function CTAFinal() {
                   />
                 </Field>
               </div>
-
-              <Field label="Data exata prevista (se já souber)">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <button
-                      type="button"
-                      className={`${inputCls} flex items-center text-left ${!dataExata ? "text-muted-foreground" : ""}`}
-                    >
-                      {dataExata
-                        ? dataExata.toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })
-                        : "Selecione uma data"}
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={dataExata}
-                      onSelect={setDataExata}
-                      captionLayout="dropdown"
-                      startMonth={new Date(2026, 0)}
-                      endMonth={new Date(2031, 11)}
-                      locale={ptBR}
-                      classNames={{ nav: "hidden" }}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </Field>
 
               <Field label="Em qual fase do planejamento você está?">
                 <select value={fase} onChange={(e) => setFase(e.target.value)} className={inputCls}>
