@@ -4,8 +4,9 @@ import { Menu, X, MessageCircle } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { ptBR } from "date-fns/locale";
-import heroAsset from "@/assets/hero-venue.jpg.asset.json";
 import { GOOGLE_MAPS_ICON, WAZE_ICON } from "@/assets/map-icons";
+
+const HERO_IMAGE_URL = "/images/hero-venue.webp";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -23,9 +24,9 @@ export const Route = createFileRoute("/")({
           "Casamentos ao ar livre, com estrutura completa em meio à natureza. Agende sua visita ao Sítio Canto da Mata.",
       },
       { property: "og:url", content: "https://sitiocantodamata.com.br/" },
-      { property: "og:image", content: heroAsset.url },
+      { property: "og:image", content: HERO_IMAGE_URL },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: heroAsset.url },
+      { name: "twitter:image", content: HERO_IMAGE_URL },
     ],
     links: [{ rel: "canonical", href: "https://sitiocantodamata.com.br/" }],
   }),
@@ -55,8 +56,8 @@ const DIFERENCIAIS = [
   { titulo: "Mobiliário e equipe de apoio", desc: "Bancos, mesas, cadeiras e equipe no dia." },
 ];
 
-// Placeholder — trocar por fotos reais depois
-const GALERIA = Array.from({ length: 6 }, () => heroAsset.url);
+// Placeholder — trocar pelas fotos definitivas da galeria quando chegarem
+const GALERIA = Array.from({ length: 6 }, () => HERO_IMAGE_URL);
 
 function Home() {
   return (
@@ -136,7 +137,7 @@ function Hero() {
     <section id="top" className="relative isolate">
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <img
-          src={heroAsset.url}
+          src={HERO_IMAGE_URL}
           alt="Sítio Canto da Mata"
           className="h-full w-full object-cover"
           fetchPriority="high"
