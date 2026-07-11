@@ -450,7 +450,6 @@ function CTAFinal() {
                   <option value="inicial">Estou na fase inicial, apenas pesquisando valores</option>
                   <option value="visitas">Já comecei as visitas, mas continuo pesquisando os locais</option>
                   <option value="ultimas_visitas">Estou fazendo as últimas visitas e pronta para fechar</option>
-                  <option value="contratado">Já contratei o espaço, seguindo com o restante da organização</option>
                 </select>
               </Field>
 
