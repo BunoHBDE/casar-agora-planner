@@ -33,9 +33,8 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-// TODO: substituir por WhatsApp real
-const WHATSAPP_URL = "https://wa.me/5500000000000?text=Ol%C3%A1%2C%20quero%20agendar%20uma%20visita%20ao%20S%C3%ADtio%20Canto%20da%20Mata";
-const INSTAGRAM_URL = "#";
+const WHATSAPP_URL = "https://wa.me/5511933197671?text=Ol%C3%A1%2C%20quero%20agendar%20uma%20visita%20ao%20S%C3%ADtio%20Canto%20da%20Mata";
+const INSTAGRAM_URL = "https://www.instagram.com/sitiocantodamata100";
 
 const MESES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 const ANOS = Array.from({ length: 6 }, (_, i) => String(2026 + i));
