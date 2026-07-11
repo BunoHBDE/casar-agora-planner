@@ -56,8 +56,14 @@ const DIFERENCIAIS = [
   { titulo: "Mobiliário e equipe de apoio", desc: "Bancos, mesas, cadeiras e equipe no dia." },
 ];
 
-// Placeholder — trocar pelas fotos definitivas da galeria quando chegarem
-const GALERIA = Array.from({ length: 6 }, () => HERO_IMAGE_URL);
+const GALERIA = [
+  "/images/galeria/galeria-1.webp",
+  "/images/galeria/galeria-2.webp",
+  "/images/galeria/galeria-3.webp",
+  "/images/galeria/galeria-4.webp",
+  "/images/galeria/galeria-5.webp",
+  "/images/galeria/galeria-6.webp",
+];
 
 function Home() {
   return (
