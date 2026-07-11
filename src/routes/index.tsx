@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useRef } from "react";
-import { Menu, X, MessageCircle } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Menu, X, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { ptBR } from "date-fns/locale";
@@ -230,6 +230,23 @@ function Estrutura() {
 }
 
 function Galeria() {
+  const [aberta, setAberta] = useState<number | null>(null);
+
+  const fechar = () => setAberta(null);
+  const anterior = () => setAberta((i) => (i === null ? null : (i - 1 + GALERIA.length) % GALERIA.length));
+  const proxima = () => setAberta((i) => (i === null ? null : (i + 1) % GALERIA.length));
+
+  useEffect(() => {
+    if (aberta === null) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setAberta(null);
+      if (e.key === "ArrowLeft") anterior();
+      if (e.key === "ArrowRight") proxima();
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [aberta]);
+
   return (
     <section id="galeria" className="mx-auto max-w-6xl px-6 py-20 sm:py-28">
       <div className="text-center">
@@ -243,16 +260,71 @@ function Galeria() {
       </div>
       <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {GALERIA.map((src, i) => (
-          <div key={i} className="aspect-[4/3] overflow-hidden rounded-xl bg-muted">
+          <button
+            key={i}
+            type="button"
+            onClick={() => setAberta(i)}
+            aria-label={`Ampliar foto ${i + 1}`}
+            className="aspect-[4/3] cursor-zoom-in overflow-hidden rounded-xl bg-muted"
+          >
             <img
               src={src}
               alt={`Sítio Canto da Mata — foto ${i + 1}`}
               loading="lazy"
               className="h-full w-full object-cover transition duration-500 hover:scale-105"
             />
-          </div>
+          </button>
         ))}
       </div>
+
+      {aberta !== null && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4"
+          onClick={fechar}
+          role="dialog"
+          aria-modal="true"
+        >
+          <button
+            type="button"
+            onClick={fechar}
+            aria-label="Fechar"
+            className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+          >
+            <X className="h-6 w-6" />
+          </button>
+
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              anterior();
+            }}
+            aria-label="Foto anterior"
+            className="absolute left-2 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20 sm:left-4"
+          >
+            <ChevronLeft className="h-7 w-7" />
+          </button>
+
+          <img
+            src={GALERIA[aberta]}
+            alt={`Sítio Canto da Mata — foto ${aberta + 1}`}
+            onClick={(e) => e.stopPropagation()}
+            className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain"
+          />
+
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              proxima();
+            }}
+            aria-label="Próxima foto"
+            className="absolute right-2 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20 sm:right-4"
+          >
+            <ChevronRight className="h-7 w-7" />
+          </button>
+        </div>
+      )}
     </section>
   );
 }
