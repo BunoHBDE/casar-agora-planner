@@ -332,6 +332,8 @@ function CTAFinal() {
   const [mes, setMes] = useState("");
   const [ano, setAno] = useState("");
   const [convidados, setConvidados] = useState("");
+  const [dataExata, setDataExata] = useState("");
+  const [fase, setFase] = useState("");
   const [enviado, setEnviado] = useState(false);
 
   const maskTelefone = (raw: string) => {
@@ -432,6 +434,25 @@ function CTAFinal() {
                   />
                 </Field>
               </div>
+
+              <Field label="Data exata prevista (se já souber)">
+                <input
+                  type="date"
+                  value={dataExata}
+                  onChange={(e) => setDataExata(e.target.value)}
+                  className={inputCls}
+                />
+              </Field>
+
+              <Field label="Em qual fase do planejamento você está?">
+                <select value={fase} onChange={(e) => setFase(e.target.value)} className={inputCls}>
+                  <option value="">Selecione uma opção</option>
+                  <option value="inicial">Estou na fase inicial, apenas pesquisando valores</option>
+                  <option value="visitas">Já comecei as visitas, mas continuo pesquisando os locais</option>
+                  <option value="ultimas_visitas">Estou fazendo as últimas visitas e pronta para fechar</option>
+                  <option value="contratado">Já contratei o espaço, seguindo com o restante da organização</option>
+                </select>
+              </Field>
 
               <button
                 type="submit"
