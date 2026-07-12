@@ -100,6 +100,12 @@ function Landing() {
       if (typeof window !== "undefined") {
         (window as any).dataLayer = (window as any).dataLayer || [];
         (window as any).dataLayer.push({ event: "lead_form_planilha_submit" });
+        if (typeof (window as any).gtag === "function") {
+          (window as any).gtag("event", "lead_form_planilha_submit", {
+            event_category: "lead",
+            event_label: "planilha_gratis",
+          });
+        }
       }
       form.submit();
     } finally {
