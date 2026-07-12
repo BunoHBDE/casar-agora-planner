@@ -159,10 +159,10 @@ function Landing() {
 
           <div className="mt-6 grid gap-4">
             <Field label="Nome completo">
-              <input required name="nome" className={inputCls} placeholder="Seu nome" />
+              <input required name="nome" autoComplete="name" className={inputCls} placeholder="Seu nome" />
             </Field>
             <Field label="E-mail">
-              <input required type="email" inputMode="email" name="email" className={inputCls} placeholder="voce@email.com" />
+              <input required type="email" inputMode="email" name="email" autoComplete="email" className={inputCls} placeholder="voce@email.com" />
             </Field>
             <Field label="Celular">
               <input
@@ -170,6 +170,7 @@ function Landing() {
                 type="tel"
                 inputMode="tel"
                 name="celular"
+                autoComplete="tel"
                 value={celular}
                 onChange={(e) => setCelular(maskCelular(e.target.value))}
                 className={inputCls}

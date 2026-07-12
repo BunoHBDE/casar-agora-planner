@@ -496,6 +496,7 @@ function CTAFinal() {
                 <input
                   required
                   name="nome"
+                  autoComplete="name"
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
                   className={inputCls}
@@ -510,6 +511,7 @@ function CTAFinal() {
                     type="email"
                     inputMode="email"
                     name="email"
+                    autoComplete="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className={inputCls}
@@ -522,6 +524,7 @@ function CTAFinal() {
                     type="tel"
                     inputMode="tel"
                     name="celular"
+                    autoComplete="tel"
                     value={telefone}
                     onChange={(e) => setTelefone(maskTelefone(e.target.value))}
                     className={inputCls}
