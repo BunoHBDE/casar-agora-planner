@@ -442,6 +442,13 @@ function CTAFinal() {
     if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
       (window as any).fbq("track", "Lead");
     }
+    // Evento customizado para o Google Tag Manager disparar a tag de
+    // conversão do Google Ads (o gatilho no GTM deve ser "Evento
+    // personalizado" com o nome "lead_form_submit").
+    if (typeof window !== "undefined") {
+      (window as any).dataLayer = (window as any).dataLayer || [];
+      (window as any).dataLayer.push({ event: "lead_form_submit", form_name: "proposta_home" });
+    }
     formRef.current?.submit();
     setEnviado(true);
   }
