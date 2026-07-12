@@ -487,6 +487,7 @@ function CTAFinal() {
               method="post"
               target="proposta-sink"
               onSubmit={handleSubmit}
+              autoComplete="off"
               className="mt-6 grid gap-4"
             >
               <input type="hidden" name="data_exata" value={dataExataStr} />
