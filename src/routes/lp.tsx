@@ -149,6 +149,7 @@ function Landing() {
           method="post"
           target="lead-sink"
           onSubmit={handleSubmit}
+          autoComplete="off"
           className="rounded-2xl border border-border/60 bg-card p-5 shadow-soft sm:p-8"
         >
           <input ref={tokenInputRef} type="hidden" name="g-recaptcha-response" />
@@ -202,7 +203,20 @@ function Landing() {
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Convidados">
-                <input required type="text" inputMode="numeric" pattern="[0-9]*" autoComplete="one-time-code" name="convidados" className={inputCls} placeholder="80" />
+                <input
+                  required
+                  id="numero-convidados"
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  autoComplete="off"
+                  aria-autocomplete="none"
+                  data-lpignore="true"
+                  data-form-type="other"
+                  name="convidados"
+                  className={inputCls}
+                  placeholder="80"
+                />
               </Field>
               <Field label="Orçamento">
                 <select required name="orcamento" defaultValue="" className={inputCls}>

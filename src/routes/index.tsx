@@ -601,10 +601,12 @@ function CTAFinal() {
                 </Field>
                 <Field label="Número de convidados">
                   <input
+                    id="numero-convidados"
                     type="text"
                     inputMode="numeric"
                     pattern="[0-9]*"
                     autoComplete="off"
+                    aria-autocomplete="none"
                     data-lpignore="true"
                     data-form-type="other"
                     name="convidados"
