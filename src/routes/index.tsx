@@ -36,6 +36,15 @@ export const Route = createFileRoute("/")({
 const WHATSAPP_URL = "https://wa.me/5511933197671?text=Ol%C3%A1%2C%20quero%20agendar%20uma%20visita%20ao%20S%C3%ADtio%20Canto%20da%20Mata";
 const INSTAGRAM_URL = "https://www.instagram.com/sitiocantodamata100";
 
+// Evento customizado para o GTM: gatilho "Evento personalizado" com o
+// nome "whatsapp_click". Usado em todo botão/link que leva ao WhatsApp.
+function trackWhatsappClick() {
+  if (typeof window !== "undefined") {
+    (window as any).dataLayer = (window as any).dataLayer || [];
+    (window as any).dataLayer.push({ event: "whatsapp_click" });
+  }
+}
+
 const MESES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 const ANOS = Array.from({ length: 6 }, (_, i) => String(2026 + i));
 
@@ -444,10 +453,10 @@ function CTAFinal() {
     }
     // Evento customizado para o Google Tag Manager disparar a tag de
     // conversão do Google Ads (o gatilho no GTM deve ser "Evento
-    // personalizado" com o nome "lead_form_submit").
+    // personalizado" com o nome "lead_form_home_submit").
     if (typeof window !== "undefined") {
       (window as any).dataLayer = (window as any).dataLayer || [];
-      (window as any).dataLayer.push({ event: "lead_form_submit", form_name: "proposta_home" });
+      (window as any).dataLayer.push({ event: "lead_form_home_submit", form_name: "proposta_home" });
     }
     formRef.current?.submit();
     setEnviado(true);
@@ -627,6 +636,7 @@ function CTAFinal() {
           href={WHATSAPP_URL}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={trackWhatsappClick}
           className="flex flex-col items-center justify-center gap-3 bg-primary p-8 text-center text-primary-foreground transition hover:bg-primary/90"
         >
           <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-foreground/15">
@@ -663,7 +673,7 @@ function Footer() {
           <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="hover:text-primary">
             Instagram
           </a>
-          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="hover:text-primary">
+          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" onClick={trackWhatsappClick} className="hover:text-primary">
             WhatsApp
           </a>
           <Link to="/lp" className="hover:text-primary">Planilha grátis</Link>

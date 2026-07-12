@@ -95,6 +95,12 @@ function Landing() {
       if (typeof window.fbq !== "undefined") {
         window.fbq("track", "Lead");
       }
+      // Evento customizado para o GTM: gatilho "Evento personalizado"
+      // com o nome "lead_form_planilha_submit".
+      if (typeof window !== "undefined") {
+        (window as any).dataLayer = (window as any).dataLayer || [];
+        (window as any).dataLayer.push({ event: "lead_form_planilha_submit" });
+      }
       form.submit();
     } finally {
       window.setTimeout(() => {
