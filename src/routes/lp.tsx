@@ -202,7 +202,7 @@ function Landing() {
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Convidados">
-                <input required type="text" inputMode="numeric" pattern="[0-9]*" autoComplete="off" name="convidados" className={inputCls} placeholder="80" />
+                <input required type="text" inputMode="numeric" pattern="[0-9]*" autoComplete="one-time-code" name="convidados" className={inputCls} placeholder="80" />
               </Field>
               <Field label="Orçamento">
                 <select required name="orcamento" defaultValue="" className={inputCls}>
