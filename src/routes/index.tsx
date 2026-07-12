@@ -487,6 +487,7 @@ function CTAFinal() {
               method="post"
               target="proposta-sink"
               onSubmit={handleSubmit}
+              autoComplete="off"
               className="mt-6 grid gap-4"
             >
               <input type="hidden" name="data_exata" value={dataExataStr} />
@@ -604,6 +605,8 @@ function CTAFinal() {
                     inputMode="numeric"
                     pattern="[0-9]*"
                     autoComplete="off"
+                    data-lpignore="true"
+                    data-form-type="other"
                     name="convidados"
                     value={convidados}
                     onChange={(e) => setConvidados(e.target.value.replace(/\D/g, ""))}
