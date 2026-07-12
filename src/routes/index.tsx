@@ -600,13 +600,13 @@ function CTAFinal() {
                 </Field>
                 <Field label="Número de convidados">
                   <input
-                    type="number"
+                    type="text"
                     inputMode="numeric"
+                    pattern="[0-9]*"
                     autoComplete="off"
-                    min={1}
                     name="convidados"
                     value={convidados}
-                    onChange={(e) => setConvidados(e.target.value)}
+                    onChange={(e) => setConvidados(e.target.value.replace(/\D/g, ""))}
                     className={inputCls}
                     placeholder="Digite o número"
                   />
