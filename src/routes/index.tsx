@@ -605,6 +605,8 @@ function CTAFinal() {
                     inputMode="numeric"
                     pattern="[0-9]*"
                     autoComplete="off"
+                    data-lpignore="true"
+                    data-form-type="other"
                     name="convidados"
                     value={convidados}
                     onChange={(e) => setConvidados(e.target.value.replace(/\D/g, ""))}
