@@ -599,7 +599,7 @@ function CTAFinal() {
                     </Popover>
                   )}
                 </Field>
-                <Field label="Número de convidados">
+                <Field label="Convidados">
                   <input
                     id="numero-convidados"
                     type="text"
@@ -613,7 +613,7 @@ function CTAFinal() {
                     value={convidados}
                     onChange={(e) => setConvidados(e.target.value.replace(/\D/g, ""))}
                     className={inputCls}
-                    placeholder="Digite o número"
+                    placeholder="80"
                   />
                 </Field>
               </div>
