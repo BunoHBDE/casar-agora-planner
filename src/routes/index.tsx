@@ -42,12 +42,6 @@ function trackWhatsappClick() {
   if (typeof window !== "undefined") {
     (window as any).dataLayer = (window as any).dataLayer || [];
     (window as any).dataLayer.push({ event: "whatsapp_click" });
-    if (typeof (window as any).gtag === "function") {
-      (window as any).gtag("event", "whatsapp_click", {
-        event_category: "engagement",
-        event_label: "whatsapp",
-      });
-    }
   }
 }
 
@@ -463,12 +457,6 @@ function CTAFinal() {
     if (typeof window !== "undefined") {
       (window as any).dataLayer = (window as any).dataLayer || [];
       (window as any).dataLayer.push({ event: "lead_form_home_submit", form_name: "proposta_home" });
-      if (typeof (window as any).gtag === "function") {
-        (window as any).gtag("event", "lead_form_home_submit", {
-          event_category: "lead",
-          event_label: "proposta_home",
-        });
-      }
     }
     formRef.current?.submit();
     setEnviado(true);

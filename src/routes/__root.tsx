@@ -7,7 +7,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -194,52 +194,6 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-const COOKIE_BANNER_KEY = "ccm_cookie_notice_dismissed";
-
-function CookieBanner() {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    try {
-      if (!window.localStorage.getItem(COOKIE_BANNER_KEY)) {
-        setVisible(true);
-      }
-    } catch {
-      // localStorage indisponível (ex: modo privado) — não bloqueia a navegação
-      setVisible(true);
-    }
-  }, []);
-
-  function dismiss() {
-    setVisible(false);
-    try {
-      window.localStorage.setItem(COOKIE_BANNER_KEY, "1");
-    } catch {
-      // ignora se não conseguir salvar
-    }
-  }
-
-  if (!visible) return null;
-
-  return (
-    <div className="fixed inset-x-0 bottom-0 z-[200] border-t border-border/60 bg-background/95 px-4 py-4 backdrop-blur sm:px-6">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 text-center sm:flex-row sm:justify-between sm:text-left">
-        <p className="text-xs text-muted-foreground sm:text-sm">
-          Usamos cookies para melhorar sua experiência e analisar o tráfego do site.
-          Ao continuar navegando, você concorda com o uso de cookies.
-        </p>
-        <button
-          type="button"
-          onClick={dismiss}
-          className="w-full shrink-0 rounded-full bg-primary px-5 py-2 text-xs font-medium uppercase tracking-[0.1em] text-primary-foreground transition hover:bg-primary/90 sm:w-auto"
-        >
-          Entendi
-        </button>
-      </div>
-    </div>
-  );
-}
-
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
@@ -247,7 +201,6 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
-      <CookieBanner />
     </QueryClientProvider>
   );
 }
