@@ -1,55 +1,23 @@
-## Objetivo
+## Causa
 
-Transformar o site em dois caminhos claros:
+No formulário da home (`src/routes/index.tsx`, `CTAFinal`), o campo de convidados usa:
+- `<Field label="Número de convidados">`
+- `placeholder="Digite o número"`
 
-- `/` — Home de apresentação do Sítio Canto da Mata (institucional, semelhante em estrutura ao sonho-meu-seven.vercel.app).
-- `/lp` — Página atual de captura de lead (planilha gratuita), sem mudanças de funcionalidade.
+Chrome (e gerenciadores de senha) usam heurística baseada no texto visível ao redor do input. A palavra **"Número"** próxima a um input numérico ativa o autofill de "número de cartão", mesmo com todos os `autocomplete="off"`.
 
-## Passos
+Na `/lp` o mesmo campo aparece como `label="Convidados"` e `placeholder="80"` — sem a palavra "número" — e por isso não dispara a sugestão.
 
-1. **Mover a landing atual para `/lp`**
-   - Renomear `src/routes/index.tsx` → `src/routes/lp.tsx` (mesma UI, mesmo formulário, mesmo iframe, mesmo `fbq('track','Lead')`, mesmo redirect para `/download`).
-   - Ajustar `createFileRoute("/")` → `createFileRoute("/lp")`.
-   - Nenhuma alteração no fluxo de envio, reCAPTCHA, Pixel ou destino.
+## Correção
 
-2. **Criar nova home em `/` (`src/routes/index.tsx`)**
-   Estrutura inspirada no site de referência (sonho-meu-seven), adaptada ao Sítio Canto da Mata:
-   
-   - **Header** fixo com logo + navegação (Sobre, Estrutura, Galeria, Localização, Contato) + CTA "Baixe a planilha" → `/lp`.
-   - **Hero** com foto do espaço (reaproveita `hero-venue.jpg` por enquanto), nome, subtítulo curto, dois CTAs: "Agende uma visita" (WhatsApp) e "Baixe a planilha gratuita" (`/lp`).
-   - **Sobre o espaço** — parágrafo curto de apresentação.
-   - **Estrutura / diferenciais** — grade com ícones (capela, salão, hospedagem, área externa, etc.) usando placeholders de texto até você definir.
-   - **Galeria** — grade de fotos (placeholders com `hero-venue.jpg` repetido; substituir quando você enviar as fotos).
-   - **Depoimentos** (opcional, placeholder).
-   - **Localização** — endereço + link para Google Maps.
-   - **CTA final** — bloco convidando a agendar visita.
-   - **Footer** — contato, redes sociais, © ano.
-   
-   SEO próprio: `title`, `description`, `og:title/description/image` distintos da /lp.
+Alinhar os textos do campo na home com os da `/lp`, sem mexer em nenhuma lógica de envio, tracking ou máscara:
 
-3. **Placeholders de conteúdo**
-   Como você vai enviar as fotos, a home vai nascer com:
-   - Foto hero atual reutilizada em hero + galeria.
-   - Textos institucionais em português com tom acolhedor, editáveis por você depois.
-   - Links de WhatsApp / Instagram / e-mail como placeholders (`#`) para você preencher.
+1. Trocar o label do campo em `CTAFinal` de `"Número de convidados"` para `"Convidados"`.
+2. Trocar o placeholder de `"Digite o número"` para `"80"` (mesmo valor da `/lp`).
+3. Manter todos os atributos anti-autofill já existentes (`autoComplete="off"`, `data-lpignore`, `data-form-type="other"`, `inputMode="numeric"`, `id="numero-convidados"`, `name="convidados"`).
 
-4. **Sitemap e SEO**
-   - Adicionar `/lp` ao `src/routes/sitemap[.]xml.ts`.
-   - Home passa a ter metadados institucionais (não mais o texto da planilha).
+Nenhuma outra alteração — o `name="convidados"` continua o mesmo, então a coluna no Google Sheets segue intacta.
 
-5. **Analytics / Pixel**
-   - Google Analytics e Meta Pixel continuam no `__root.tsx`, então funcionam em todas as rotas automaticamente.
-   - `fbq('track','Lead')` continua disparando só no submit do formulário em `/lp`.
+## Verificação
 
-## Detalhes técnicos
-
-- Design system: reutiliza tokens já existentes em `src/styles.css` (paleta atual do site, fonte serif do hero).
-- Componentes ficam dentro do próprio arquivo `index.tsx` (Header, Hero, Sections, Footer) para manter simples; podemos extrair depois se crescer.
-- Nenhuma mudança em backend, formulário, Apps Script, iframe, reCAPTCHA ou `/download`.
-- `routeTree.gen.ts` é regenerado automaticamente ao adicionar `lp.tsx`.
-
-## O que fica para você depois
-
-- Enviar fotos reais (hero, galeria, estrutura).
-- Confirmar textos institucionais, telefone/WhatsApp, endereço, Instagram.
-- Atualizar sitemap se criar mais páginas.
+Após aplicar, abrir a home, focar o campo Convidados e confirmar que o Chrome não oferece mais o autofill de cartão.
