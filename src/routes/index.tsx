@@ -602,6 +602,7 @@ function CTAFinal() {
                   <input
                     type="number"
                     inputMode="numeric"
+                    autoComplete="off"
                     min={1}
                     name="convidados"
                     value={convidados}
