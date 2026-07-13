@@ -28,7 +28,10 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:image", content: HERO_IMAGE_URL },
     ],
-    links: [{ rel: "canonical", href: "https://sitiocantodamata.com.br/" }],
+    links: [
+      { rel: "canonical", href: "https://sitiocantodamata.com.br/" },
+      { rel: "preload", as: "image", href: HERO_IMAGE_URL, fetchPriority: "high" },
+    ],
   }),
   component: Home,
 });

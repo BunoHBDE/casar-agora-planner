@@ -160,8 +160,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
-        rel: "stylesheet",
+        rel: "preload",
+        as: "style",
         href: "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap",
+        // onload é um atributo HTML literal (string), não um handler React —
+        // técnica padrão de carregamento assíncrono de CSS ("loadCSS" pattern)
+        onload: "this.onload=null;this.rel='stylesheet'",
       },
       {
         rel: "stylesheet",
@@ -189,6 +193,12 @@ function RootShell({ children }: { children: ReactNode }) {
             width="0"
             style={{ display: "none", visibility: "hidden" }}
             title="Google Tag Manager"
+          />
+        </noscript>
+        <noscript>
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
           />
         </noscript>
         {children}
