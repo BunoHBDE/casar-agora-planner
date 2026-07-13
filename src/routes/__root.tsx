@@ -78,14 +78,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Sítio Canto da Mata — Espaço para Casamentos no Campo" },
-      { name: "description", content: "Sítio Canto da Mata: espaço para casamentos no campo. Baixe gratuitamente a planilha completa de organização do seu casamento." },
+      { name: "description", content: "Sítio Canto da Mata: espaço para casamentos no campo, cercado pela natureza.. Agende sua visita." },
       { property: "og:site_name", content: "Sítio Canto da Mata" },
       { property: "og:title", content: "Sítio Canto da Mata — Espaço para Casamentos no Campo" },
-      { property: "og:description", content: "Espaço para casamentos no campo. Baixe gratuitamente a planilha completa de organização do seu casamento." },
+      { property: "og:description", content: "Sítio Canto da Mata: espaço para casamentos no campo, cercado pela natureza.. Agende sua visita." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Sítio Canto da Mata — Espaço para Casamentos no Campo" },
-        { name: "twitter:description", content: "Espaço para casamentos no campo. Baixe gratuitamente a planilha completa de organização do seu casamento." },
+        { name: "twitter:description", content: "Sítio Canto da Mata: espaço para casamentos no campo, cercado pela natureza.. Agende sua visita." },
+        { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c66f996c-c867-4b96-bd67-24301d29bb74/id-preview-f54f0850--e3f28cb6-9492-49a4-8e22-5974c1f68d81.lovable.app-1783897574871.png" },
+        { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c66f996c-c867-4b96-bd67-24301d29bb74/id-preview-f54f0850--e3f28cb6-9492-49a4-8e22-5974c1f68d81.lovable.app-1783897574871.png" },
       ],
       scripts: [
         {
@@ -151,7 +153,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         },
       ],
     links: [
-      { rel: "icon", type: "image/png", href: "/__l5e/assets-v1/d187e4ca-28bd-46db-ac48-8124e38124e1/favicon.png" },
       { rel: "apple-touch-icon", href: "/__l5e/assets-v1/d187e4ca-28bd-46db-ac48-8124e38124e1/favicon.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },

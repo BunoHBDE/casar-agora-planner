@@ -15,13 +15,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Sítio Canto da Mata: espaço para casamentos ao ar livre, cercado pela natureza. Estrutura completa, capela e hospedagem. Agende sua visita.",
+          "Sítio Canto da Mata: espaço para casamentos no campo, cercado pela natureza.. Agende sua visita.",
       },
       { property: "og:title", content: "Sítio Canto da Mata — Espaço para Casamentos no Campo" },
       {
         property: "og:description",
         content:
-          "Casamentos ao ar livre, com estrutura completa em meio à natureza. Agende sua visita ao Sítio Canto da Mata.",
+          "Sítio Canto da Mata: espaço para casamentos no campo, cercado pela natureza.. Agende sua visita.",
       },
       { property: "og:url", content: "https://sitiocantodamata.com.br/" },
       { property: "og:image", content: HERO_IMAGE_URL },
