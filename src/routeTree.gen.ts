@@ -66,7 +66,11 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/download' | '/lp' | '/sitemap.xml' | '/api/public/submit-lead'
+    | '/'
+    | '/download'
+    | '/lp'
+    | '/sitemap.xml'
+    | '/api/public/submit-lead'
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/download' | '/lp' | '/sitemap.xml' | '/api/public/submit-lead'
   id:
