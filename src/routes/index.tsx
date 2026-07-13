@@ -7,6 +7,7 @@ import { ptBR } from "date-fns/locale";
 import { GOOGLE_MAPS_ICON, WAZE_ICON } from "@/assets/map-icons";
 
 const HERO_IMAGE_URL = "/images/hero-venue.webp";
+const HERO_IMAGE_AVIF_URL = "/images/hero-venue.avif";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,7 +31,7 @@ export const Route = createFileRoute("/")({
     ],
     links: [
       { rel: "canonical", href: "https://sitiocantodamata.com.br/" },
-      { rel: "preload", as: "image", href: HERO_IMAGE_URL, fetchPriority: "high" },
+      { rel: "preload", as: "image", href: HERO_IMAGE_AVIF_URL, type: "image/avif", fetchPriority: "high" },
     ],
   }),
   component: Home,
@@ -67,7 +68,7 @@ const DIFERENCIAIS = [
   { titulo: "Mobiliário e equipe de apoio", desc: "Bancos, mesas, cadeiras e equipe no dia." },
 ];
 
-const GALERIA = [
+const GALERIA_WEBP = [
   "/images/galeria/galeria-1.webp",
   "/images/galeria/galeria-2.webp",
   "/images/galeria/galeria-3.webp",
@@ -75,6 +76,16 @@ const GALERIA = [
   "/images/galeria/galeria-5.webp",
   "/images/galeria/galeria-6.webp",
 ];
+const GALERIA_AVIF = [
+  "/images/galeria/galeria-1.avif",
+  "/images/galeria/galeria-2.avif",
+  "/images/galeria/galeria-3.avif",
+  "/images/galeria/galeria-4.avif",
+  "/images/galeria/galeria-5.avif",
+  "/images/galeria/galeria-6.avif",
+];
+// Mantido para compatibilidade com og:image/twitter:image (que exigem um único caminho)
+const GALERIA = GALERIA_WEBP;
 
 function Home() {
   return (
@@ -153,12 +164,16 @@ function Hero() {
   return (
     <section id="top" className="relative isolate">
       <div className="absolute inset-0 -z-10 overflow-hidden">
-        <img
-          src={HERO_IMAGE_URL}
-          alt="Sítio Canto da Mata"
-          className="h-full w-full object-cover"
-          fetchPriority="high"
-        />
+        <picture>
+          <source srcSet={HERO_IMAGE_AVIF_URL} type="image/avif" />
+          <source srcSet={HERO_IMAGE_URL} type="image/webp" />
+          <img
+            src={HERO_IMAGE_URL}
+            alt="Sítio Canto da Mata"
+            className="h-full w-full object-cover"
+            fetchPriority="high"
+          />
+        </picture>
         <div className="absolute inset-0 bg-primary/50" />
         <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-background" />
       </div>
@@ -270,7 +285,7 @@ function Galeria() {
         </p>
       </div>
       <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {GALERIA.map((src, i) => (
+        {GALERIA_WEBP.map((src, i) => (
           <button
             key={i}
             type="button"
@@ -278,12 +293,16 @@ function Galeria() {
             aria-label={`Ampliar foto ${i + 1}`}
             className="aspect-[4/3] cursor-zoom-in overflow-hidden rounded-xl bg-muted"
           >
-            <img
-              src={src}
-              alt={`Sítio Canto da Mata — foto ${i + 1}`}
-              loading="lazy"
-              className="h-full w-full object-cover transition duration-500 hover:scale-105"
-            />
+            <picture>
+              <source srcSet={GALERIA_AVIF[i]} type="image/avif" />
+              <source srcSet={src} type="image/webp" />
+              <img
+                src={src}
+                alt={`Sítio Canto da Mata — foto ${i + 1}`}
+                loading="lazy"
+                className="h-full w-full object-cover transition duration-500 hover:scale-105"
+              />
+            </picture>
           </button>
         ))}
       </div>
@@ -316,12 +335,16 @@ function Galeria() {
             <ChevronLeft className="h-7 w-7" />
           </button>
 
-          <img
-            src={GALERIA[aberta]}
-            alt={`Sítio Canto da Mata — foto ${aberta + 1}`}
-            onClick={(e) => e.stopPropagation()}
-            className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain"
-          />
+          <picture>
+            <source srcSet={GALERIA_AVIF[aberta]} type="image/avif" />
+            <source srcSet={GALERIA_WEBP[aberta]} type="image/webp" />
+            <img
+              src={GALERIA_WEBP[aberta]}
+              alt={`Sítio Canto da Mata — foto ${aberta + 1}`}
+              onClick={(e) => e.stopPropagation()}
+              className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain"
+            />
+          </picture>
 
           <button
             type="button"
