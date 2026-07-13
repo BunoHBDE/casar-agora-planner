@@ -182,7 +182,7 @@ function Hero() {
         style={{ textShadow: "0 2px 16px rgba(0,0,0,0.45)" }}
       >
         <span className="text-[11px] uppercase tracking-[0.28em] text-primary-foreground/85">
-          Espaço para casamentos
+          CASAMENTO NO CAMPO
         </span>
         <h1 className="mt-5 font-serif text-4xl leading-tight sm:text-6xl">
           Um refúgio no campo para o seu grande dia
