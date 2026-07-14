@@ -1,23 +1,44 @@
-## Causa
+## Objetivo
+Fazer com que a home (`/`) não baixe o código da landing (`/lp`) nem do `/download`. Cada rota deve virar um chunk JS separado, carregado só quando o usuário visita a rota.
 
-No formulário da home (`src/routes/index.tsx`, `CTAFinal`), o campo de convidados usa:
-- `<Field label="Número de convidados">`
-- `placeholder="Digite o número"`
+## Diagnóstico
+- O TanStack Start já tem `autoCodeSplitting` ligado por padrão.
+- Os componentes de rota (`Home`, `Landing`, `DownloadPage`) já não estão `export`ados (bom — não bloqueia o split).
+- Mesmo assim, tudo está caindo num bundle único. A forma mais segura de garantir a divisão — sem tocar em `vite.config.ts` (que é gerenciado pelo Lovable) nem em `src/router.tsx` — é usar o mecanismo manual do próprio TanStack: arquivos `*.lazy.tsx` com `createLazyFileRoute`. Isso é uma API pública, oficial e explícita para code splitting por rota.
 
-Chrome (e gerenciadores de senha) usam heurística baseada no texto visível ao redor do input. A palavra **"Número"** próxima a um input numérico ativa o autofill de "número de cartão", mesmo com todos os `autocomplete="off"`.
+## Mudanças (só arquivos em `src/routes/`)
 
-Na `/lp` o mesmo campo aparece como `label="Convidados"` e `placeholder="80"` — sem a palavra "número" — e por isso não dispara a sugestão.
+Para cada rota pesada, separar em dois arquivos:
 
-## Correção
+1. **`src/routes/lp.tsx`** (crítico — fica no bundle inicial, mas minúsculo)
+   - Mantém `createFileRoute("/lp")` só com `head` (metadados) e nada de componente.
+2. **`src/routes/lp.lazy.tsx`** (novo, lazy)
+   - `createLazyFileRoute("/lp")({ component: Landing })`
+   - Move para cá o componente `Landing` inteiro, imports do React/useState/useRef/useEffect, constantes (`WEBHOOK_URL`, `RECAPTCHA_SITE_KEY`, `ESTADOS`, `MESES`, `ANOS`, `ORCAMENTOS`) e a `declare global`.
 
-Alinhar os textos do campo na home com os da `/lp`, sem mexer em nenhuma lógica de envio, tracking ou máscara:
+3. **`src/routes/download.tsx`** → mesmo padrão:
+   - `download.tsx` fica só com `createFileRoute("/download")` + `head`.
+   - `download.lazy.tsx` recebe `DownloadPage`.
 
-1. Trocar o label do campo em `CTAFinal` de `"Número de convidados"` para `"Convidados"`.
-2. Trocar o placeholder de `"Digite o número"` para `"80"` (mesmo valor da `/lp`).
-3. Manter todos os atributos anti-autofill já existentes (`autoComplete="off"`, `data-lpignore`, `data-form-type="other"`, `inputMode="numeric"`, `id="numero-convidados"`, `name="convidados"`).
+4. **`src/routes/index.tsx`** → mesmo padrão:
+   - `index.tsx` fica só com `createFileRoute("/")` + `head`.
+   - `index.lazy.tsx` recebe `Home` e tudo específico dela (constantes `DIFERENCIAIS`, imports de assets, etc.).
+   - Assim, mesmo o código da home só entra num chunk carregado on-demand — o bundle inicial fica com router + shell + CSS.
 
-Nenhuma outra alteração — o `name="convidados"` continua o mesmo, então a coluna no Google Sheets segue intacta.
+`__root.tsx` **não** muda (root route não pode ser lazy).
 
-## Verificação
+`src/routeTree.gen.ts` é regenerado automaticamente pelo plugin — não editamos.
 
-Após aplicar, abrir a home, focar o campo Convidados e confirmar que o Chrome não oferece mais o autofill de cartão.
+## O que NÃO vai ser tocado
+- `vite.config.ts`
+- `src/router.tsx`
+- `src/routeTree.gen.ts`
+- `src/integrations/**`
+- Qualquer lógica de formulário, reCAPTCHA, GTM, Meta Pixel, webhooks: só mudam de arquivo, o comportamento é idêntico.
+
+## Verificação depois de aplicar
+- Rodar o build e confirmar que aparecem chunks separados (algo como `lp-*.js`, `download-*.js`, `index-*.js`) e que o chunk carregado em `/` não contém o texto do formulário da `/lp` (ex.: `RECAPTCHA_SITE_KEY`, `WEBHOOK_URL`, "planilha").
+- Navegar `/` → aba Network deve mostrar o chunk da home; ir para `/lp` deve baixar o chunk da lp só nesse momento.
+
+## Risco
+Baixo. É refactor mecânico de mover funções entre arquivos, usando uma API documentada do TanStack Router. Nenhuma configuração global é alterada.
