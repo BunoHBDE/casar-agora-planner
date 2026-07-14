@@ -24,12 +24,12 @@ const LpRoute = LpRouteImport.update({
   id: '/lp',
   path: '/lp',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/lp.lazy').then((d) => d.Route))
 const DownloadRoute = DownloadRouteImport.update({
   id: '/download',
   path: '/download',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/download.lazy').then((d) => d.Route))
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
