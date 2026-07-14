@@ -6,8 +6,9 @@ import { Calendar } from "@/components/ui/calendar";
 import { ptBR } from "date-fns/locale";
 import { GOOGLE_MAPS_ICON, WAZE_ICON } from "@/assets/map-icons";
 
-const HERO_IMAGE_URL = "/images/hero-venue.webp";
-const HERO_IMAGE_AVIF_URL = "/images/hero-venue.avif";
+const HERO_IMAGE_URL = "/images/hero-venue-1400.webp";
+const HERO_SRCSET_AVIF = "/images/hero-venue-700.avif 700w, /images/hero-venue-1400.avif 1400w";
+const HERO_SRCSET_WEBP = "/images/hero-venue-700.webp 700w, /images/hero-venue-1400.webp 1400w";
 
 export const Route = createLazyFileRoute("/")({
   component: Home,
@@ -140,8 +141,8 @@ function Hero() {
     <section id="top" className="relative isolate">
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <picture>
-          <source srcSet={HERO_IMAGE_AVIF_URL} type="image/avif" />
-          <source srcSet={HERO_IMAGE_URL} type="image/webp" />
+          <source srcSet={HERO_SRCSET_AVIF} sizes="100vw" type="image/avif" />
+          <source srcSet={HERO_SRCSET_WEBP} sizes="100vw" type="image/webp" />
           <img
             src={HERO_IMAGE_URL}
             alt="Sítio Canto da Mata"

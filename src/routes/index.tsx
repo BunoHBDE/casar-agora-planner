@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-const HERO_IMAGE_URL = "/images/hero-venue.webp";
-const HERO_IMAGE_AVIF_URL = "/images/hero-venue.avif";
+const HERO_IMAGE_URL = "/images/hero-venue-1400.webp";
+const HERO_IMAGE_AVIF_URL = "/images/hero-venue-1400.avif";
+const HERO_SRCSET_AVIF = "/images/hero-venue-700.avif 700w, /images/hero-venue-1400.avif 1400w";
+const HERO_SRCSET_WEBP = "/images/hero-venue-700.webp 700w, /images/hero-venue-1400.webp 1400w";
 
 export const Route = createFileRoute("/")({
   head: () => ({
