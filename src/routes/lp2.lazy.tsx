@@ -64,7 +64,22 @@ const DESTAQUES = [
   },
 ];
 
-const PLANILHA_PREVIEW_LINHAS = ["Cerimônia", "Mesa dos Convidados", "Mesa do Bolo", "Outras Áreas"];
+const GRUPOS_CONVIDADOS = [
+  "Familiar Próximo",
+  "Amigo Próximo",
+  "Familiar Distante",
+  "Colega de Trabalho",
+  "Convidado dos Pais",
+  "Outros",
+];
+
+const PRIORIDADE_ROWS = [
+  { label: "Alta", valores: [1, 1, 0, 0, 0, 0], quantidade: 2, convite: 2, confirmados: 1 },
+  { label: "Média", valores: [0, 0, 0, 1, 0, 0], quantidade: 1, convite: 1, confirmados: 1 },
+];
+const LISTA_PRINCIPAL = { quantidade: 3, convite: 3, confirmados: 2 };
+const LISTA_ESPERA_ROW = { label: "Lista de Espera", valores: [0, 0, 1, 0, 1, 0], quantidade: 2, convite: 1, confirmados: 1 };
+const TOTAL_GERAL = { quantidade: 5, convite: 4, confirmados: 3 };
 
 function Landing() {
   const [celular, setCelular] = useState("");
@@ -199,27 +214,73 @@ function Landing() {
 
           <div className="rounded-2xl border border-border/60 bg-card p-5 sm:p-6">
             <p className="text-xs italic text-muted-foreground">
-              ✨ Este espaço é para sonhar com cores, flores e significados.
+              📊 Exemplo de como fica o resumo automático dos seus convidados.
             </p>
-            <div className="mt-3 overflow-hidden rounded-lg border border-border/60">
-              <table className="w-full text-left text-[11px] sm:text-xs">
-                <thead>
-                  <tr className="bg-secondary/60 text-foreground/80">
-                    <th className="px-2.5 py-2 font-medium">Área</th>
-                    <th className="px-2.5 py-2 font-medium">Estilo</th>
-                    <th className="px-2.5 py-2 font-medium">Cores</th>
-                    <th className="px-2.5 py-2 font-medium">Observações</th>
+            <div className="mt-3 overflow-x-auto rounded-lg border border-border/60">
+              <table className="w-full min-w-[560px] text-center text-[10px] sm:min-w-0 sm:text-[11px]">
+                <thead className="bg-secondary/60 text-foreground/80">
+                  <tr>
+                    <th rowSpan={2} className="border-b border-border/60 px-2 py-1.5 text-left font-medium">
+                      Prioridade
+                    </th>
+                    <th colSpan={GRUPOS_CONVIDADOS.length} className="border-b border-border/40 px-2 py-1 font-medium">
+                      Grupos
+                    </th>
+                    <th rowSpan={2} className="border-b border-border/60 bg-secondary/70 px-2 py-1.5 font-medium">
+                      Quantidade
+                    </th>
+                    <th rowSpan={2} className="border-b border-border/60 bg-gold/25 px-2 py-1.5 font-medium">
+                      Convite enviado
+                    </th>
+                    <th rowSpan={2} className="border-b border-border/60 bg-sage/25 px-2 py-1.5 font-medium">
+                      Confirmados
+                    </th>
+                  </tr>
+                  <tr>
+                    {GRUPOS_CONVIDADOS.map((grupo) => (
+                      <th key={grupo} className="border-b border-border/60 px-2 py-1.5 font-medium">
+                        {grupo}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {PLANILHA_PREVIEW_LINHAS.map((linha, i) => (
-                    <tr key={linha} className={i % 2 === 1 ? "bg-muted/30" : undefined}>
-                      <td className="px-2.5 py-2 text-foreground/85">{linha}</td>
-                      <td className="px-2.5 py-2 text-foreground/40">—</td>
-                      <td className="px-2.5 py-2 text-foreground/40">—</td>
-                      <td className="px-2.5 py-2 text-foreground/40">—</td>
+                  {PRIORIDADE_ROWS.map((row) => (
+                    <tr key={row.label} className="border-b border-border/40">
+                      <td className="px-2 py-1.5 text-left font-medium text-foreground/85">{row.label}</td>
+                      {row.valores.map((v, i) => (
+                        <td key={i} className="px-2 py-1.5 text-primary/80">{v}</td>
+                      ))}
+                      <td className="bg-secondary/40 px-2 py-1.5 font-medium">{row.quantidade}</td>
+                      <td className="bg-gold/15 px-2 py-1.5 font-medium">{row.convite}</td>
+                      <td className="bg-sage/15 px-2 py-1.5 font-medium">{row.confirmados}</td>
                     </tr>
                   ))}
+                  <tr className="border-b border-border/40 bg-secondary/25">
+                    <td colSpan={1 + GRUPOS_CONVIDADOS.length} className="px-2 py-1.5 text-right font-semibold text-foreground/85">
+                      Lista Principal
+                    </td>
+                    <td className="bg-secondary/50 px-2 py-1.5 font-semibold">{LISTA_PRINCIPAL.quantidade}</td>
+                    <td className="bg-gold/25 px-2 py-1.5 font-semibold">{LISTA_PRINCIPAL.convite}</td>
+                    <td className="bg-sage/25 px-2 py-1.5 font-semibold">{LISTA_PRINCIPAL.confirmados}</td>
+                  </tr>
+                  <tr className="border-b border-border/40">
+                    <td className="px-2 py-1.5 text-left font-medium text-foreground/85">{LISTA_ESPERA_ROW.label}</td>
+                    {LISTA_ESPERA_ROW.valores.map((v, i) => (
+                      <td key={i} className="px-2 py-1.5 text-primary/80">{v}</td>
+                    ))}
+                    <td className="bg-secondary/40 px-2 py-1.5 font-medium">{LISTA_ESPERA_ROW.quantidade}</td>
+                    <td className="bg-gold/15 px-2 py-1.5 font-medium">{LISTA_ESPERA_ROW.convite}</td>
+                    <td className="bg-sage/15 px-2 py-1.5 font-medium">{LISTA_ESPERA_ROW.confirmados}</td>
+                  </tr>
+                  <tr className="bg-secondary/25">
+                    <td colSpan={1 + GRUPOS_CONVIDADOS.length} className="px-2 py-1.5 text-right font-semibold text-foreground/85">
+                      Total Geral
+                    </td>
+                    <td className="bg-secondary/50 px-2 py-1.5 font-semibold">{TOTAL_GERAL.quantidade}</td>
+                    <td className="bg-gold/25 px-2 py-1.5 font-semibold">{TOTAL_GERAL.convite}</td>
+                    <td className="bg-sage/25 px-2 py-1.5 font-semibold">{TOTAL_GERAL.confirmados}</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
