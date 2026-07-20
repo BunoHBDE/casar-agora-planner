@@ -74,8 +74,10 @@ function Landing() {
       } catch (err) {
         console.warn("reCAPTCHA execute falhou, seguindo sem token:", err);
       }
+      // content_name diferencia este Lead do Lead do formulário da home nas
+      // Conversões Personalizadas do Meta.
       if (typeof window.fbq !== "undefined") {
-        window.fbq("track", "Lead");
+        window.fbq("track", "Lead", { content_name: "formulario_planilha" });
       }
       if (typeof window !== "undefined") {
         (window as any).dataLayer = (window as any).dataLayer || [];
