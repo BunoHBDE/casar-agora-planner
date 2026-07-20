@@ -216,8 +216,20 @@ function Landing() {
             <p className="text-xs italic text-muted-foreground">
               📊 Exemplo de como fica o resumo automático dos seus convidados.
             </p>
-            <div className="mt-3 overflow-x-auto rounded-lg border border-border/60">
-              <table className="w-full min-w-[560px] text-center text-[10px] sm:min-w-0 sm:text-[11px]">
+
+            {/* Mobile: cartões empilhados — a tabela completa não cabe bem em telas pequenas */}
+            <div className="mt-3 space-y-2 sm:hidden">
+              {PRIORIDADE_ROWS.map((row) => (
+                <ResumoCardMobile key={row.label} row={row} />
+              ))}
+              <ResumoSubtotalMobile label="Lista Principal" data={LISTA_PRINCIPAL} />
+              <ResumoCardMobile row={LISTA_ESPERA_ROW} />
+              <ResumoSubtotalMobile label="Total Geral" data={TOTAL_GERAL} />
+            </div>
+
+            {/* Tablet e desktop: tabela completa com o detalhamento por grupo */}
+            <div className="mt-3 hidden overflow-x-auto rounded-lg border border-border/60 sm:block">
+              <table className="w-full min-w-[520px] text-center text-[11px]">
                 <thead className="bg-secondary/60 text-foreground/80">
                   <tr>
                     <th rowSpan={2} className="border-b border-border/60 px-2 py-1.5 text-left font-medium">
@@ -465,5 +477,48 @@ function RadioOption({ value, label, name = "fase" }: { value: string; label: st
       />
       <span className="text-sm text-foreground">{label}</span>
     </label>
+  );
+}
+
+type ResumoRow = { label: string; valores: number[]; quantidade: number; convite: number; confirmados: number };
+type ResumoSubtotal = { quantidade: number; convite: number; confirmados: number };
+
+function ResumoMetricas({ data }: { data: ResumoSubtotal }) {
+  return (
+    <div className="flex flex-wrap gap-1.5 text-[10px] font-medium">
+      <span className="rounded-full bg-secondary/60 px-2 py-0.5">Qtd. {data.quantidade}</span>
+      <span className="rounded-full bg-gold/25 px-2 py-0.5">Convite {data.convite}</span>
+      <span className="rounded-full bg-sage/25 px-2 py-0.5">Confirmados {data.confirmados}</span>
+    </div>
+  );
+}
+
+function ResumoCardMobile({ row }: { row: ResumoRow }) {
+  const grupos = GRUPOS_CONVIDADOS.map((grupo, i) => ({ grupo, valor: row.valores[i] })).filter((g) => g.valor > 0);
+  return (
+    <div className="rounded-xl border border-border/60 p-3">
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-sm font-medium text-foreground/85">{row.label}</span>
+        <ResumoMetricas data={row} />
+      </div>
+      {grupos.length > 0 && (
+        <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-foreground/60">
+          {grupos.map(({ grupo, valor }) => (
+            <span key={grupo}>
+              {grupo}: <strong className="font-medium text-primary/80">{valor}</strong>
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ResumoSubtotalMobile({ label, data }: { label: string; data: ResumoSubtotal }) {
+  return (
+    <div className="flex items-center justify-between gap-2 rounded-xl bg-secondary/25 p-3">
+      <span className="text-sm font-semibold text-foreground/85">{label}</span>
+      <ResumoMetricas data={data} />
+    </div>
   );
 }
