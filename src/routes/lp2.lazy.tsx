@@ -217,14 +217,47 @@ function Landing() {
               📊 Exemplo de como fica o resumo automático dos seus convidados.
             </p>
 
-            {/* Mobile: cartões empilhados — a tabela completa não cabe bem em telas pequenas */}
-            <div className="mt-3 space-y-2 sm:hidden">
-              {PRIORIDADE_ROWS.map((row) => (
-                <ResumoCardMobile key={row.label} row={row} />
-              ))}
-              <ResumoSubtotalMobile label="Lista Principal" data={LISTA_PRINCIPAL} />
-              <ResumoCardMobile row={LISTA_ESPERA_ROW} />
-              <ResumoSubtotalMobile label="Total Geral" data={TOTAL_GERAL} />
+            {/* Mobile: tabela simplificada — mantém a estética de planilha, mas só com
+                as colunas-resumo; o detalhamento por grupo fica para telas maiores */}
+            <div className="mt-3 overflow-hidden rounded-lg border border-border/60 sm:hidden">
+              <table className="w-full text-center text-[11px]">
+                <thead className="bg-secondary/60 text-foreground/80">
+                  <tr>
+                    <th className="border-b border-border/60 px-2.5 py-2 text-left font-medium">Prioridade</th>
+                    <th className="border-b border-border/60 bg-secondary/70 px-2 py-2 font-medium">Qtd.</th>
+                    <th className="border-b border-border/60 bg-gold/25 px-2 py-2 font-medium">Convites</th>
+                    <th className="border-b border-border/60 bg-sage/25 px-2 py-2 font-medium">Confirmados</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {PRIORIDADE_ROWS.map((row) => (
+                    <tr key={row.label} className="border-b border-border/40">
+                      <td className="px-2.5 py-2 text-left font-medium text-foreground/85">{row.label}</td>
+                      <td className="bg-secondary/40 px-2 py-2">{row.quantidade}</td>
+                      <td className="bg-gold/15 px-2 py-2">{row.convite}</td>
+                      <td className="bg-sage/15 px-2 py-2">{row.confirmados}</td>
+                    </tr>
+                  ))}
+                  <tr className="border-b border-border/40">
+                    <td className="bg-secondary/25 px-2.5 py-2 text-left font-semibold text-foreground/85">Lista Principal</td>
+                    <td className="bg-secondary/50 px-2 py-2 font-semibold">{LISTA_PRINCIPAL.quantidade}</td>
+                    <td className="bg-gold/25 px-2 py-2 font-semibold">{LISTA_PRINCIPAL.convite}</td>
+                    <td className="bg-sage/25 px-2 py-2 font-semibold">{LISTA_PRINCIPAL.confirmados}</td>
+                  </tr>
+                  <tr className="border-b border-border/40">
+                    <td className="px-2.5 py-2 text-left font-medium text-foreground/85">{LISTA_ESPERA_ROW.label}</td>
+                    <td className="bg-secondary/40 px-2 py-2">{LISTA_ESPERA_ROW.quantidade}</td>
+                    <td className="bg-gold/15 px-2 py-2">{LISTA_ESPERA_ROW.convite}</td>
+                    <td className="bg-sage/15 px-2 py-2">{LISTA_ESPERA_ROW.confirmados}</td>
+                  </tr>
+                  <tr>
+                    <td className="bg-secondary/25 px-2.5 py-2 text-left font-semibold text-foreground/85">Total Geral</td>
+                    <td className="bg-secondary/50 px-2 py-2 font-semibold">{TOTAL_GERAL.quantidade}</td>
+                    <td className="bg-gold/25 px-2 py-2 font-semibold">{TOTAL_GERAL.convite}</td>
+                    <td className="bg-sage/25 px-2 py-2 font-semibold">{TOTAL_GERAL.confirmados}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
 
             {/* Tablet e desktop: tabela completa com o detalhamento por grupo */}
@@ -480,45 +513,3 @@ function RadioOption({ value, label, name = "fase" }: { value: string; label: st
   );
 }
 
-type ResumoRow = { label: string; valores: number[]; quantidade: number; convite: number; confirmados: number };
-type ResumoSubtotal = { quantidade: number; convite: number; confirmados: number };
-
-function ResumoMetricas({ data }: { data: ResumoSubtotal }) {
-  return (
-    <div className="flex flex-wrap gap-1.5 text-[10px] font-medium">
-      <span className="rounded-full bg-secondary/60 px-2 py-0.5">Qtd. {data.quantidade}</span>
-      <span className="rounded-full bg-gold/25 px-2 py-0.5">Convite {data.convite}</span>
-      <span className="rounded-full bg-sage/25 px-2 py-0.5">Confirmados {data.confirmados}</span>
-    </div>
-  );
-}
-
-function ResumoCardMobile({ row }: { row: ResumoRow }) {
-  const grupos = GRUPOS_CONVIDADOS.map((grupo, i) => ({ grupo, valor: row.valores[i] })).filter((g) => g.valor > 0);
-  return (
-    <div className="rounded-xl border border-border/60 p-3">
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-sm font-medium text-foreground/85">{row.label}</span>
-        <ResumoMetricas data={row} />
-      </div>
-      {grupos.length > 0 && (
-        <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-foreground/60">
-          {grupos.map(({ grupo, valor }) => (
-            <span key={grupo}>
-              {grupo}: <strong className="font-medium text-primary/80">{valor}</strong>
-            </span>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function ResumoSubtotalMobile({ label, data }: { label: string; data: ResumoSubtotal }) {
-  return (
-    <div className="flex items-center justify-between gap-2 rounded-xl bg-secondary/25 p-3">
-      <span className="text-sm font-semibold text-foreground/85">{label}</span>
-      <ResumoMetricas data={data} />
-    </div>
-  );
-}
