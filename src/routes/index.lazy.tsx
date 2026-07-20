@@ -19,10 +19,14 @@ const INSTAGRAM_URL = "https://www.instagram.com/sitiocantodamata100";
 
 // Evento customizado para o GTM: gatilho "Evento personalizado" com o
 // nome "whatsapp_click". Usado em todo botão/link que leva ao WhatsApp.
+// No Meta Pixel dispara o evento padrão "Contact".
 function trackWhatsappClick() {
   if (typeof window !== "undefined") {
     (window as any).dataLayer = (window as any).dataLayer || [];
     (window as any).dataLayer.push({ event: "whatsapp_click" });
+    if (typeof (window as any).fbq === "function") {
+      (window as any).fbq("track", "Contact", { content_name: "botao_whatsapp" });
+    }
   }
 }
 
@@ -450,8 +454,10 @@ function CTAFinal() {
       setEnviado(true);
       return;
     }
+    // content_name diferencia este Lead do Lead da planilha (/lp) nas
+    // Conversões Personalizadas do Meta.
     if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
-      (window as any).fbq("track", "Lead");
+      (window as any).fbq("track", "Lead", { content_name: "formulario_proposta_home" });
     }
     if (typeof window !== "undefined") {
       (window as any).dataLayer = (window as any).dataLayer || [];
