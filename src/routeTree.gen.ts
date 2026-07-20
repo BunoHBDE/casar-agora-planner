@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as Lp2RouteImport } from './routes/lp2'
 import { Route as LpRouteImport } from './routes/lp'
 import { Route as DownloadRouteImport } from './routes/download'
 import { Route as IndexRouteImport } from './routes/index'
@@ -20,6 +21,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Lp2Route = Lp2RouteImport.update({
+  id: '/lp2',
+  path: '/lp2',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/lp2.lazy').then((d) => d.Route))
 const LpRoute = LpRouteImport.update({
   id: '/lp',
   path: '/lp',
@@ -45,6 +51,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/download': typeof DownloadRoute
   '/lp': typeof LpRoute
+  '/lp2': typeof Lp2Route
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/public/submit-lead': typeof ApiPublicSubmitLeadRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/download': typeof DownloadRoute
   '/lp': typeof LpRoute
+  '/lp2': typeof Lp2Route
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/public/submit-lead': typeof ApiPublicSubmitLeadRoute
 }
@@ -60,6 +68,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/download': typeof DownloadRoute
   '/lp': typeof LpRoute
+  '/lp2': typeof Lp2Route
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/public/submit-lead': typeof ApiPublicSubmitLeadRoute
 }
@@ -69,15 +78,23 @@ export interface FileRouteTypes {
     | '/'
     | '/download'
     | '/lp'
+    | '/lp2'
     | '/sitemap.xml'
     | '/api/public/submit-lead'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/download' | '/lp' | '/sitemap.xml' | '/api/public/submit-lead'
+  to:
+    | '/'
+    | '/download'
+    | '/lp'
+    | '/lp2'
+    | '/sitemap.xml'
+    | '/api/public/submit-lead'
   id:
     | '__root__'
     | '/'
     | '/download'
     | '/lp'
+    | '/lp2'
     | '/sitemap.xml'
     | '/api/public/submit-lead'
   fileRoutesById: FileRoutesById
@@ -86,6 +103,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DownloadRoute: typeof DownloadRoute
   LpRoute: typeof LpRoute
+  Lp2Route: typeof Lp2Route
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiPublicSubmitLeadRoute: typeof ApiPublicSubmitLeadRoute
 }
@@ -104,6 +122,13 @@ declare module '@tanstack/react-router' {
       path: '/lp'
       fullPath: '/lp'
       preLoaderRoute: typeof LpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lp2': {
+      id: '/lp2'
+      path: '/lp2'
+      fullPath: '/lp2'
+      preLoaderRoute: typeof Lp2RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/download': {
@@ -134,6 +159,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DownloadRoute: DownloadRoute,
   LpRoute: LpRoute,
+  Lp2Route: Lp2Route,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiPublicSubmitLeadRoute: ApiPublicSubmitLeadRoute,
 }
