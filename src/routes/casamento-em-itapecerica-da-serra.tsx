@@ -4,11 +4,9 @@ const HERO_IMAGE_URL = "/images/hero-venue-1400.webp";
 const BASE_URL = "https://sitiocantodamata.com.br";
 const PAGE_PATH = "/casamento-em-itapecerica-da-serra";
 
-// Tempo de carro real entre Itapecerica da Serra e o sítio (Estrada dos Tigres,
-// 100 - Pereiras, São Lourenço da Serra) — aguardando confirmação. Vias e
-// distâncias de páginas de localidade têm que ser reais e verificadas: nunca
-// estimar/inventar esse valor. Trocar o placeholder abaixo assim que confirmado.
-export const TEMPO_CARRO_ITAPECERICA = "⟨tempo a confirmar⟩";
+// Tempo de carro real entre Itapecerica da Serra (centro) e o sítio (Estrada
+// dos Tigres, 100 - Pereiras, São Lourenço da Serra), confirmado pelo cliente.
+export const TEMPO_CARRO_ITAPECERICA = "40 minutos de carro";
 export const VIA_ACESSO_ITAPECERICA = "Rodovia Régis Bittencourt (BR-116)";
 
 export const FAQ_ITEMS = [

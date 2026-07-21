@@ -186,11 +186,11 @@ function Hero() {
           Casamento em Itapecerica da Serra e região
         </span>
         <h1 className="mt-5 font-serif text-4xl leading-tight sm:text-6xl">
-          O seu casamento na serra, a poucos minutos de Itapecerica
+          O seu casamento na serra, a {TEMPO_CARRO_ITAPECERICA} de Itapecerica
         </h1>
         <p className="mx-auto mt-5 max-w-xl text-sm text-primary-foreground/90 sm:text-base">
-          Um refúgio no campo onde o dia é só de vocês — cerimônia ao ar livre, sob as árvores, a uma curta viagem
-          do centro de Itapecerica da Serra.
+          Um refúgio no campo onde o dia é só de vocês — cerimônia ao ar livre, sob as árvores, a uma viagem
+          tranquila do centro de Itapecerica da Serra.
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <a
@@ -225,7 +225,8 @@ function OndeFicamos() {
       <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-foreground/80">
         Se você procura um lugar para casar na região de Itapecerica da Serra, mas quer um espaço só seu — sem
         dividir o dia com outra festa, sem o barulho da cidade —, o Sítio Canto da Mata está logo ali. Ficamos em
-        São Lourenço da Serra, a cerca de {TEMPO_CARRO_ITAPECERICA} de Itapecerica pela {VIA_ACESSO_ITAPECERICA}.
+        São Lourenço da Serra, a cerca de {TEMPO_CARRO_ITAPECERICA} de Itapecerica — o trajeto passa pelo centro da
+        cidade e segue pela {VIA_ACESSO_ITAPECERICA}.
       </p>
       <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-foreground/80">
         É perto o bastante para os seus convidados chegarem sem viagem longa, e distante o bastante para que, ao
@@ -438,8 +439,8 @@ function CTAFinal() {
         <span className="text-[11px] uppercase tracking-[0.24em] text-primary-foreground/70">Vamos começar</span>
         <h2 className="mt-4 font-serif text-3xl sm:text-4xl">Venha sentir o clima do sítio</h2>
         <p className="mx-auto mt-4 max-w-lg text-sm text-primary-foreground/90 sm:text-base">
-          Agende uma visita e conheça de perto o lugar onde o seu casamento vira memória para a vida toda. A poucos
-          minutos de Itapecerica da Serra, no ritmo tranquilo do campo.
+          Agende uma visita e conheça de perto o lugar onde o seu casamento vira memória para a vida toda. A{" "}
+          {TEMPO_CARRO_ITAPECERICA} de Itapecerica da Serra, no ritmo tranquilo do campo.
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <a
