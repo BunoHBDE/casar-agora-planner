@@ -1,5 +1,5 @@
 import { createLazyFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Sparkles,
   Waves,
@@ -13,6 +13,9 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { ptBR } from "date-fns/locale";
 import { GOOGLE_MAPS_ICON, WAZE_ICON } from "@/assets/map-icons";
 import { FAQ_ITEMS, TEMPO_CARRO_ITAPECERICA, VIA_ACESSO_ITAPECERICA } from "./casamento-em-itapecerica-da-serra";
 
@@ -99,6 +102,11 @@ const GALERIA_AVIF = [
   "/images/galeria/galeria-5.avif",
   "/images/galeria/galeria-6.avif",
 ];
+
+const MESES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const ANOS = Array.from({ length: 6 }, (_, i) => String(2026 + i));
+
+const WEBHOOK_URL_PROPOSTA = "https://script.google.com/macros/s/AKfycbxSNqMil3-Cp2zTJDgNWW7QMa7WDHhzleqp_iUgwzcqzm7R1oYCjlP5whqhCTkwuMu0_g/exec";
 
 function CasamentoItapecericaDaSerra() {
   return (
@@ -194,7 +202,7 @@ function Hero() {
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <a
-            href="/#contato"
+            href="#contato"
             onClick={trackAgendarVisitaClick}
             className="w-full rounded-full bg-primary-foreground px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary transition hover:bg-primary-foreground/90 sm:w-auto"
           >
@@ -433,36 +441,260 @@ function Faq() {
 }
 
 function CTAFinal() {
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [telefone, setTelefone] = useState("");
+  const [mes, setMes] = useState("");
+  const [ano, setAno] = useState("");
+  const [convidados, setConvidados] = useState("");
+  const [dataExata, setDataExata] = useState<Date | undefined>(undefined);
+  const [dataModo, setDataModo] = useState<"aproximado" | "exata">("aproximado");
+  const [fase, setFase] = useState("");
+  const [enviado, setEnviado] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const maskTelefone = (raw: string) => {
+    const digits = raw.replace(/\D/g, "").slice(0, 11);
+    if (digits.length <= 2) return `(${digits}`;
+    if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  };
+
+  const dataExataStr = dataExata
+    ? dataExata.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" })
+    : "";
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    // content_name/event próprios diferenciam este Lead (vindo da página local
+    // de Itapecerica) do Lead do formulário da home nas Conversões
+    // Personalizadas do Meta e no GTM.
+    if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
+      (window as any).fbq("track", "Lead", { content_name: "formulario_proposta_itapecerica" });
+    }
+    if (typeof window !== "undefined") {
+      (window as any).dataLayer = (window as any).dataLayer || [];
+      (window as any).dataLayer.push({ event: "lead_form_itapecerica_submit", form_name: "proposta_itapecerica" });
+    }
+    formRef.current?.submit();
+    setEnviado(true);
+  }
+
   return (
-    <section className="bg-primary text-primary-foreground">
-      <div className="mx-auto max-w-2xl px-6 py-20 text-center sm:py-28">
-        <span className="text-[11px] uppercase tracking-[0.24em] text-primary-foreground/70">Vamos começar</span>
-        <h2 className="mt-4 font-serif text-3xl sm:text-4xl">Venha sentir o clima do sítio</h2>
-        <p className="mx-auto mt-4 max-w-lg text-sm text-primary-foreground/90 sm:text-base">
-          Agende uma visita e conheça de perto o lugar onde o seu casamento vira memória para a vida toda. A{" "}
-          {TEMPO_CARRO_ITAPECERICA} de Itapecerica da Serra, no ritmo tranquilo do campo.
+    <section id="contato" className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-24">
+      <div className="mb-10 text-center">
+        <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">Vamos começar</span>
+        <h2 className="mt-4 font-serif text-3xl text-primary sm:text-4xl">Venha sentir o clima do sítio</h2>
+        <p className="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-foreground/75 sm:text-base">
+          Preencha seus dados e agende uma visita: conheça de perto o lugar onde o seu casamento vira memória para
+          a vida toda. A {TEMPO_CARRO_ITAPECERICA} de Itapecerica da Serra, no ritmo tranquilo do campo.
         </p>
-        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <a
-            href="/#contato"
-            onClick={trackAgendarVisitaClick}
-            className="w-full rounded-full bg-primary-foreground px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary transition hover:bg-primary-foreground/90 sm:w-auto"
-          >
-            Agende uma visita
-          </a>
-          <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={trackWhatsappClick}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-primary-foreground/70 px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary-foreground/10 sm:w-auto"
-          >
-            <MessageCircle className="h-4 w-4" strokeWidth={1.75} />
-            Prefere falar direto no WhatsApp? Clique aqui.
-          </a>
+      </div>
+
+      <iframe name="proposta-sink-itapecerica" title="proposta-sink-itapecerica" style={{ display: "none" }} />
+      <div className="grid overflow-hidden rounded-2xl border border-border/60 bg-card shadow-soft sm:grid-cols-[1.4fr_1fr]">
+        <div className="p-6 sm:p-10">
+          <h3 className="font-serif text-2xl text-primary sm:text-3xl">Receba uma proposta personalizada</h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Preencha seus dados e comece a planejar o seu casamento com o{"\n"}
+            Sítio Canto da Mata
+          </p>
+
+          {enviado ? (
+            <p className="mt-8 rounded-md bg-primary/10 p-4 text-sm text-primary">
+              Recebemos seus dados! Em breve entraremos em contato.
+            </p>
+          ) : (
+            <form
+              ref={formRef}
+              action={WEBHOOK_URL_PROPOSTA}
+              method="post"
+              target="proposta-sink-itapecerica"
+              onSubmit={handleSubmit}
+              autoComplete="off"
+              className="mt-6 grid gap-4"
+            >
+              <input type="hidden" name="data_exata" value={dataExataStr} />
+              <input type="hidden" name="origem" value="casamento-itapecerica-da-serra" />
+
+              <Field label="Nome *">
+                <input
+                  required
+                  name="nome"
+                  autoComplete="name"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                  className={inputCls}
+                  placeholder="Informe seu nome completo"
+                />
+              </Field>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="E-mail *">
+                  <input
+                    required
+                    type="email"
+                    inputMode="email"
+                    name="email"
+                    autoComplete="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className={inputCls}
+                    placeholder="Informe seu melhor e-mail"
+                  />
+                </Field>
+                <Field label="Telefone *">
+                  <input
+                    required
+                    type="tel"
+                    inputMode="tel"
+                    name="celular"
+                    autoComplete="tel"
+                    value={telefone}
+                    onChange={(e) => setTelefone(maskTelefone(e.target.value))}
+                    className={inputCls}
+                    placeholder="Informe seu telefone"
+                  />
+                </Field>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="Data desejada">
+                  <div className="mb-2 inline-flex rounded-full border border-input p-0.5 text-xs">
+                    <button
+                      type="button"
+                      onClick={() => setDataModo("aproximado")}
+                      className={`rounded-full px-3 py-1.5 font-medium transition ${
+                        dataModo === "aproximado"
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      Mês e ano
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDataModo("exata")}
+                      className={`rounded-full px-3 py-1.5 font-medium transition ${
+                        dataModo === "exata"
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      Já sei a data exata
+                    </button>
+                  </div>
+
+                  {dataModo === "aproximado" ? (
+                    <div className="grid grid-cols-2 gap-2">
+                      <select name="mes" value={mes} onChange={(e) => setMes(e.target.value)} className={inputCls}>
+                        <option value="">Mês</option>
+                        {MESES.map((m) => (
+                          <option key={m} value={m}>{m}</option>
+                        ))}
+                      </select>
+                      <select name="ano" value={ano} onChange={(e) => setAno(e.target.value)} className={inputCls}>
+                        <option value="">Ano</option>
+                        {ANOS.map((a) => (
+                          <option key={a} value={a}>{a}</option>
+                        ))}
+                      </select>
+                    </div>
+                  ) : (
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <button
+                          type="button"
+                          className={`${inputCls} flex items-center text-left ${!dataExata ? "text-muted-foreground" : ""}`}
+                        >
+                          {dataExata
+                            ? dataExata.toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })
+                            : "Selecione uma data"}
+                        </button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={dataExata}
+                          onSelect={setDataExata}
+                          captionLayout="dropdown"
+                          startMonth={new Date(2026, 0)}
+                          endMonth={new Date(2031, 11)}
+                          locale={ptBR}
+                          classNames={{ nav: "hidden" }}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  )}
+                </Field>
+                <Field label="Convidados">
+                  <input
+                    id="numero-convidados"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    autoComplete="off"
+                    aria-autocomplete="none"
+                    data-lpignore="true"
+                    data-form-type="other"
+                    name="convidados"
+                    value={convidados}
+                    onChange={(e) => setConvidados(e.target.value.replace(/\D/g, ""))}
+                    className={inputCls}
+                    placeholder="80"
+                  />
+                </Field>
+              </div>
+
+              <Field label="Em qual fase do planejamento você está?">
+                <select name="fase" value={fase} onChange={(e) => setFase(e.target.value)} className={inputCls}>
+                  <option value="">Selecione uma opção</option>
+                  <option value="inicial">Estou na fase inicial, apenas pesquisando valores</option>
+                  <option value="visitas">Já comecei as visitas, mas continuo pesquisando os locais</option>
+                  <option value="ultimas_visitas">Estou fazendo as últimas visitas e pronta para fechar</option>
+                </select>
+              </Field>
+
+              <button
+                type="submit"
+                className="mt-2 w-full rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary/90"
+              >
+                Quero minha proposta
+              </button>
+            </form>
+          )}
         </div>
+
+        {/* Banner WhatsApp */}
+        <a
+          href={WHATSAPP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={trackWhatsappClick}
+          className="flex flex-col items-center justify-center gap-3 bg-primary p-8 text-center text-primary-foreground transition hover:bg-primary/90"
+        >
+          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-foreground/15">
+            <MessageCircle className="h-7 w-7" strokeWidth={1.75} />
+          </span>
+          <p className="font-serif text-lg leading-snug">Prefere falar direto no WhatsApp?</p>
+          <p className="text-sm text-primary-foreground/85">Clique aqui e fale agora com nosso time.</p>
+        </a>
       </div>
     </section>
+  );
+}
+
+const inputCls =
+  "h-11 w-full rounded-md border border-input bg-background px-3 text-base text-foreground outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/20 sm:text-sm";
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="block">
+      <span className="mb-1.5 block text-xs font-medium uppercase tracking-[0.1em] text-muted-foreground">
+        {label}
+      </span>
+      {children}
+    </label>
   );
 }
 
