@@ -10,6 +10,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         const entries = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/lp", changefreq: "weekly", priority: "0.8" },
+          { path: "/casamento-em-itapecerica-da-serra", changefreq: "monthly", priority: "0.7" },
         ];
 
         const urls = entries.map(
