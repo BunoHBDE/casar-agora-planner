@@ -1,6 +1,7 @@
 import { createStart, createMiddleware } from "@tanstack/react-start";
 
 import { renderErrorPage } from "./lib/error-page";
+import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
 
 const errorMiddleware = createMiddleware().server(async ({ next }) => {
   try {
@@ -25,5 +26,6 @@ const errorMiddleware = createMiddleware().server(async ({ next }) => {
 // Os arquivos de integração do Supabase (auth-attacher.ts, client.ts,
 // etc.) continuam intactos — só paramos de conectá-los aqui.
 export const startInstance = createStart(() => ({
+  functionMiddleware: [attachSupabaseAuth],
   requestMiddleware: [errorMiddleware],
 }));

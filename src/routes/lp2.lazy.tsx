@@ -30,7 +30,7 @@ const RECURSOS = [
   {
     Icon: ClipboardList,
     titulo: "Informações e fornecedores",
-    desc: "Nomes, horários e todos os fornecedores — buffet, foto, DJ, bolo — reunidos em um lugar só.",
+    desc: "Nomes, horários e todos os fornecedores, buffet, foto, DJ, bolo, reunidos em um lugar só.",
   },
   {
     Icon: Palette,
@@ -172,7 +172,7 @@ function Landing() {
             Planeje o seu casamento com tranquilidade.
           </h1>
           <p className="mx-auto mt-4 max-w-md text-sm text-primary-foreground/90 sm:text-base">
-            A planilha completa que organiza fornecedores, decoração e convidados — com a leveza que esse momento merece.
+            A planilha completa que organiza fornecedores, decoração e convidados, com a leveza que esse momento merece.
           </p>
           <div className="mt-8">
             <a
