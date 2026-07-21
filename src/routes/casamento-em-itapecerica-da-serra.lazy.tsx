@@ -194,10 +194,10 @@ function Hero() {
           Casamento em Itapecerica da Serra e região
         </span>
         <h1 className="mt-5 font-serif text-4xl leading-tight sm:text-6xl">
-          O seu casamento na serra, a {TEMPO_CARRO_ITAPECERICA} de Itapecerica
+          O seu casamento a 40 minutos de carro de Itapecerica da Serra
         </h1>
         <p className="mx-auto mt-5 max-w-xl text-sm text-primary-foreground/90 sm:text-base">
-          Um refúgio no campo onde o dia é só de vocês — cerimônia ao ar livre, sob as árvores, a uma viagem
+          Um refúgio no campo onde o dia é só de vocês, cerimônia ao ar livre, sob as árvores, a uma viagem
           tranquila do centro de Itapecerica da Serra.
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -231,10 +231,10 @@ function OndeFicamos() {
       </span>
       <h2 className="mt-4 font-serif text-3xl text-primary sm:text-4xl">Perto de Itapecerica, mas dentro do campo</h2>
       <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-foreground/80">
-        Se você procura um lugar para casar na região de Itapecerica da Serra, mas quer um espaço só seu — sem
-        dividir o dia com outra festa, sem o barulho da cidade —, o Sítio Canto da Mata está logo ali. Ficamos em
-        São Lourenço da Serra, a cerca de {TEMPO_CARRO_ITAPECERICA} de Itapecerica — o trajeto passa pelo centro da
-        cidade e segue pela {VIA_ACESSO_ITAPECERICA}.
+        Se você procura um lugar para casar na região de Itapecerica da Serra, mas quer um espaço só seu, sem
+        dividir o dia com outra festa, sem o barulho da cidade, o Sítio Canto da Mata está logo ali. Ficamos em
+        São Lourenço da Serra, a cerca de 40 minutos de carro de Itapecerica, o trajeto passa pelo centro da
+        cidade e segue pela Rodovia Régis Bittencourt (BR-116).
       </p>
       <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-foreground/80">
         É perto o bastante para os seus convidados chegarem sem viagem longa, e distante o bastante para que, ao

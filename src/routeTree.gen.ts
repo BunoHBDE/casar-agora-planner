@@ -13,8 +13,8 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as Lp2RouteImport } from './routes/lp2'
 import { Route as LpRouteImport } from './routes/lp'
 import { Route as DownloadRouteImport } from './routes/download'
-import { Route as IndexRouteImport } from './routes/index'
 import { Route as CasamentoEmItapecericaDaSerraRouteImport } from './routes/casamento-em-itapecerica-da-serra'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPublicSubmitLeadRouteImport } from './routes/api/public/submit-lead'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -22,11 +22,6 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CasamentoEmItapecericaDaSerraRoute = CasamentoEmItapecericaDaSerraRouteImport.update({
-  id: '/casamento-em-itapecerica-da-serra',
-  path: '/casamento-em-itapecerica-da-serra',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/casamento-em-itapecerica-da-serra.lazy').then((d) => d.Route))
 const Lp2Route = Lp2RouteImport.update({
   id: '/lp2',
   path: '/lp2',
@@ -42,6 +37,16 @@ const DownloadRoute = DownloadRouteImport.update({
   path: '/download',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/download.lazy').then((d) => d.Route))
+const CasamentoEmItapecericaDaSerraRoute =
+  CasamentoEmItapecericaDaSerraRouteImport.update({
+    id: '/casamento-em-itapecerica-da-serra',
+    path: '/casamento-em-itapecerica-da-serra',
+    getParentRoute: () => rootRouteImport,
+  } as any).lazy(() =>
+    import('./routes/casamento-em-itapecerica-da-serra.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -55,29 +60,29 @@ const ApiPublicSubmitLeadRoute = ApiPublicSubmitLeadRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/casamento-em-itapecerica-da-serra': typeof CasamentoEmItapecericaDaSerraRoute
   '/download': typeof DownloadRoute
   '/lp': typeof LpRoute
   '/lp2': typeof Lp2Route
-  '/casamento-em-itapecerica-da-serra': typeof CasamentoEmItapecericaDaSerraRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/public/submit-lead': typeof ApiPublicSubmitLeadRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/casamento-em-itapecerica-da-serra': typeof CasamentoEmItapecericaDaSerraRoute
   '/download': typeof DownloadRoute
   '/lp': typeof LpRoute
   '/lp2': typeof Lp2Route
-  '/casamento-em-itapecerica-da-serra': typeof CasamentoEmItapecericaDaSerraRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/public/submit-lead': typeof ApiPublicSubmitLeadRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/casamento-em-itapecerica-da-serra': typeof CasamentoEmItapecericaDaSerraRoute
   '/download': typeof DownloadRoute
   '/lp': typeof LpRoute
   '/lp2': typeof Lp2Route
-  '/casamento-em-itapecerica-da-serra': typeof CasamentoEmItapecericaDaSerraRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/public/submit-lead': typeof ApiPublicSubmitLeadRoute
 }
@@ -85,38 +90,38 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/casamento-em-itapecerica-da-serra'
     | '/download'
     | '/lp'
     | '/lp2'
-    | '/casamento-em-itapecerica-da-serra'
     | '/sitemap.xml'
     | '/api/public/submit-lead'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/casamento-em-itapecerica-da-serra'
     | '/download'
     | '/lp'
     | '/lp2'
-    | '/casamento-em-itapecerica-da-serra'
     | '/sitemap.xml'
     | '/api/public/submit-lead'
   id:
     | '__root__'
     | '/'
+    | '/casamento-em-itapecerica-da-serra'
     | '/download'
     | '/lp'
     | '/lp2'
-    | '/casamento-em-itapecerica-da-serra'
     | '/sitemap.xml'
     | '/api/public/submit-lead'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CasamentoEmItapecericaDaSerraRoute: typeof CasamentoEmItapecericaDaSerraRoute
   DownloadRoute: typeof DownloadRoute
   LpRoute: typeof LpRoute
   Lp2Route: typeof Lp2Route
-  CasamentoEmItapecericaDaSerraRoute: typeof CasamentoEmItapecericaDaSerraRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiPublicSubmitLeadRoute: typeof ApiPublicSubmitLeadRoute
 }
@@ -144,18 +149,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LpRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/casamento-em-itapecerica-da-serra': {
-      id: '/casamento-em-itapecerica-da-serra'
-      path: '/casamento-em-itapecerica-da-serra'
-      fullPath: '/casamento-em-itapecerica-da-serra'
-      preLoaderRoute: typeof CasamentoEmItapecericaDaSerraRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/download': {
       id: '/download'
       path: '/download'
       fullPath: '/download'
       preLoaderRoute: typeof DownloadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/casamento-em-itapecerica-da-serra': {
+      id: '/casamento-em-itapecerica-da-serra'
+      path: '/casamento-em-itapecerica-da-serra'
+      fullPath: '/casamento-em-itapecerica-da-serra'
+      preLoaderRoute: typeof CasamentoEmItapecericaDaSerraRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -177,10 +182,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CasamentoEmItapecericaDaSerraRoute: CasamentoEmItapecericaDaSerraRoute,
   DownloadRoute: DownloadRoute,
   LpRoute: LpRoute,
   Lp2Route: Lp2Route,
-  CasamentoEmItapecericaDaSerraRoute: CasamentoEmItapecericaDaSerraRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiPublicSubmitLeadRoute: ApiPublicSubmitLeadRoute,
 }
