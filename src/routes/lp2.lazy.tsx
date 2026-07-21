@@ -199,8 +199,8 @@ function Landing() {
           </h2>
         </div>
 
-        <div className="mt-10 grid gap-6 lg:grid-cols-[1.1fr_1fr] lg:items-stretch">
-          <div className="grid gap-4 sm:grid-cols-2">
+        <div className="mt-10 grid gap-6">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {RECURSOS.map(({ Icon, titulo, desc }) => (
               <article key={titulo} className="rounded-2xl border border-border/60 bg-card p-5">
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/60 text-primary">
