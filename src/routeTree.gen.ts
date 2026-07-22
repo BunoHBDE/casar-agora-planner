@@ -13,8 +13,8 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as Lp2RouteImport } from './routes/lp2'
 import { Route as LpRouteImport } from './routes/lp'
 import { Route as DownloadRouteImport } from './routes/download'
-import { Route as CasamentoEmItapecericaDaSerraRouteImport } from './routes/casamento-em-itapecerica-da-serra'
 import { Route as CasamentoEmSaoLourencoDaSerraRouteImport } from './routes/casamento-em-sao-lourenco-da-serra'
+import { Route as CasamentoEmItapecericaDaSerraRouteImport } from './routes/casamento-em-itapecerica-da-serra'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPublicSubmitLeadRouteImport } from './routes/api/public/submit-lead'
 
@@ -38,16 +38,6 @@ const DownloadRoute = DownloadRouteImport.update({
   path: '/download',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/download.lazy').then((d) => d.Route))
-const CasamentoEmItapecericaDaSerraRoute =
-  CasamentoEmItapecericaDaSerraRouteImport.update({
-    id: '/casamento-em-itapecerica-da-serra',
-    path: '/casamento-em-itapecerica-da-serra',
-    getParentRoute: () => rootRouteImport,
-  } as any).lazy(() =>
-    import('./routes/casamento-em-itapecerica-da-serra.lazy').then(
-      (d) => d.Route,
-    ),
-  )
 const CasamentoEmSaoLourencoDaSerraRoute =
   CasamentoEmSaoLourencoDaSerraRouteImport.update({
     id: '/casamento-em-sao-lourenco-da-serra',
@@ -55,6 +45,16 @@ const CasamentoEmSaoLourencoDaSerraRoute =
     getParentRoute: () => rootRouteImport,
   } as any).lazy(() =>
     import('./routes/casamento-em-sao-lourenco-da-serra.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const CasamentoEmItapecericaDaSerraRoute =
+  CasamentoEmItapecericaDaSerraRouteImport.update({
+    id: '/casamento-em-itapecerica-da-serra',
+    path: '/casamento-em-itapecerica-da-serra',
+    getParentRoute: () => rootRouteImport,
+  } as any).lazy(() =>
+    import('./routes/casamento-em-itapecerica-da-serra.lazy').then(
       (d) => d.Route,
     ),
   )
@@ -174,18 +174,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DownloadRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/casamento-em-itapecerica-da-serra': {
-      id: '/casamento-em-itapecerica-da-serra'
-      path: '/casamento-em-itapecerica-da-serra'
-      fullPath: '/casamento-em-itapecerica-da-serra'
-      preLoaderRoute: typeof CasamentoEmItapecericaDaSerraRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/casamento-em-sao-lourenco-da-serra': {
       id: '/casamento-em-sao-lourenco-da-serra'
       path: '/casamento-em-sao-lourenco-da-serra'
       fullPath: '/casamento-em-sao-lourenco-da-serra'
       preLoaderRoute: typeof CasamentoEmSaoLourencoDaSerraRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/casamento-em-itapecerica-da-serra': {
+      id: '/casamento-em-itapecerica-da-serra'
+      path: '/casamento-em-itapecerica-da-serra'
+      fullPath: '/casamento-em-itapecerica-da-serra'
+      preLoaderRoute: typeof CasamentoEmItapecericaDaSerraRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {

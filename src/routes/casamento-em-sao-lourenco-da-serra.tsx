@@ -10,7 +10,7 @@ export const VIA_ACESSO_SP = "Rodovia Régis Bittencourt (BR-116)";
 // Tempo de carro real entre o centro de São Lourenço da Serra e o sítio
 // (Estrada dos Tigres, 100 - Pereiras) — aguardando confirmação do cliente.
 // Nunca estimar/inventar: trocar o placeholder assim que confirmado.
-export const TEMPO_CENTRO_SLS = "⟨tempo a confirmar⟩";
+export const TEMPO_CENTRO_SLS = "20 minutos";
 
 export const FAQ_ITEMS = [
   {
