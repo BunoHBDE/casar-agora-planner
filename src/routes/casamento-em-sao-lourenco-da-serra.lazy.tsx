@@ -28,10 +28,9 @@ export const Route = createLazyFileRoute("/casamento-em-sao-lourenco-da-serra")(
 // esta é a página do endereço real, não uma cidade satélite.
 const KM_DA_SE = "52 km a sudoeste da Praça da Sé";
 
-// Frase de primeira mão sobre por que este pedaço de São Lourenço — só o
-// dono/morador da região tem essa história. Aguardando confirmação, nunca
-// inventar.
-const HISTORIA_PESSOAL = "⟨história pessoal a confirmar⟩";
+// Nome da primeira noiva citada na história do sítio — aguardando autorização
+// para usar o nome real ("Karina"). Até lá, mantém-se anônimo.
+const NOIVA_LAGO = "uma das nossas primeiras noivas";
 
 const WHATSAPP_URL =
   "https://wa.me/5511933197671?text=Ol%C3%A1%2C%20quero%20agendar%20uma%20visita%20ao%20S%C3%ADtio%20Canto%20da%20Mata";
@@ -243,14 +242,23 @@ function FeitoEmSaoLourenco() {
         Um pedaço de São Lourenço preparado para o seu dia
       </h2>
       <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-foreground/80">
-        Este é o Sítio Canto da Mata, uma antiga fazenda dos anos 1980, no bairro {BAIRRO_SITIO}, em São Lourenço
-        da Serra, que cultivamos com o carinho de quem cuida do próprio quintal. Foi aqui que escolhemos ficar:{" "}
-        {HISTORIA_PESSOAL}
+        Aqui, no bairro {BAIRRO_SITIO}, existe uma antiga fazenda dos anos 1980. Quando a assumimos, em 2022,
+        somos a terceira geração de donos deste espaço, restauramos cada canto com o cuidado de quem preserva a
+        memória de uma casa de família, mantendo a estética da época. No começo, era um lugar para se hospedar.
+        Foram as primeiras noivas que, vendo as fotos da mata e do ar livre, enxergaram aqui um casamento antes
+        mesmo de nós.
       </p>
       <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-foreground/80">
-        Em São Lourenço, o tempo desacelera. O cheiro da terra se mistura ao do café fresco, a brisa da serra
-        embala a cerimônia, e a natureza assume o papel de anfitriã. A 60 minutos de São Paulo pela{" "}
-        {VIA_ACESSO_SP}, você troca o barulho da cidade pelo som da mata sem precisar viajar para longe.
+        Uma delas, {NOIVA_LAGO}, sonhava em casar à beira do lago. Para realizar esse sonho, construímos o deck
+        sobre a água. É o mesmo altar onde, desde então, tantos casais se casaram, nascido não de um projeto, mas
+        de uma história real.
+      </p>
+      <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-foreground/80">
+        O que oferecemos é um resgate: o casamento afetivo e verdadeiro de antigamente, quando as famílias
+        celebravam no quintal, sem luxo, mas com significado. Em São Lourenço da Serra, a 60 minutos de São Paulo
+        pela {VIA_ACESSO_SP}, o tempo desacelera, o cheiro da terra se mistura ao do café fresco, a brisa da serra
+        embala a cerimônia, e a natureza vira a anfitriã. Um lugar onde o amor desacelera, a natureza acolhe e
+        cada história é vivida com verdade.
       </p>
 
       <div className="mt-8 overflow-hidden rounded-2xl border border-border/60">

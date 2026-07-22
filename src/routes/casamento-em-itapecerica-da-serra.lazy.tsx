@@ -116,6 +116,7 @@ function CasamentoItapecericaDaSerra() {
       <Hero />
       <OndeFicamos />
       <PorQueCasarAqui />
+      <HistoriaResumo />
       <Galeria />
       <Faq />
       <CTAFinal />
@@ -305,6 +306,27 @@ function PorQueCasarAqui() {
           ))}
         </div>
       </div>
+    </section>
+  );
+}
+
+// Faixa curta de marca: planta a alma da marca sem contar a história inteira
+// (que vive na página-mãe de São Lourenço). Link discreto, nunca botão, para
+// não competir com o CTA de agendar visita.
+function HistoriaResumo() {
+  return (
+    <section className="mx-auto max-w-2xl px-6 py-14 text-center">
+      <p className="font-serif text-lg italic leading-relaxed text-foreground/80">
+        Um sítio de família dos anos 1980, em São Lourenço da Serra, a poucos minutos daqui, com um propósito:
+        resgatar o casamento afetivo e verdadeiro de antigamente, quando se celebrava no quintal, sem luxo, mas
+        com significado.
+      </p>
+      <Link
+        to="/casamento-em-sao-lourenco-da-serra"
+        className="mt-3 inline-block text-sm text-primary underline-offset-4 hover:underline"
+      >
+        Conheça a nossa história →
+      </Link>
     </section>
   );
 }
