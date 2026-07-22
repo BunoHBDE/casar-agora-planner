@@ -256,9 +256,7 @@ function FeitoEmSaoLourenco() {
       <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-foreground/80">
         O que oferecemos é um resgate: o casamento afetivo e verdadeiro de antigamente, quando as famílias
         celebravam no quintal, sem luxo, mas com significado. Em São Lourenço da Serra, a 60 minutos de São Paulo
-        pela {VIA_ACESSO_SP}, o tempo desacelera, o cheiro da terra se mistura ao do café fresco, a brisa da serra
-        embala a cerimônia, e a natureza vira a anfitriã. Um lugar onde o amor desacelera, a natureza acolhe e
-        cada história é vivida com verdade.
+        pela {VIA_ACESSO_SP}.
       </p>
 
       <div className="mt-8 overflow-hidden rounded-2xl border border-border/60">
