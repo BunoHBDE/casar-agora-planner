@@ -17,11 +17,20 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { ptBR } from "date-fns/locale";
 import { GOOGLE_MAPS_ICON, WAZE_ICON } from "@/assets/map-icons";
-import { FAQ_ITEMS, TEMPO_CARRO_ITAPECERICA, VIA_ACESSO_ITAPECERICA } from "./casamento-em-itapecerica-da-serra";
+import { BAIRRO_SITIO, FAQ_ITEMS, TEMPO_CENTRO_SLS, VIA_ACESSO_SP } from "./casamento-em-sao-lourenco-da-serra";
 
-export const Route = createLazyFileRoute("/casamento-em-itapecerica-da-serra")({
-  component: CasamentoItapecericaDaSerra,
+export const Route = createLazyFileRoute("/casamento-em-sao-lourenco-da-serra")({
+  component: CasamentoSaoLourencoDaSerra,
 });
+
+// Detalhe verificado (via pesquisa): São Lourenço da Serra fica no quilômetro
+// 307 da Régis Bittencourt, a 52 km a sudoeste da Praça da Sé. Reforça que
+// esta é a página do endereço real, não uma cidade satélite.
+const KM_DA_SE = "52 km a sudoeste da Praça da Sé";
+
+// Nome da primeira noiva citada na história do sítio — aguardando autorização
+// para usar o nome real ("Karina"). Até lá, mantém-se anônimo.
+const NOIVA_LAGO = "uma das nossas primeiras noivas";
 
 const WHATSAPP_URL =
   "https://wa.me/5511933197671?text=Ol%C3%A1%2C%20quero%20agendar%20uma%20visita%20ao%20S%C3%ADtio%20Canto%20da%20Mata";
@@ -32,9 +41,9 @@ const WHATSAPP_URL =
 function trackWhatsappClick() {
   if (typeof window !== "undefined") {
     (window as any).dataLayer = (window as any).dataLayer || [];
-    (window as any).dataLayer.push({ event: "whatsapp_click", page: "casamento-itapecerica-da-serra" });
+    (window as any).dataLayer.push({ event: "whatsapp_click", page: "casamento-sao-lourenco-da-serra" });
     if (typeof (window as any).fbq === "function") {
-      (window as any).fbq("track", "Contact", { content_name: "botao_whatsapp_itapecerica" });
+      (window as any).fbq("track", "Contact", { content_name: "botao_whatsapp_sao_lourenco" });
     }
   }
 }
@@ -42,7 +51,7 @@ function trackWhatsappClick() {
 function trackAgendarVisitaClick() {
   if (typeof window !== "undefined") {
     (window as any).dataLayer = (window as any).dataLayer || [];
-    (window as any).dataLayer.push({ event: "agendar_visita_click", page: "casamento-itapecerica-da-serra" });
+    (window as any).dataLayer.push({ event: "agendar_visita_click", page: "casamento-sao-lourenco-da-serra" });
   }
 }
 
@@ -57,32 +66,32 @@ const DIFERENCIAIS = [
   {
     Icon: Sparkles,
     titulo: "Exclusividade total",
-    desc: "Apenas um evento por dia. O sítio inteiro é de vocês, do primeiro ao último convidado.",
+    desc: "Um único evento por dia. O sítio inteiro é de vocês, do primeiro ao último convidado.",
   },
   {
     Icon: Waves,
     titulo: "Cerimônia sobre o lago",
-    desc: "O altar à beira d'água, com o abraço da natureza como cenário.",
+    desc: "O altar à beira d'água, com o abraço da mata como cenário.",
   },
   {
     Icon: Sun,
     titulo: "Casamento à luz do dia",
-    desc: "A celebração ao ar livre, sem pressa, no ritmo tranquilo do campo.",
+    desc: "Ao ar livre, sem pressa, no ritmo tranquilo da serra.",
   },
   {
     Icon: Users,
     titulo: "Até 100 convidados",
-    desc: "Intimista na medida certa: perto o suficiente para abraçar todo mundo.",
+    desc: "Intimista na medida: perto o bastante para abraçar todo mundo.",
   },
   {
     Icon: UtensilsCrossed,
     titulo: "Buffet completo",
-    desc: "Serviço contínuo, com alimentação garantida do início ao fim da festa.",
+    desc: "Serviço contínuo, com alimentação garantida do início ao fim.",
   },
   {
     Icon: CheckCircle2,
     titulo: "Tudo pronto no dia",
-    desc: "Mobiliário, estacionamento privativo e equipe de apoio já incluídos.",
+    desc: "Mobiliário, estacionamento privativo e equipe de apoio inclusos.",
   },
 ];
 
@@ -108,15 +117,14 @@ const ANOS = Array.from({ length: 6 }, (_, i) => String(2026 + i));
 
 const WEBHOOK_URL_PROPOSTA = "https://script.google.com/macros/s/AKfycbxSNqMil3-Cp2zTJDgNWW7QMa7WDHhzleqp_iUgwzcqzm7R1oYCjlP5whqhCTkwuMu0_g/exec";
 
-function CasamentoItapecericaDaSerra() {
+function CasamentoSaoLourencoDaSerra() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <TopoMinimo />
       <Breadcrumb />
       <Hero />
-      <OndeFicamos />
+      <FeitoEmSaoLourenco />
       <PorQueCasarAqui />
-      <HistoriaResumo />
       <Galeria />
       <Faq />
       <CTAFinal />
@@ -156,7 +164,7 @@ function Breadcrumb() {
       <span>Casamento no Campo</span>
       <span className="mx-1.5">›</span>
       <span aria-current="page" className="text-foreground/70">
-        Itapecerica da Serra
+        São Lourenço da Serra
       </span>
     </nav>
   );
@@ -192,14 +200,14 @@ function Hero() {
         style={{ textShadow: "0 2px 16px rgba(0,0,0,0.45)" }}
       >
         <span className="text-[11px] uppercase tracking-[0.28em] text-primary-foreground/85">
-          Casamento em Itapecerica da Serra e região
+          Casamento em São Lourenço da Serra
         </span>
         <h1 className="mt-5 font-serif text-4xl leading-tight sm:text-6xl">
-          O seu casamento a 40 minutos de carro de Itapecerica da Serra
+          O sítio onde o seu casamento acontece de verdade
         </h1>
         <p className="mx-auto mt-5 max-w-xl text-sm text-primary-foreground/90 sm:text-base">
-          Um refúgio no campo onde o dia é só de vocês, cerimônia ao ar livre, sob as árvores, a uma viagem
-          tranquila do centro de Itapecerica da Serra.
+          No coração de São Lourenço da Serra, um refúgio de mata, lago e silêncio, reservado para um único
+          casamento por dia. Só de vocês.
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <a
@@ -224,23 +232,33 @@ function Hero() {
   );
 }
 
-function OndeFicamos() {
+function FeitoEmSaoLourenco() {
   return (
     <section className="mx-auto max-w-4xl px-6 py-20 text-center sm:py-28">
       <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
-        Fácil de chegar, longe da correria
+        Aqui, e em nenhum outro lugar
       </span>
-      <h2 className="mt-4 font-serif text-3xl text-primary sm:text-4xl">Perto de Itapecerica, mas dentro do campo</h2>
+      <h2 className="mt-4 font-serif text-3xl text-primary sm:text-4xl">
+        Um pedaço de São Lourenço preparado para o seu dia
+      </h2>
       <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-foreground/80">
-        Se você procura um lugar para casar na região de Itapecerica da Serra, mas quer um espaço só seu, sem
-        dividir o dia com outra festa, sem o barulho da cidade, o Sítio Canto da Mata está logo ali. Ficamos em
-        São Lourenço da Serra, a cerca de 40 minutos de carro de Itapecerica, o trajeto passa pelo centro da
-        cidade e segue pela Rodovia Régis Bittencourt (BR-116).
+        Aqui, no bairro {BAIRRO_SITIO}, existe uma antiga fazenda dos anos 1980. Quando a assumimos, em 2022,
+        somos a terceira geração de donos deste espaço, restauramos cada canto com o cuidado de quem preserva a
+        memória de uma casa de família, mantendo a estética da época. No começo, era um lugar para se hospedar.
+        Foram as primeiras noivas que, vendo as fotos da mata e do ar livre, enxergaram aqui um casamento antes
+        mesmo de nós.
       </p>
       <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-foreground/80">
-        É perto o bastante para os seus convidados chegarem sem viagem longa, e distante o bastante para que, ao
-        passar o portão, o tempo desacelere. O cheiro da terra se mistura ao do café fresco, a brisa embala a
-        cerimônia, e a natureza assume o papel de anfitriã.
+        Uma delas, {NOIVA_LAGO}, sonhava em casar à beira do lago. Para realizar esse sonho, construímos o deck
+        sobre a água. É o mesmo altar onde, desde então, tantos casais se casaram, nascido não de um projeto, mas
+        de uma história real.
+      </p>
+      <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-foreground/80">
+        O que oferecemos é um resgate: o casamento afetivo e verdadeiro de antigamente, quando as famílias
+        celebravam no quintal, sem luxo, mas com significado. Em São Lourenço da Serra, a 60 minutos de São Paulo
+        pela {VIA_ACESSO_SP}, o tempo desacelera, o cheiro da terra se mistura ao do café fresco, a brisa da serra
+        embala a cerimônia, e a natureza vira a anfitriã. Um lugar onde o amor desacelera, a natureza acolhe e
+        cada história é vivida com verdade.
       </p>
 
       <div className="mt-8 overflow-hidden rounded-2xl border border-border/60">
@@ -255,6 +273,9 @@ function OndeFicamos() {
       </div>
 
       <p className="mt-5 text-sm text-foreground/75">{SITIO_ENDERECO}</p>
+      <p className="mt-1 text-xs text-muted-foreground">
+        A cerca de {TEMPO_CENTRO_SLS} do centro de São Lourenço da Serra, e {KM_DA_SE}.
+      </p>
 
       <div className="mt-6 flex items-center justify-center gap-4">
         <a
@@ -306,27 +327,6 @@ function PorQueCasarAqui() {
           ))}
         </div>
       </div>
-    </section>
-  );
-}
-
-// Faixa curta de marca: planta a alma da marca sem contar a história inteira
-// (que vive na página-mãe de São Lourenço). Link discreto, nunca botão, para
-// não competir com o CTA de agendar visita.
-function HistoriaResumo() {
-  return (
-    <section className="mx-auto max-w-2xl px-6 py-14 text-center">
-      <p className="font-serif text-lg italic leading-relaxed text-foreground/80">
-        Um sítio de família dos anos 1980, em São Lourenço da Serra, a poucos minutos daqui, com um propósito:
-        resgatar o casamento afetivo e verdadeiro de antigamente, quando se celebrava no quintal, sem luxo, mas
-        com significado.
-      </p>
-      <Link
-        to="/casamento-em-sao-lourenco-da-serra"
-        className="mt-3 inline-block text-sm text-primary underline-offset-4 hover:underline"
-      >
-        Conheça a nossa história →
-      </Link>
     </section>
   );
 }
@@ -489,14 +489,14 @@ function CTAFinal() {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     // content_name/event próprios diferenciam este Lead (vindo da página local
-    // de Itapecerica) do Lead do formulário da home nas Conversões
-    // Personalizadas do Meta e no GTM.
+    // de São Lourenço da Serra) do Lead do formulário da home e das outras
+    // páginas de localidade nas Conversões Personalizadas do Meta e no GTM.
     if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
-      (window as any).fbq("track", "Lead", { content_name: "formulario_proposta_itapecerica" });
+      (window as any).fbq("track", "Lead", { content_name: "formulario_proposta_sao_lourenco" });
     }
     if (typeof window !== "undefined") {
       (window as any).dataLayer = (window as any).dataLayer || [];
-      (window as any).dataLayer.push({ event: "lead_form_itapecerica_submit", form_name: "proposta_itapecerica" });
+      (window as any).dataLayer.push({ event: "lead_form_sao_lourenco_submit", form_name: "proposta_sao_lourenco" });
     }
     formRef.current?.submit();
     setEnviado(true);
@@ -506,14 +506,14 @@ function CTAFinal() {
     <section id="contato" className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-24">
       <div className="mb-10 text-center">
         <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">Vamos começar</span>
-        <h2 className="mt-4 font-serif text-3xl text-primary sm:text-4xl">Venha sentir o clima do sítio</h2>
+        <h2 className="mt-4 font-serif text-3xl text-primary sm:text-4xl">Venha conhecer o sítio</h2>
         <p className="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-foreground/75 sm:text-base">
-          Preencha seus dados e agende uma visita: conheça de perto o lugar onde o seu casamento vira memória para
-          a vida toda. A {TEMPO_CARRO_ITAPECERICA} de Itapecerica da Serra, no ritmo tranquilo do campo.
+          Agende uma visita e conheça de perto o lugar, em São Lourenço da Serra, onde o seu casamento vira
+          memória para a vida toda.
         </p>
       </div>
 
-      <iframe name="proposta-sink-itapecerica" title="proposta-sink-itapecerica" style={{ display: "none" }} />
+      <iframe name="proposta-sink-sao-lourenco" title="proposta-sink-sao-lourenco" style={{ display: "none" }} />
       <div className="grid overflow-hidden rounded-2xl border border-border/60 bg-card shadow-soft sm:grid-cols-[1.4fr_1fr]">
         <div className="p-6 sm:p-10">
           <h3 className="font-serif text-2xl text-primary sm:text-3xl">Receba uma proposta personalizada</h3>
@@ -531,13 +531,13 @@ function CTAFinal() {
               ref={formRef}
               action={WEBHOOK_URL_PROPOSTA}
               method="post"
-              target="proposta-sink-itapecerica"
+              target="proposta-sink-sao-lourenco"
               onSubmit={handleSubmit}
               autoComplete="off"
               className="mt-6 grid gap-4"
             >
               <input type="hidden" name="data_exata" value={dataExataStr} />
-              <input type="hidden" name="origem" value="casamento-itapecerica-da-serra" />
+              <input type="hidden" name="origem" value="casamento-sao-lourenco-da-serra" />
 
               <Field label="Nome *">
                 <input
