@@ -1,7 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { ClipboardList, Palette, Users, Clock } from "lucide-react";
-import heroAsset from "@/assets/hero-venue.jpg.asset.json";
 
 export const Route = createLazyFileRoute("/lp2")({
   component: Landing,
@@ -88,15 +87,30 @@ function Landing() {
   const formRef = useRef<HTMLFormElement>(null);
   const tokenInputRef = useRef<HTMLInputElement>(null);
 
+  // Carrega o reCAPTCHA v3 (~alguns KB de JS de terceiros + gstatic) apenas
+  // quando a pessoa começa a interagir com o formulário, e não no mount da
+  // página. O token só é necessário no submit, então adiar tira esse peso do
+  // caminho crítico de carregamento sem afetar a validação.
   useEffect(() => {
     const SCRIPT_ID = "recaptcha-v3-script";
-    if (document.getElementById(SCRIPT_ID)) return;
-    const s = document.createElement("script");
-    s.id = SCRIPT_ID;
-    s.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`;
-    s.async = true;
-    s.defer = true;
-    document.head.appendChild(s);
+    const form = formRef.current;
+    let injected = false;
+    const loadRecaptcha = () => {
+      if (injected || document.getElementById(SCRIPT_ID)) return;
+      injected = true;
+      const s = document.createElement("script");
+      s.id = SCRIPT_ID;
+      s.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`;
+      s.async = true;
+      s.defer = true;
+      document.head.appendChild(s);
+    };
+    form?.addEventListener("focusin", loadRecaptcha, { once: true });
+    form?.addEventListener("pointerdown", loadRecaptcha, { once: true });
+    return () => {
+      form?.removeEventListener("focusin", loadRecaptcha);
+      form?.removeEventListener("pointerdown", loadRecaptcha);
+    };
   }, []);
 
   const maskCelular = (raw: string) => {
@@ -152,15 +166,27 @@ function Landing() {
       {/* Hero */}
       <section className="relative isolate">
         <div className="absolute inset-0 -z-10 overflow-hidden">
-          <img
-            src={heroAsset.url}
-            alt=""
-            width={1600}
-            height={1200}
-            fetchPriority="high"
-            decoding="async"
-            className="h-full w-full scale-110 object-cover blur-sm"
-          />
+          <picture>
+            <source
+              srcSet="/images/hero-venue-700.avif 700w, /images/hero-venue-1400.avif 1400w"
+              sizes="100vw"
+              type="image/avif"
+            />
+            <source
+              srcSet="/images/hero-venue-700.webp 700w, /images/hero-venue-1400.webp 1400w"
+              sizes="100vw"
+              type="image/webp"
+            />
+            <img
+              src="/images/hero-venue-1400.webp"
+              alt=""
+              width={1600}
+              height={1200}
+              fetchPriority="high"
+              decoding="async"
+              className="h-full w-full scale-110 object-cover blur-sm"
+            />
+          </picture>
           <div className="absolute inset-0 bg-primary/45" />
           <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-background" />
         </div>

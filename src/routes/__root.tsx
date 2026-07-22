@@ -91,41 +91,56 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       ],
       scripts: [
         {
+          // GTM + GA4 (gtag) + Meta Pixel são carregados de forma adiada: na
+          // primeira interação da pessoa (scroll/toque/tecla) ou, no máximo,
+          // quando o navegador fica ocioso (requestIdleCallback, teto de 3s).
+          // Assim os ~centenas de KB de JS de terceiros deixam de competir com
+          // a hidratação da página no carregamento inicial (melhora LCP/TBT).
+          // dataLayer é iniciado imediatamente para não perder eventos que os
+          // componentes empurram antes das tags terminarem de carregar; o
+          // PageView do Pixel dispara junto com o carregamento adiado.
           type: "text/javascript",
           children: `
-            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','GTM-PKJJWXQ5');
-          `,
-        },
-        {
-          async: true,
-          src: "https://www.googletagmanager.com/gtag/js?id=G-RGH172N6HB",
-        },
-        {
-          type: "text/javascript",
-          children: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-RGH172N6HB');
-          `,
-        },
-        {
-          type: "text/javascript",
-          children: `
-            !function(f,b,e,v,n,t,s)
-            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-            n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t,s)}(window, document,'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '1259848206165936');
-            fbq('track', 'PageView');
+            (function(){
+              window.dataLayer = window.dataLayer || [];
+              var loaded = false;
+              function loadAnalytics(){
+                if (loaded) return; loaded = true;
+                (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                })(window,document,'script','dataLayer','GTM-PKJJWXQ5');
+                var ga=document.createElement('script');ga.async=true;
+                ga.src='https://www.googletagmanager.com/gtag/js?id=G-RGH172N6HB';
+                document.head.appendChild(ga);
+                function gtag(){dataLayer.push(arguments);}
+                window.gtag=window.gtag||gtag;
+                gtag('js', new Date());
+                gtag('config', 'G-RGH172N6HB');
+                !function(f,b,e,v,n,t,s)
+                {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                n.queue=[];t=b.createElement(e);t.async=!0;
+                t.src=v;s=b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t,s)}(window, document,'script',
+                'https://connect.facebook.net/en_US/fbevents.js');
+                fbq('init', '1259848206165936');
+                fbq('track', 'PageView');
+              }
+              var evts=['scroll','pointerdown','keydown','touchstart'];
+              function onFirstInteraction(){
+                loadAnalytics();
+                evts.forEach(function(e){window.removeEventListener(e,onFirstInteraction);});
+              }
+              evts.forEach(function(e){window.addEventListener(e,onFirstInteraction,{once:true,passive:true});});
+              if ('requestIdleCallback' in window) {
+                requestIdleCallback(loadAnalytics, { timeout: 3000 });
+              } else {
+                setTimeout(loadAnalytics, 2500);
+              }
+            })();
           `,
         },
         {
@@ -162,7 +177,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "preload",
         as: "style",
-        href: "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Inter:wght@400;500;600&display=swap",
         // onload é um atributo HTML literal (string), não um handler React —
         // técnica padrão de carregamento assíncrono de CSS ("loadCSS" pattern)
         onload: "this.onload=null;this.rel='stylesheet'",
@@ -198,7 +213,7 @@ function RootShell({ children }: { children: ReactNode }) {
         <noscript>
           <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Inter:wght@400;500;600&display=swap"
           />
         </noscript>
         {children}
