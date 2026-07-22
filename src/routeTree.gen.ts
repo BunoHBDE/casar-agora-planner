@@ -14,6 +14,7 @@ import { Route as Lp2RouteImport } from './routes/lp2'
 import { Route as LpRouteImport } from './routes/lp'
 import { Route as DownloadRouteImport } from './routes/download'
 import { Route as CasamentoEmItapecericaDaSerraRouteImport } from './routes/casamento-em-itapecerica-da-serra'
+import { Route as CasamentoEmSaoLourencoDaSerraRouteImport } from './routes/casamento-em-sao-lourenco-da-serra'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPublicSubmitLeadRouteImport } from './routes/api/public/submit-lead'
 
@@ -47,6 +48,16 @@ const CasamentoEmItapecericaDaSerraRoute =
       (d) => d.Route,
     ),
   )
+const CasamentoEmSaoLourencoDaSerraRoute =
+  CasamentoEmSaoLourencoDaSerraRouteImport.update({
+    id: '/casamento-em-sao-lourenco-da-serra',
+    path: '/casamento-em-sao-lourenco-da-serra',
+    getParentRoute: () => rootRouteImport,
+  } as any).lazy(() =>
+    import('./routes/casamento-em-sao-lourenco-da-serra.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -61,6 +72,7 @@ const ApiPublicSubmitLeadRoute = ApiPublicSubmitLeadRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/casamento-em-itapecerica-da-serra': typeof CasamentoEmItapecericaDaSerraRoute
+  '/casamento-em-sao-lourenco-da-serra': typeof CasamentoEmSaoLourencoDaSerraRoute
   '/download': typeof DownloadRoute
   '/lp': typeof LpRoute
   '/lp2': typeof Lp2Route
@@ -70,6 +82,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/casamento-em-itapecerica-da-serra': typeof CasamentoEmItapecericaDaSerraRoute
+  '/casamento-em-sao-lourenco-da-serra': typeof CasamentoEmSaoLourencoDaSerraRoute
   '/download': typeof DownloadRoute
   '/lp': typeof LpRoute
   '/lp2': typeof Lp2Route
@@ -80,6 +93,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/casamento-em-itapecerica-da-serra': typeof CasamentoEmItapecericaDaSerraRoute
+  '/casamento-em-sao-lourenco-da-serra': typeof CasamentoEmSaoLourencoDaSerraRoute
   '/download': typeof DownloadRoute
   '/lp': typeof LpRoute
   '/lp2': typeof Lp2Route
@@ -91,6 +105,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/casamento-em-itapecerica-da-serra'
+    | '/casamento-em-sao-lourenco-da-serra'
     | '/download'
     | '/lp'
     | '/lp2'
@@ -100,6 +115,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/casamento-em-itapecerica-da-serra'
+    | '/casamento-em-sao-lourenco-da-serra'
     | '/download'
     | '/lp'
     | '/lp2'
@@ -109,6 +125,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/casamento-em-itapecerica-da-serra'
+    | '/casamento-em-sao-lourenco-da-serra'
     | '/download'
     | '/lp'
     | '/lp2'
@@ -119,6 +136,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CasamentoEmItapecericaDaSerraRoute: typeof CasamentoEmItapecericaDaSerraRoute
+  CasamentoEmSaoLourencoDaSerraRoute: typeof CasamentoEmSaoLourencoDaSerraRoute
   DownloadRoute: typeof DownloadRoute
   LpRoute: typeof LpRoute
   Lp2Route: typeof Lp2Route
@@ -163,6 +181,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CasamentoEmItapecericaDaSerraRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/casamento-em-sao-lourenco-da-serra': {
+      id: '/casamento-em-sao-lourenco-da-serra'
+      path: '/casamento-em-sao-lourenco-da-serra'
+      fullPath: '/casamento-em-sao-lourenco-da-serra'
+      preLoaderRoute: typeof CasamentoEmSaoLourencoDaSerraRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -183,6 +208,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CasamentoEmItapecericaDaSerraRoute: CasamentoEmItapecericaDaSerraRoute,
+  CasamentoEmSaoLourencoDaSerraRoute: CasamentoEmSaoLourencoDaSerraRoute,
   DownloadRoute: DownloadRoute,
   LpRoute: LpRoute,
   Lp2Route: Lp2Route,
