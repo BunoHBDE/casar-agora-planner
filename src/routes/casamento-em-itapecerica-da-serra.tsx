@@ -68,8 +68,11 @@ export const Route = createFileRoute("/casamento-em-itapecerica-da-serra")({
               "@type": "BreadcrumbList",
               itemListElement: [
                 { "@type": "ListItem", position: 1, name: "Home", item: BASE_URL },
-                { "@type": "ListItem", position: 2, name: "Casamento no Campo" },
-                { "@type": "ListItem", position: 3, name: "Itapecerica da Serra", item: `${BASE_URL}${PAGE_PATH}` },
+                // "Casamento no Campo" fica só no breadcrumb visual da página — não
+                // existe uma página de categoria real, e o Google exige um "item"
+                // (URL) em todo ListItem que não seja o último. Incluir esse nó sem
+                // URL foi o que o Search Console reportou como erro crítico.
+                { "@type": "ListItem", position: 2, name: "Itapecerica da Serra", item: `${BASE_URL}${PAGE_PATH}` },
               ],
             },
             {
