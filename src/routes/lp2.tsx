@@ -1,5 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import heroAsset from "@/assets/hero-venue.jpg.asset.json";
+
+// URL absoluta (exigida por crawlers de redes sociais) apontando para a
+// versão otimizada do hero, e não para o JPEG original de ~1 MB.
+const OG_IMAGE_URL = "https://sitiocantodamata.com.br/images/hero-venue-1400.webp";
 
 export const Route = createFileRoute("/lp2")({
   head: () => ({
@@ -16,9 +19,9 @@ export const Route = createFileRoute("/lp2")({
         property: "og:description",
         content: "Receba a planilha gratuita de organização do seu casamento.",
       },
-      { property: "og:image", content: heroAsset.url },
+      { property: "og:image", content: OG_IMAGE_URL },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: heroAsset.url },
+      { name: "twitter:image", content: OG_IMAGE_URL },
     ],
   }),
 });
