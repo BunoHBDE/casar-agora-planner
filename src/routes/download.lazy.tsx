@@ -21,7 +21,7 @@ function DownloadPage() {
             *Verifique a caixa de SPAM
           </p>
           <a
-            href="https://bit.ly/PlanilhaOrganizandoOSeuCasamento"
+            href="https://docs.google.com/spreadsheets/d/14UP12fAyskfjTWKYYGlQXkxgMsQVr0Ko/edit?usp=sharing&ouid=110313268108453966297&rtpof=true&sd=true"
             target="_blank"
             rel="noopener noreferrer"
             className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary/90"
