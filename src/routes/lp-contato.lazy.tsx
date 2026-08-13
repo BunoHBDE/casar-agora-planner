@@ -4,6 +4,7 @@ import { MessageCircle } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { ptBR } from "date-fns/locale";
+import { aplicarCorrespondenciaAvancada } from "@/lib/meta-pixel";
 
 export const Route = createLazyFileRoute("/lp-contato")({
   component: LandingContato,
@@ -141,6 +142,9 @@ function Contato() {
       return;
     }
     setEnviando(true);
+    // Correspondência avançada: precisa vir antes dos eventos, para que eles
+    // já saiam com os dados de contato associados.
+    aplicarCorrespondenciaAvancada({ nome, email, telefone });
     // content_name diferencia este Lead dos formulários da home (/) e da
     // planilha (/lp, /lp2) nas Conversões Personalizadas do Meta.
     if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
