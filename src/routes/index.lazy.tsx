@@ -5,6 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { ptBR } from "date-fns/locale";
 import { GOOGLE_MAPS_ICON, WAZE_ICON } from "@/assets/map-icons";
+import { aplicarCorrespondenciaAvancada } from "@/lib/meta-pixel";
 
 const HERO_IMAGE_URL = "/images/hero-venue-1400.webp";
 const HERO_SRCSET_AVIF = "/images/hero-venue-700.avif 700w, /images/hero-venue-1400.avif 1400w";
@@ -454,6 +455,9 @@ function CTAFinal() {
       setEnviado(true);
       return;
     }
+    // Correspondência avançada: precisa vir antes dos eventos, para que eles
+    // já saiam com os dados de contato associados.
+    aplicarCorrespondenciaAvancada({ nome, email, telefone });
     // content_name diferencia este Lead do Lead da planilha (/lp) nas
     // Conversões Personalizadas do Meta.
     if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
