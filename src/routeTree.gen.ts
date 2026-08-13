@@ -9,45 +9,21 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as Lp2RouteImport } from './routes/lp2'
-import { Route as LpRouteImport } from './routes/lp'
-import { Route as DownloadRouteImport } from './routes/download'
-import { Route as CasamentoEmSaoLourencoDaSerraRouteImport } from './routes/casamento-em-sao-lourenco-da-serra'
-import { Route as CasamentoEmItapecericaDaSerraRouteImport } from './routes/casamento-em-itapecerica-da-serra'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CasamentoEmItapecericaDaSerraRouteImport } from './routes/casamento-em-itapecerica-da-serra'
+import { Route as CasamentoEmSaoLourencoDaSerraRouteImport } from './routes/casamento-em-sao-lourenco-da-serra'
+import { Route as DownloadRouteImport } from './routes/download'
+import { Route as LpRouteImport } from './routes/lp'
+import { Route as LpContatoRouteImport } from './routes/lp-contato'
+import { Route as Lp2RouteImport } from './routes/lp2'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ApiPublicSubmitLeadRouteImport } from './routes/api/public/submit-lead'
 
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
-} as any)
-const Lp2Route = Lp2RouteImport.update({
-  id: '/lp2',
-  path: '/lp2',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/lp2.lazy').then((d) => d.Route))
-const LpRoute = LpRouteImport.update({
-  id: '/lp',
-  path: '/lp',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/lp.lazy').then((d) => d.Route))
-const DownloadRoute = DownloadRouteImport.update({
-  id: '/download',
-  path: '/download',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/download.lazy').then((d) => d.Route))
-const CasamentoEmSaoLourencoDaSerraRoute =
-  CasamentoEmSaoLourencoDaSerraRouteImport.update({
-    id: '/casamento-em-sao-lourenco-da-serra',
-    path: '/casamento-em-sao-lourenco-da-serra',
-    getParentRoute: () => rootRouteImport,
-  } as any).lazy(() =>
-    import('./routes/casamento-em-sao-lourenco-da-serra.lazy').then(
-      (d) => d.Route,
-    ),
-  )
+} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 const CasamentoEmItapecericaDaSerraRoute =
   CasamentoEmItapecericaDaSerraRouteImport.update({
     id: '/casamento-em-itapecerica-da-serra',
@@ -58,11 +34,41 @@ const CasamentoEmItapecericaDaSerraRoute =
       (d) => d.Route,
     ),
   )
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const CasamentoEmSaoLourencoDaSerraRoute =
+  CasamentoEmSaoLourencoDaSerraRouteImport.update({
+    id: '/casamento-em-sao-lourenco-da-serra',
+    path: '/casamento-em-sao-lourenco-da-serra',
+    getParentRoute: () => rootRouteImport,
+  } as any).lazy(() =>
+    import('./routes/casamento-em-sao-lourenco-da-serra.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const DownloadRoute = DownloadRouteImport.update({
+  id: '/download',
+  path: '/download',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+} as any).lazy(() => import('./routes/download.lazy').then((d) => d.Route))
+const LpRoute = LpRouteImport.update({
+  id: '/lp',
+  path: '/lp',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/lp.lazy').then((d) => d.Route))
+const LpContatoRoute = LpContatoRouteImport.update({
+  id: '/lp-contato',
+  path: '/lp-contato',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/lp-contato.lazy').then((d) => d.Route))
+const Lp2Route = Lp2RouteImport.update({
+  id: '/lp2',
+  path: '/lp2',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/lp2.lazy').then((d) => d.Route))
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicSubmitLeadRoute = ApiPublicSubmitLeadRouteImport.update({
   id: '/api/public/submit-lead',
   path: '/api/public/submit-lead',
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/casamento-em-sao-lourenco-da-serra': typeof CasamentoEmSaoLourencoDaSerraRoute
   '/download': typeof DownloadRoute
   '/lp': typeof LpRoute
+  '/lp-contato': typeof LpContatoRoute
   '/lp2': typeof Lp2Route
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/public/submit-lead': typeof ApiPublicSubmitLeadRoute
@@ -85,6 +92,7 @@ export interface FileRoutesByTo {
   '/casamento-em-sao-lourenco-da-serra': typeof CasamentoEmSaoLourencoDaSerraRoute
   '/download': typeof DownloadRoute
   '/lp': typeof LpRoute
+  '/lp-contato': typeof LpContatoRoute
   '/lp2': typeof Lp2Route
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/public/submit-lead': typeof ApiPublicSubmitLeadRoute
@@ -96,6 +104,7 @@ export interface FileRoutesById {
   '/casamento-em-sao-lourenco-da-serra': typeof CasamentoEmSaoLourencoDaSerraRoute
   '/download': typeof DownloadRoute
   '/lp': typeof LpRoute
+  '/lp-contato': typeof LpContatoRoute
   '/lp2': typeof Lp2Route
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/public/submit-lead': typeof ApiPublicSubmitLeadRoute
@@ -108,6 +117,7 @@ export interface FileRouteTypes {
     | '/casamento-em-sao-lourenco-da-serra'
     | '/download'
     | '/lp'
+    | '/lp-contato'
     | '/lp2'
     | '/sitemap.xml'
     | '/api/public/submit-lead'
@@ -118,6 +128,7 @@ export interface FileRouteTypes {
     | '/casamento-em-sao-lourenco-da-serra'
     | '/download'
     | '/lp'
+    | '/lp-contato'
     | '/lp2'
     | '/sitemap.xml'
     | '/api/public/submit-lead'
@@ -128,6 +139,7 @@ export interface FileRouteTypes {
     | '/casamento-em-sao-lourenco-da-serra'
     | '/download'
     | '/lp'
+    | '/lp-contato'
     | '/lp2'
     | '/sitemap.xml'
     | '/api/public/submit-lead'
@@ -139,6 +151,7 @@ export interface RootRouteChildren {
   CasamentoEmSaoLourencoDaSerraRoute: typeof CasamentoEmSaoLourencoDaSerraRoute
   DownloadRoute: typeof DownloadRoute
   LpRoute: typeof LpRoute
+  LpContatoRoute: typeof LpContatoRoute
   Lp2Route: typeof Lp2Route
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiPublicSubmitLeadRoute: typeof ApiPublicSubmitLeadRoute
@@ -146,39 +159,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/lp2': {
-      id: '/lp2'
-      path: '/lp2'
-      fullPath: '/lp2'
-      preLoaderRoute: typeof Lp2RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/lp': {
-      id: '/lp'
-      path: '/lp'
-      fullPath: '/lp'
-      preLoaderRoute: typeof LpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/download': {
-      id: '/download'
-      path: '/download'
-      fullPath: '/download'
-      preLoaderRoute: typeof DownloadRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/casamento-em-sao-lourenco-da-serra': {
-      id: '/casamento-em-sao-lourenco-da-serra'
-      path: '/casamento-em-sao-lourenco-da-serra'
-      fullPath: '/casamento-em-sao-lourenco-da-serra'
-      preLoaderRoute: typeof CasamentoEmSaoLourencoDaSerraRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/casamento-em-itapecerica-da-serra': {
@@ -188,11 +173,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CasamentoEmItapecericaDaSerraRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/casamento-em-sao-lourenco-da-serra': {
+      id: '/casamento-em-sao-lourenco-da-serra'
+      path: '/casamento-em-sao-lourenco-da-serra'
+      fullPath: '/casamento-em-sao-lourenco-da-serra'
+      preLoaderRoute: typeof CasamentoEmSaoLourencoDaSerraRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/download': {
+      id: '/download'
+      path: '/download'
+      fullPath: '/download'
+      preLoaderRoute: typeof DownloadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lp': {
+      id: '/lp'
+      path: '/lp'
+      fullPath: '/lp'
+      preLoaderRoute: typeof LpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lp-contato': {
+      id: '/lp-contato'
+      path: '/lp-contato'
+      fullPath: '/lp-contato'
+      preLoaderRoute: typeof LpContatoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lp2': {
+      id: '/lp2'
+      path: '/lp2'
+      fullPath: '/lp2'
+      preLoaderRoute: typeof Lp2RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/submit-lead': {
@@ -211,6 +231,7 @@ const rootRouteChildren: RootRouteChildren = {
   CasamentoEmSaoLourencoDaSerraRoute: CasamentoEmSaoLourencoDaSerraRoute,
   DownloadRoute: DownloadRoute,
   LpRoute: LpRoute,
+  LpContatoRoute: LpContatoRoute,
   Lp2Route: Lp2Route,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiPublicSubmitLeadRoute: ApiPublicSubmitLeadRoute,
@@ -218,3 +239,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
