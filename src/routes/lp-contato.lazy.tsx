@@ -93,7 +93,6 @@ function Contato() {
   const [dataModo, setDataModo] = useState<"aproximado" | "exata">("aproximado");
   const [erroDataExata, setErroDataExata] = useState(false);
   const [fase, setFase] = useState("");
-  const [consentimento, setConsentimento] = useState(true);
   const [enviado, setEnviado] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
@@ -184,6 +183,9 @@ function Contato() {
             >
               <input type="hidden" name="data_exata" value={dataExataStr} />
               <input type="hidden" name="origem" value="lp-contato" />
+              {/* Mantém a coluna da planilha preenchida: registra que o aviso
+                  de LGPD estava na tela no momento do envio. */}
+              <input type="hidden" name="consentimento_lgpd" value="sim" />
 
               <Field label="Nome *">
                 <input
@@ -339,25 +341,6 @@ function Contato() {
                 </select>
               </Field>
 
-              {/* Vem marcada por decisão do cliente. Desmarcar bloqueia o
-                  envio, então todo lead que chega tem o consentimento
-                  registrado como "sim" na planilha. */}
-              <label className="mt-1 flex cursor-pointer items-start gap-3">
-                <input
-                  type="checkbox"
-                  name="consentimento_lgpd"
-                  value="sim"
-                  required
-                  checked={consentimento}
-                  onChange={(e) => setConsentimento(e.target.checked)}
-                  className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-primary"
-                />
-                <span className="text-xs leading-relaxed text-muted-foreground">
-                  Autorizo o contato do Sítio Canto da Mata e o uso dos meus dados para
-                  essa finalidade, conforme a <strong>LGPD</strong>.
-                </span>
-              </label>
-
               {/* O botão segue clicável mesmo com campos em branco: assim o
                   clique aciona a validação do navegador, que aponta o
                   primeiro campo pendente em vez de deixar a pessoa sem
@@ -372,6 +355,14 @@ function Contato() {
               </button>
               <p className="text-center text-xs text-muted-foreground">
                 Seus dados são confidenciais. Sem spam.
+              </p>
+              {/* Aviso de LGPD no lugar de caixa de consentimento: quem envia
+                  está pedindo um orçamento, e o contato é a resposta a esse
+                  pedido. O aviso informa a finalidade sem colocar mais um
+                  passo no caminho de quem preenche. */}
+              <p className="text-center text-[11px] leading-relaxed text-muted-foreground">
+                Ao enviar, você autoriza o contato do Sítio Canto da Mata e o uso dos seus
+                dados para essa finalidade, conforme a <strong>LGPD</strong>.
               </p>
             </form>
           )}
