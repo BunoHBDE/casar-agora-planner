@@ -4,7 +4,6 @@ import { MessageCircle } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { ptBR } from "date-fns/locale";
-import { GOOGLE_MAPS_ICON, WAZE_ICON } from "@/assets/map-icons";
 
 export const Route = createLazyFileRoute("/lp-contato")({
   component: LandingContato,
@@ -16,44 +15,9 @@ const WEBHOOK_URL_PROPOSTA =
   "https://script.google.com/macros/s/AKfycbxSNqMil3-Cp2zTJDgNWW7QMa7WDHhzleqp_iUgwzcqzm7R1oYCjlP5whqhCTkwuMu0_g/exec";
 
 const WHATSAPP_NUMERO = "5511933197671";
-const INSTAGRAM_URL = "https://www.instagram.com/sitiocantodamata100";
-
-const HERO_IMAGE_URL = "/images/hero-venue-1400.webp";
-const HERO_SRCSET_AVIF = "/images/hero-venue-700.avif 700w, /images/hero-venue-1400.avif 1400w";
-const HERO_SRCSET_WEBP = "/images/hero-venue-700.webp 700w, /images/hero-venue-1400.webp 1400w";
 
 const MESES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 const ANOS = Array.from({ length: 6 }, (_, i) => String(2026 + i));
-
-const SITIO_ENDERECO = "Estrada Dos Tigres, 100 - Pereiras, São Lourenço da Serra - SP, 06890-000";
-const GOOGLE_MAPS_URL = "https://maps.app.goo.gl/Hi3gP8wreiHrvFAP8";
-const WAZE_URL = "https://www.waze.com/en/live-map/directions/sitio-canto-da-mata-sao-lourenco-da-serra?place=w.205194778.2051947775.41039786";
-
-const DIFERENCIAIS = [
-  { titulo: "O altar sobre o lago", desc: "O cenário para um \"sim\" inesquecível, com o abraço da natureza." },
-  { titulo: "Buffet completo", desc: "Serviço contínuo com alimentação garantida do início ao fim da festa." },
-  { titulo: "Decoração", desc: "Arranjos com flores naturais e preservadas, personalizados com o nosso acervo." },
-  { titulo: "Exclusividade total", desc: "Apenas um evento por dia, privacidade absoluta." },
-  { titulo: "Estacionamento privativo", desc: "Espaço amplo e seguro." },
-  { titulo: "Mobiliário e equipe de apoio", desc: "Bancos, mesas, cadeiras e equipe no dia." },
-];
-
-const GALERIA_WEBP = [
-  "/images/galeria/galeria-1.webp",
-  "/images/galeria/galeria-2.webp",
-  "/images/galeria/galeria-3.webp",
-  "/images/galeria/galeria-4.webp",
-  "/images/galeria/galeria-5.webp",
-  "/images/galeria/galeria-6.webp",
-];
-const GALERIA_AVIF = [
-  "/images/galeria/galeria-1.avif",
-  "/images/galeria/galeria-2.avif",
-  "/images/galeria/galeria-3.avif",
-  "/images/galeria/galeria-4.avif",
-  "/images/galeria/galeria-5.avif",
-  "/images/galeria/galeria-6.avif",
-];
 
 // Evento customizado para o GTM: gatilho "Evento personalizado" com o
 // nome "whatsapp_click". No Meta Pixel dispara o evento padrão "Contact".
@@ -67,162 +31,25 @@ function trackWhatsappClick() {
   }
 }
 
+// Página de campanha enxuta: só o formulário, sem menu, seções ou links que
+// levem a pessoa para fora antes de deixar os dados.
 function LandingContato() {
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <Hero />
-      <Estrutura />
-      <Galeria />
-      <Localizacao />
-      <Contato />
-      <Footer />
-    </main>
-  );
-}
-
-function Hero() {
-  return (
-    <section className="relative isolate">
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <picture>
-          <source srcSet={HERO_SRCSET_AVIF} sizes="100vw" type="image/avif" />
-          <source srcSet={HERO_SRCSET_WEBP} sizes="100vw" type="image/webp" />
-          <img
-            src={HERO_IMAGE_URL}
-            alt="Sítio Canto da Mata"
-            width={1400}
-            height={1050}
-            fetchPriority="high"
-            decoding="async"
-            className="h-full w-full object-cover"
-          />
-        </picture>
-        <div className="absolute inset-0 bg-primary/50" />
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-background" />
-      </div>
-      <div
-        className="mx-auto max-w-2xl px-6 pt-20 pb-28 text-center text-primary-foreground sm:pt-28 sm:pb-36"
-        style={{ textShadow: "0 2px 16px rgba(0,0,0,0.45)" }}
-      >
-        <span className="text-[11px] uppercase tracking-[0.24em] text-primary-foreground/85">
-          SÍTIO CANTO DA MATA
-        </span>
-        <h1 className="mt-4 font-serif text-3xl leading-tight sm:text-5xl">
-          Um refúgio no campo para o seu grande dia
-        </h1>
-        <p className="mx-auto mt-4 max-w-md text-sm text-primary-foreground/90 sm:text-base">
-          Espaço para casamentos a 60 minutos de São Paulo, com buffet, decoração e
-          exclusividade de um único evento por dia.
-        </p>
-        <div className="mt-8">
-          <a
-            href="#contato"
-            className="inline-block rounded-full bg-primary-foreground px-8 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary transition hover:bg-primary-foreground/90"
-          >
-            Quero minha proposta
-          </a>
-          <p className="mt-3 text-xs text-primary-foreground/80">
-            Sem compromisso · leva menos de 1 minuto
+    <main className="flex min-h-screen flex-col bg-secondary/30 text-foreground">
+      <div className="flex flex-1 items-center justify-center px-4 py-10 sm:px-6 sm:py-14">
+        <div className="w-full max-w-xl">
+          <p className="text-center text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+            Sítio Canto da Mata
           </p>
+          <Contato />
         </div>
       </div>
-    </section>
-  );
-}
-
-function Estrutura() {
-  return (
-    <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
-      <div className="text-center">
-        <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
-          O que está incluso
-        </span>
-        <h2 className="mt-3 font-serif text-2xl text-primary sm:text-3xl">
-          Uma estrutura completa para o seu casamento
-        </h2>
-      </div>
-      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {DIFERENCIAIS.map((d) => (
-          <article
-            key={d.titulo}
-            className="rounded-2xl border border-border/60 bg-card p-6 shadow-soft/40"
-          >
-            <h3 className="font-serif text-xl text-primary">{d.titulo}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-foreground/75">{d.desc}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function Galeria() {
-  return (
-    <section className="border-y border-border/60 bg-secondary/40 py-16 sm:py-20">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="text-center">
-          <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">Galeria</span>
-          <h2 className="mt-3 font-serif text-2xl text-primary sm:text-3xl">
-            Um passeio pelo sítio
-          </h2>
+      <footer className="border-t border-border/60 bg-background">
+        <div className="mx-auto max-w-xl px-6 py-6 text-center text-xs text-muted-foreground">
+          © {new Date().getFullYear()} Sítio Canto da Mata
         </div>
-        <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {GALERIA_WEBP.map((src, i) => (
-            <div key={src} className="aspect-[4/3] overflow-hidden rounded-xl bg-muted">
-              <picture>
-                <source srcSet={GALERIA_AVIF[i]} type="image/avif" />
-                <source srcSet={src} type="image/webp" />
-                <img
-                  src={src}
-                  alt={`Sítio Canto da Mata — foto ${i + 1}`}
-                  loading="lazy"
-                  decoding="async"
-                  className="h-full w-full object-cover"
-                />
-              </picture>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Localizacao() {
-  return (
-    <section className="mx-auto max-w-3xl px-6 py-16 text-center sm:py-20">
-      <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">Localização</span>
-      <h2 className="mt-3 font-serif text-2xl text-primary sm:text-3xl">
-        Fácil de chegar, longe da correria.
-      </h2>
-      <p className="mt-4 text-base text-foreground/80">
-        A 60 minutos de São Paulo, em São Lourenço da Serra.
-      </p>
-      <p className="mt-3 text-sm text-foreground/75">{SITIO_ENDERECO}</p>
-
-      <div className="mt-6 flex items-center justify-center gap-4">
-        <a
-          href={GOOGLE_MAPS_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Abrir no Google Maps"
-          title="Abrir no Google Maps"
-          className="flex h-14 w-14 items-center justify-center rounded-full border border-border/60 bg-card shadow-soft/40 transition hover:scale-105 hover:border-primary"
-        >
-          <img src={GOOGLE_MAPS_ICON} alt="Google Maps" className="h-8 w-8" />
-        </a>
-        <a
-          href={WAZE_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Abrir no Waze"
-          title="Abrir no Waze"
-          className="flex h-14 w-14 items-center justify-center rounded-full border border-border/60 bg-card shadow-soft/40 transition hover:scale-105 hover:border-primary"
-        >
-          <img src={WAZE_ICON} alt="Waze" className="h-8 w-8" />
-        </a>
-      </div>
-    </section>
+      </footer>
+    </main>
   );
 }
 
@@ -274,14 +101,14 @@ function Contato() {
   }
 
   return (
-    <section id="contato" className="mx-auto max-w-xl px-4 py-16 sm:px-6 sm:py-20">
+    <section id="contato" className="mt-4">
       <iframe name="proposta-sink" title="proposta-sink" style={{ display: "none" }} />
 
       <div className="overflow-hidden rounded-2xl border border-border/60 bg-card shadow-soft">
         <div className="p-6 sm:p-8">
-          <h2 className="font-serif text-2xl text-primary sm:text-3xl">
+          <h1 className="font-serif text-2xl text-primary sm:text-3xl">
             Receba uma proposta personalizada
-          </h2>
+          </h1>
           <p className="mt-2 text-sm text-muted-foreground">
             Preencha seus dados e comece a planejar o seu casamento com o Sítio Canto da Mata.
           </p>
@@ -489,18 +316,5 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       </span>
       {children}
     </label>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="border-t border-border/60 bg-background">
-      <div className="mx-auto flex max-w-3xl flex-col items-center justify-between gap-3 px-6 py-8 text-xs text-muted-foreground sm:flex-row">
-        <p>© {new Date().getFullYear()} Sítio Canto da Mata</p>
-        <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="hover:text-primary">
-          Instagram
-        </a>
-      </div>
-    </footer>
   );
 }
