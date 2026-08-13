@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MessageCircle } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
@@ -93,8 +93,21 @@ function Contato() {
   const [erroDataExata, setErroDataExata] = useState(false);
   const [fase, setFase] = useState("");
   const [enviado, setEnviado] = useState(false);
+  const [enviando, setEnviando] = useState(false);
+  const [formValido, setFormValido] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const dataExataBtnRef = useRef<HTMLButtonElement>(null);
+
+  // O botão de envio fica desativado enquanto os obrigatórios não estiverem
+  // completos. A checagem reaproveita a validação do próprio navegador
+  // (required, type e pattern), somada à regra da data exata, que vive num
+  // campo oculto e por isso o navegador não valida.
+  useEffect(() => {
+    const form = formRef.current;
+    if (!form) return;
+    const dataOk = dataModo === "aproximado" ? Boolean(mes && ano) : Boolean(dataExata);
+    setFormValido(form.checkValidity() && dataOk);
+  }, [nome, email, telefone, mes, ano, convidados, dataExata, dataModo]);
 
   const maskTelefone = (raw: string) => {
     const digits = raw.replace(/\D/g, "").slice(0, 11);
@@ -117,6 +130,9 @@ function Contato() {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    // Trava contra envio repetido: sem ela, dois cliques em sequência muito
+    // rápida contariam a mesma pessoa duas vezes nos eventos do Meta.
+    if (enviando) return;
     // A data exata vive num campo oculto, que o navegador não valida sozinho:
     // quando esse é o modo escolhido, a checagem do preenchimento é nossa.
     if (dataModo === "exata" && !dataExata) {
@@ -124,6 +140,7 @@ function Contato() {
       dataExataBtnRef.current?.focus();
       return;
     }
+    setEnviando(true);
     // content_name diferencia este Lead dos formulários da home (/) e da
     // planilha (/lp, /lp2) nas Conversões Personalizadas do Meta.
     if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
@@ -331,9 +348,10 @@ function Contato() {
 
               <button
                 type="submit"
-                className="mt-2 w-full rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary/90"
+                disabled={!formValido || enviando}
+                className="mt-2 w-full rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-primary/40 disabled:hover:bg-primary/40"
               >
-                Quero minha proposta
+                {enviando ? "Enviando…" : "Quero minha proposta"}
               </button>
               <p className="text-center text-xs text-muted-foreground">
                 Seus dados são confidenciais. Sem spam.
