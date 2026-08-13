@@ -333,7 +333,7 @@ function Contato() {
                 type="submit"
                 className="mt-2 w-full rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary/90"
               >
-                Quero minha proposta
+                DAR O PRIMEIRO PASSO
               </button>
               <p className="text-center text-xs text-muted-foreground">
                 Seus dados são confidenciais. Sem spam.
