@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { MessageCircle } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
@@ -93,22 +93,11 @@ function Contato() {
   const [dataModo, setDataModo] = useState<"aproximado" | "exata">("aproximado");
   const [erroDataExata, setErroDataExata] = useState(false);
   const [fase, setFase] = useState("");
+  const [consentimento, setConsentimento] = useState(true);
   const [enviado, setEnviado] = useState(false);
   const [enviando, setEnviando] = useState(false);
-  const [formValido, setFormValido] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const dataExataBtnRef = useRef<HTMLButtonElement>(null);
-
-  // O botão de envio fica desativado enquanto os obrigatórios não estiverem
-  // completos. A checagem reaproveita a validação do próprio navegador
-  // (required, type e pattern), somada à regra da data exata, que vive num
-  // campo oculto e por isso o navegador não valida.
-  useEffect(() => {
-    const form = formRef.current;
-    if (!form) return;
-    const dataOk = dataModo === "aproximado" ? Boolean(mes && ano) : Boolean(dataExata);
-    setFormValido(form.checkValidity() && dataOk);
-  }, [nome, email, telefone, mes, ano, convidados, dataExata, dataModo]);
 
   const maskTelefone = (raw: string) => {
     const digits = raw.replace(/\D/g, "").slice(0, 11);
@@ -350,9 +339,33 @@ function Contato() {
                 </select>
               </Field>
 
+              {/* Vem marcada por decisão do cliente. Desmarcar bloqueia o
+                  envio, então todo lead que chega tem o consentimento
+                  registrado como "sim" na planilha. */}
+              <label className="mt-1 flex cursor-pointer items-start gap-3">
+                <input
+                  type="checkbox"
+                  name="consentimento_lgpd"
+                  value="sim"
+                  required
+                  checked={consentimento}
+                  onChange={(e) => setConsentimento(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-primary"
+                />
+                <span className="text-xs leading-relaxed text-muted-foreground">
+                  Autorizo o contato do Sítio Canto da Mata e o uso dos meus dados para
+                  essa finalidade, conforme a <strong>LGPD</strong>.
+                </span>
+              </label>
+
+              {/* O botão segue clicável mesmo com campos em branco: assim o
+                  clique aciona a validação do navegador, que aponta o
+                  primeiro campo pendente em vez de deixar a pessoa sem
+                  resposta. O disabled cobre só o intervalo do envio, contra
+                  clique duplo. */}
               <button
                 type="submit"
-                disabled={!formValido || enviando}
+                disabled={enviando}
                 className="mt-2 w-full rounded-full bg-primary px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-primary/40 disabled:hover:bg-primary/40"
               >
                 {enviando ? "Enviando…" : "DAR O PRIMEIRO PASSO"}
