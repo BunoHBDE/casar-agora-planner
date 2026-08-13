@@ -19,6 +19,34 @@ const WHATSAPP_NUMERO = "5511933197671";
 const MESES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 const ANOS = Array.from({ length: 6 }, (_, i) => String(2026 + i));
 
+// Eventos de segmentação disparados no envio do formulário, além do Lead:
+// servem para a campanha do Meta otimizar por perfil de lead. Todos exigem
+// até 100 convidados; os três últimos somam a fase do planejamento.
+// No Meta são eventos personalizados (trackCustom) e no GTM, eventos
+// personalizados de mesmo nome em snake_case.
+const PIXEL_ATE_100 = { meta: "Lead100Convidados", gtm: "lead_100_convidados" };
+const PIXEIS_POR_FASE: Record<string, { meta: string; gtm: string }> = {
+  inicial: { meta: "Lead100ConvidadosFaseInicial", gtm: "lead_100_convidados_fase_inicial" },
+  visitas: { meta: "Lead100ConvidadosFaseVisitas", gtm: "lead_100_convidados_fase_visitas" },
+  ultimas_visitas: {
+    meta: "Lead100ConvidadosFaseUltimasVisitas",
+    gtm: "lead_100_convidados_fase_ultimas_visitas",
+  },
+};
+const LIMITE_CONVIDADOS = 100;
+
+function dispararPixel(
+  pixel: { meta: string; gtm: string },
+  dados: { convidados: number; fase: string }
+) {
+  if (typeof window === "undefined") return;
+  if (typeof (window as any).fbq === "function") {
+    (window as any).fbq("trackCustom", pixel.meta, dados);
+  }
+  (window as any).dataLayer = (window as any).dataLayer || [];
+  (window as any).dataLayer.push({ event: pixel.gtm, ...dados });
+}
+
 // Evento customizado para o GTM: gatilho "Evento personalizado" com o
 // nome "whatsapp_click". No Meta Pixel dispara o evento padrão "Contact".
 function trackWhatsappClick() {
@@ -104,6 +132,14 @@ function Contato() {
     if (typeof window !== "undefined") {
       (window as any).dataLayer = (window as any).dataLayer || [];
       (window as any).dataLayer.push({ event: "lead_form_lp_contato_submit", form_name: "proposta_lp_contato" });
+    }
+    // Eventos de segmentação por porte da festa e fase do planejamento.
+    const totalConvidados = Number.parseInt(convidados, 10);
+    if (totalConvidados > 0 && totalConvidados <= LIMITE_CONVIDADOS) {
+      const dados = { convidados: totalConvidados, fase };
+      dispararPixel(PIXEL_ATE_100, dados);
+      const pixelDaFase = PIXEIS_POR_FASE[fase];
+      if (pixelDaFase) dispararPixel(pixelDaFase, dados);
     }
     formRef.current?.submit();
     setEnviado(true);
