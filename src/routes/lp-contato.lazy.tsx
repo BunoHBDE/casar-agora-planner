@@ -62,9 +62,11 @@ function Contato() {
   const [convidados, setConvidados] = useState("");
   const [dataExata, setDataExata] = useState<Date | undefined>(undefined);
   const [dataModo, setDataModo] = useState<"aproximado" | "exata">("aproximado");
+  const [erroDataExata, setErroDataExata] = useState(false);
   const [fase, setFase] = useState("");
   const [enviado, setEnviado] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+  const dataExataBtnRef = useRef<HTMLButtonElement>(null);
 
   const maskTelefone = (raw: string) => {
     const digits = raw.replace(/\D/g, "").slice(0, 11);
@@ -87,6 +89,13 @@ function Contato() {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    // A data exata vive num campo oculto, que o navegador não valida sozinho:
+    // quando esse é o modo escolhido, a checagem do preenchimento é nossa.
+    if (dataModo === "exata" && !dataExata) {
+      setErroDataExata(true);
+      dataExataBtnRef.current?.focus();
+      return;
+    }
     // content_name diferencia este Lead dos formulários da home (/) e da
     // planilha (/lp, /lp2) nas Conversões Personalizadas do Meta.
     if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
@@ -172,11 +181,14 @@ function Contato() {
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Data desejada">
+                <Field label="Data desejada *">
                   <div className="mb-2 inline-flex rounded-full border border-input p-0.5 text-xs">
                     <button
                       type="button"
-                      onClick={() => setDataModo("aproximado")}
+                      onClick={() => {
+                        setDataModo("aproximado");
+                        setErroDataExata(false);
+                      }}
                       className={`rounded-full px-3 py-1.5 font-medium transition ${
                         dataModo === "aproximado"
                           ? "bg-primary text-primary-foreground"
@@ -200,13 +212,13 @@ function Contato() {
 
                   {dataModo === "aproximado" ? (
                     <div className="grid grid-cols-2 gap-2">
-                      <select name="mes" value={mes} onChange={(e) => setMes(e.target.value)} className={inputCls}>
+                      <select required name="mes" value={mes} onChange={(e) => setMes(e.target.value)} className={inputCls}>
                         <option value="">Mês</option>
                         {MESES.map((m) => (
                           <option key={m} value={m}>{m}</option>
                         ))}
                       </select>
-                      <select name="ano" value={ano} onChange={(e) => setAno(e.target.value)} className={inputCls}>
+                      <select required name="ano" value={ano} onChange={(e) => setAno(e.target.value)} className={inputCls}>
                         <option value="">Ano</option>
                         {ANOS.map((a) => (
                           <option key={a} value={a}>{a}</option>
@@ -217,8 +229,12 @@ function Contato() {
                     <Popover>
                       <PopoverTrigger asChild>
                         <button
+                          ref={dataExataBtnRef}
                           type="button"
-                          className={`${inputCls} flex items-center text-left ${!dataExata ? "text-muted-foreground" : ""}`}
+                          aria-invalid={erroDataExata}
+                          className={`${inputCls} flex items-center text-left ${!dataExata ? "text-muted-foreground" : ""} ${
+                            erroDataExata ? "border-destructive ring-2 ring-destructive/20" : ""
+                          }`}
                         >
                           {dataExata
                             ? dataExata.toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })
@@ -229,7 +245,10 @@ function Contato() {
                         <Calendar
                           mode="single"
                           selected={dataExata}
-                          onSelect={setDataExata}
+                          onSelect={(d) => {
+                            setDataExata(d);
+                            if (d) setErroDataExata(false);
+                          }}
                           captionLayout="dropdown"
                           startMonth={new Date(2026, 0)}
                           endMonth={new Date(2031, 11)}
@@ -239,9 +258,15 @@ function Contato() {
                       </PopoverContent>
                     </Popover>
                   )}
+                  {erroDataExata && (
+                    <p role="alert" className="mt-1.5 text-xs text-destructive">
+                      Selecione a data desejada.
+                    </p>
+                  )}
                 </Field>
-                <Field label="Convidados">
+                <Field label="Convidados *">
                   <input
+                    required
                     id="numero-convidados"
                     type="text"
                     inputMode="numeric"
