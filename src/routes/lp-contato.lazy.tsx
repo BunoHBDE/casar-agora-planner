@@ -152,7 +152,7 @@ function Contato() {
       <div className="overflow-hidden rounded-2xl border border-border/60 bg-card shadow-soft">
         <div className="p-6 sm:p-8">
           <h1 className="font-serif text-2xl text-primary sm:text-3xl">
-            Receba uma proposta personalizada
+            Conheça o Sítio Canto da Mata
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
             Preencha seus dados e comece a planejar o seu casamento com o Sítio Canto da Mata.

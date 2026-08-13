@@ -9,31 +9,41 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as CasamentoEmItapecericaDaSerraRouteImport } from './routes/casamento-em-itapecerica-da-serra'
-import { Route as CasamentoEmSaoLourencoDaSerraRouteImport } from './routes/casamento-em-sao-lourenco-da-serra'
-import { Route as DownloadRouteImport } from './routes/download'
-import { Route as LpRouteImport } from './routes/lp'
-import { Route as LpContatoRouteImport } from './routes/lp-contato'
-import { Route as Lp2RouteImport } from './routes/lp2'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as Lp2RouteImport } from './routes/lp2'
+import { Route as LpContatoRouteImport } from './routes/lp-contato'
+import { Route as LpRouteImport } from './routes/lp'
+import { Route as DownloadRouteImport } from './routes/download'
+import { Route as CasamentoEmSaoLourencoDaSerraRouteImport } from './routes/casamento-em-sao-lourenco-da-serra'
+import { Route as CasamentoEmItapecericaDaSerraRouteImport } from './routes/casamento-em-itapecerica-da-serra'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPublicSubmitLeadRouteImport } from './routes/api/public/submit-lead'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
-const CasamentoEmItapecericaDaSerraRoute =
-  CasamentoEmItapecericaDaSerraRouteImport.update({
-    id: '/casamento-em-itapecerica-da-serra',
-    path: '/casamento-em-itapecerica-da-serra',
-    getParentRoute: () => rootRouteImport,
-  } as any).lazy(() =>
-    import('./routes/casamento-em-itapecerica-da-serra.lazy').then(
-      (d) => d.Route,
-    ),
-  )
+} as any)
+const Lp2Route = Lp2RouteImport.update({
+  id: '/lp2',
+  path: '/lp2',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/lp2.lazy').then((d) => d.Route))
+const LpContatoRoute = LpContatoRouteImport.update({
+  id: '/lp-contato',
+  path: '/lp-contato',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/lp-contato.lazy').then((d) => d.Route))
+const LpRoute = LpRouteImport.update({
+  id: '/lp',
+  path: '/lp',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/lp.lazy').then((d) => d.Route))
+const DownloadRoute = DownloadRouteImport.update({
+  id: '/download',
+  path: '/download',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/download.lazy').then((d) => d.Route))
 const CasamentoEmSaoLourencoDaSerraRoute =
   CasamentoEmSaoLourencoDaSerraRouteImport.update({
     id: '/casamento-em-sao-lourenco-da-serra',
@@ -44,31 +54,21 @@ const CasamentoEmSaoLourencoDaSerraRoute =
       (d) => d.Route,
     ),
   )
-const DownloadRoute = DownloadRouteImport.update({
-  id: '/download',
-  path: '/download',
+const CasamentoEmItapecericaDaSerraRoute =
+  CasamentoEmItapecericaDaSerraRouteImport.update({
+    id: '/casamento-em-itapecerica-da-serra',
+    path: '/casamento-em-itapecerica-da-serra',
+    getParentRoute: () => rootRouteImport,
+  } as any).lazy(() =>
+    import('./routes/casamento-em-itapecerica-da-serra.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/download.lazy').then((d) => d.Route))
-const LpRoute = LpRouteImport.update({
-  id: '/lp',
-  path: '/lp',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/lp.lazy').then((d) => d.Route))
-const LpContatoRoute = LpContatoRouteImport.update({
-  id: '/lp-contato',
-  path: '/lp-contato',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/lp-contato.lazy').then((d) => d.Route))
-const Lp2Route = Lp2RouteImport.update({
-  id: '/lp2',
-  path: '/lp2',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/lp2.lazy').then((d) => d.Route))
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 const ApiPublicSubmitLeadRoute = ApiPublicSubmitLeadRouteImport.update({
   id: '/api/public/submit-lead',
   path: '/api/public/submit-lead',
@@ -159,46 +159,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/casamento-em-itapecerica-da-serra': {
-      id: '/casamento-em-itapecerica-da-serra'
-      path: '/casamento-em-itapecerica-da-serra'
-      fullPath: '/casamento-em-itapecerica-da-serra'
-      preLoaderRoute: typeof CasamentoEmItapecericaDaSerraRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/casamento-em-sao-lourenco-da-serra': {
-      id: '/casamento-em-sao-lourenco-da-serra'
-      path: '/casamento-em-sao-lourenco-da-serra'
-      fullPath: '/casamento-em-sao-lourenco-da-serra'
-      preLoaderRoute: typeof CasamentoEmSaoLourencoDaSerraRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/download': {
-      id: '/download'
-      path: '/download'
-      fullPath: '/download'
-      preLoaderRoute: typeof DownloadRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/lp': {
-      id: '/lp'
-      path: '/lp'
-      fullPath: '/lp'
-      preLoaderRoute: typeof LpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/lp-contato': {
-      id: '/lp-contato'
-      path: '/lp-contato'
-      fullPath: '/lp-contato'
-      preLoaderRoute: typeof LpContatoRouteImport
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lp2': {
@@ -208,11 +173,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Lp2RouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
+    '/lp-contato': {
+      id: '/lp-contato'
+      path: '/lp-contato'
+      fullPath: '/lp-contato'
+      preLoaderRoute: typeof LpContatoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lp': {
+      id: '/lp'
+      path: '/lp'
+      fullPath: '/lp'
+      preLoaderRoute: typeof LpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/download': {
+      id: '/download'
+      path: '/download'
+      fullPath: '/download'
+      preLoaderRoute: typeof DownloadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/casamento-em-sao-lourenco-da-serra': {
+      id: '/casamento-em-sao-lourenco-da-serra'
+      path: '/casamento-em-sao-lourenco-da-serra'
+      fullPath: '/casamento-em-sao-lourenco-da-serra'
+      preLoaderRoute: typeof CasamentoEmSaoLourencoDaSerraRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/casamento-em-itapecerica-da-serra': {
+      id: '/casamento-em-itapecerica-da-serra'
+      path: '/casamento-em-itapecerica-da-serra'
+      fullPath: '/casamento-em-itapecerica-da-serra'
+      preLoaderRoute: typeof CasamentoEmItapecericaDaSerraRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/submit-lead': {
