@@ -21,20 +21,23 @@ const MESES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Ag
 const ANOS = Array.from({ length: 6 }, (_, i) => String(2026 + i));
 
 const LIMITE_CONVIDADOS = 100;
-const FASES_CONHECIDAS = ["inicial", "visitas", "ultimas_visitas"];
 
-// Segmentação do lead. No Meta ela viaja como content_category dentro do
-// evento padrão Lead — e não como evento próprio: evento criado com
-// trackCustom entra no Gerenciador como evento personalizado e nunca é
-// classificado como Lead, por mais que o nome diga isso. É o mesmo padrão
-// das outras páginas (/lp, /lp2, home), onde o Lead é diferenciado por
-// parâmetro e os recortes viram Conversões Personalizadas.
-//
-// Um único Lead por envio, para o número de leads da campanha não ser
-// contado em dobro.
-function segmentoDoLead(convidados: number, fase: string) {
-  if (!(convidados > 0 && convidados <= LIMITE_CONVIDADOS)) return "acima_100";
-  return FASES_CONHECIDAS.includes(fase) ? `ate_100_${fase}` : "ate_100";
+// Cada recorte é um disparo próprio do evento padrão Lead, com o seu
+// content_name — mesmo padrão de /lp e /lp2, em que cada formulário tem o
+// seu. O primeiro cobre todos os envios; os outros quatro saem junto,
+// quando o lead se encaixa no recorte.
+const CONTENT_NAME_TODOS = "formulario_proposta_lp_contato";
+const CONTENT_NAME_ATE_100 = "formulario_proposta_lp_contato_ate_100";
+const CONTENT_NAME_POR_FASE: Record<string, string> = {
+  inicial: "formulario_proposta_lp_contato_ate_100_inicial",
+  visitas: "formulario_proposta_lp_contato_ate_100_visitas",
+  ultimas_visitas: "formulario_proposta_lp_contato_ate_100_ultimas_visitas",
+};
+
+function dispararLead(contentName: string) {
+  if (typeof window === "undefined") return;
+  if (typeof (window as any).fbq !== "function") return;
+  (window as any).fbq("track", "Lead", { content_name: contentName });
 }
 
 // No GTM o modelo é outro: lá cada segmento continua sendo um evento
@@ -138,24 +141,19 @@ function Contato() {
     // já saiam com os dados de contato associados.
     aplicarCorrespondenciaAvancada({ nome, email, telefone });
     const totalConvidados = Number.parseInt(convidados, 10) || 0;
-    const segmento = segmentoDoLead(totalConvidados, fase);
     const ate100 = totalConvidados > 0 && totalConvidados <= LIMITE_CONVIDADOS;
 
-    // Um Lead padrão por envio. content_name diferencia esta página das
-    // demais (/lp, /lp2, home) e content_category carrega o segmento, que é
-    // sobre o que as Conversões Personalizadas do Meta são montadas.
-    if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
-      (window as any).fbq("track", "Lead", {
-        content_name: "formulario_proposta_lp_contato",
-        content_category: segmento,
-        convidados: totalConvidados,
-        fase,
-      });
+    // Lead de todos os envios.
+    dispararLead(CONTENT_NAME_TODOS);
+    // Leads dos recortes: até 100 convidados, e até 100 somado à fase.
+    if (ate100) {
+      dispararLead(CONTENT_NAME_ATE_100);
+      const contentNameDaFase = CONTENT_NAME_POR_FASE[fase];
+      if (contentNameDaFase) dispararLead(contentNameDaFase);
     }
 
     empurrarParaGTM("lead_form_lp_contato_submit", {
       form_name: "proposta_lp_contato",
-      segmento,
       convidados: totalConvidados,
       fase,
     });
