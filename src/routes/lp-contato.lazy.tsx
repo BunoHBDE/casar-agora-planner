@@ -521,7 +521,14 @@ function Contato({
                   type="text"
                   inputMode="numeric"
                   pattern="[0-9]*"
-                  autoComplete="off"
+                  // Sendo o primeiro campo do formulário — sem nenhum campo de
+                  // texto antes para dar contexto —, um input só de números
+                  // sozinho é lido por engano pelo teclado do Android (Gboard)
+                  // como possível número de cartão, que oferece o
+                  // autopreenchimento por cima da página, fora do controle do
+                  // autoComplete="off". O token "one-time-code" sinaliza que é
+                  // um campo de código curto, o que neutraliza essa sugestão.
+                  autoComplete="one-time-code"
                   aria-autocomplete="none"
                   data-lpignore="true"
                   data-form-type="other"
