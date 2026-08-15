@@ -77,8 +77,8 @@ const CENARIOS = [
   {
     titulo: "O altar sobre o lago",
     desc: "O coração do nosso quintal, para um “sim” sob o céu aberto e a moldura da mata.",
-    webp: "/images/galeria/galeria-3.webp",
-    avif: "/images/galeria/galeria-3.avif",
+    webp: "/images/lp-contato/altar-lago-700.webp",
+    avif: "/images/lp-contato/altar-lago-700.avif",
   },
   {
     titulo: "Área gourmet e piscina",
@@ -291,7 +291,30 @@ function PacoteEssencia() {
         ))}
       </ul>
 
+      {/* Duas fotos de decoração e mesa de bolo: mostram na prática o que a
+          lista de itens promete. */}
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
+        {[
+          { nome: "bolo-flores", alt: "Mesa de bolo com arranjos de flores laranja e pink" },
+          { nome: "bolo-branco", alt: "Mesa de bolo com cortina de samambaias e flores brancas" },
+        ].map((foto) => (
+          <div key={foto.nome} className="aspect-[4/3] overflow-hidden rounded-xl bg-muted">
+            <picture>
+              <source srcSet={`/images/lp-contato/${foto.nome}-700.avif`} type="image/avif" />
+              <source srcSet={`/images/lp-contato/${foto.nome}-700.webp`} type="image/webp" />
+              <img
+                src={`/images/lp-contato/${foto.nome}-700.webp`}
+                alt={foto.alt}
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover"
+              />
+            </picture>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
         <div className="rounded-xl border border-border/60 bg-secondary/40 p-4">
           <h3 className="font-serif text-base text-primary">Dois menus, servidos com afeto</h3>
           <p className="mt-1.5 text-sm leading-relaxed text-foreground/75">
