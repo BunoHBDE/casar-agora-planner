@@ -137,10 +137,10 @@ function LandingContato() {
         <p className="text-center text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
           Sítio Canto da Mata
         </p>
-        <h1 className="mt-4 text-center font-serif text-2xl leading-snug text-primary sm:text-3xl">
+        <h1 className="mt-3 text-center font-serif text-lg leading-snug text-primary sm:text-xl">
           Um lugar preparado para transformar o seu casamento em memória para a vida toda.
         </h1>
-        <p className="mt-3 text-center text-base text-foreground/80">
+        <p className="mt-1.5 text-center text-sm text-foreground/80">
           Dê o primeiro passo para conhecer nosso espaço
         </p>
         <Contato idPrefixo="topo" enviado={enviado} aoEnviar={() => setEnviado(true)} />
@@ -491,13 +491,9 @@ function Contato({
           {titulo && (
             <h2 className="font-serif text-2xl text-primary sm:text-3xl">{titulo}</h2>
           )}
-          <p className={`text-sm text-muted-foreground ${titulo ? "mt-2" : ""}`}>
-            Preencha seus dados e receba a proposta completa, com os valores para o seu
-            número de convidados.
-          </p>
 
           {enviado ? (
-            <p className="mt-6 rounded-md bg-primary/10 p-4 text-sm text-primary">
+            <p className={`rounded-md bg-primary/10 p-4 text-sm text-primary ${titulo ? "mt-6" : ""}`}>
               Recebemos seus dados! Em breve entraremos em contato.
             </p>
           ) : (
@@ -508,7 +504,7 @@ function Contato({
               target="proposta-sink"
               onSubmit={handleSubmit}
               autoComplete="off"
-              className="mt-6 grid gap-4"
+              className={`grid gap-4 ${titulo ? "mt-6" : ""}`}
             >
               <input type="hidden" name="data_exata" value={dataExataStr} />
               <input type="hidden" name="origem" value="lp-contato" />
@@ -518,7 +514,26 @@ function Contato({
 
               {/* A ordem começa pelas perguntas sobre a festa e termina nos
                   dados pessoais. */}
-              <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Convidados *">
+                <input
+                  required
+                  id={`${idPrefixo}-convidados`}
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  autoComplete="off"
+                  aria-autocomplete="none"
+                  data-lpignore="true"
+                  data-form-type="other"
+                  name="convidados"
+                  value={convidados}
+                  onChange={(e) => setConvidados(e.target.value.replace(/\D/g, ""))}
+                  className={inputCls}
+                  placeholder="80"
+                />
+              </Field>
+
+              <div className="grid gap-4">
                 <Field label="Data desejada *">
                   <div className="mb-2 inline-flex rounded-full border border-input p-0.5 text-xs">
                     <button
@@ -601,24 +616,6 @@ function Contato({
                       Selecione a data desejada.
                     </p>
                   )}
-                </Field>
-                <Field label="Convidados *">
-                  <input
-                    required
-                    id={`${idPrefixo}-convidados`}
-                    type="text"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    autoComplete="off"
-                    aria-autocomplete="none"
-                    data-lpignore="true"
-                    data-form-type="other"
-                    name="convidados"
-                    value={convidados}
-                    onChange={(e) => setConvidados(e.target.value.replace(/\D/g, ""))}
-                    className={inputCls}
-                    placeholder="80"
-                  />
                 </Field>
               </div>
 
