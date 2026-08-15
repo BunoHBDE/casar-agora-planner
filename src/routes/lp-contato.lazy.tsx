@@ -514,7 +514,7 @@ function Contato({
 
               {/* A ordem começa pelas perguntas sobre a festa e termina nos
                   dados pessoais. */}
-              <Field label="Convidados *">
+              <Field label="NÚMERO DE CONVIDADOS *">
                 <input
                   required
                   id={`${idPrefixo}-convidados`}
