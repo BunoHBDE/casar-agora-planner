@@ -1,6 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
-import { MessageCircle } from "lucide-react";
+import { Check, MessageCircle, Play } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { ptBR } from "date-fns/locale";
@@ -67,25 +67,342 @@ function trackWhatsappClick() {
   }
 }
 
-// Página de campanha enxuta: só o formulário, sem menu, seções ou links que
-// levem a pessoa para fora antes de deixar os dados.
+const NUMEROS = [
+  { valor: "50 mil m²", texto: "de mata preservada como moldura do seu “sim”" },
+  { valor: "60 min", texto: "de São Paulo, num refúgio de paz" },
+  { valor: "1 evento", texto: "por dia: o sítio é inteiramente seu" },
+];
+
+const CENARIOS = [
+  {
+    titulo: "O altar sobre o lago",
+    desc: "O coração do nosso quintal, para um “sim” sob o céu aberto e a moldura da mata.",
+    webp: "/images/galeria/galeria-3.webp",
+    avif: "/images/galeria/galeria-3.avif",
+  },
+  {
+    titulo: "Área gourmet e piscina",
+    desc: "A sala de estar da celebração: ampla, integrada e cheia de vida.",
+    webp: "/images/galeria/galeria-4.webp",
+    avif: "/images/galeria/galeria-4.avif",
+  },
+  {
+    titulo: "Mesas sob a pérgola",
+    desc: "O almoço de domingo que vira festa, à sombra e com a mata em volta.",
+    webp: "/images/lp-contato/mesa-posta-700.webp",
+    avif: "/images/lp-contato/mesa-posta-700.avif",
+  },
+];
+
+const PACOTE = [
+  "Espaço por 6 horas, com 1h de cortesia para a chegada dos convidados",
+  "Decoração com flores preservadas, do altar às mesas",
+  "Buffet completo, com serviço de garçons e self-service",
+  "Mobiliário: bancos de cerimônia, mesas rústicas e pontos de buffet",
+  "Equipe de apoio durante todo o evento",
+  "Estacionamento privativo",
+];
+
+const PASSOS = [
+  {
+    numero: "1",
+    titulo: "Você preenche o formulário",
+    desc: "Leva menos de um minuto. Os dados servem para montarmos uma proposta com o seu número de convidados.",
+  },
+  {
+    numero: "2",
+    titulo: "Uma consultora entra em contato em até 24h",
+    desc: "Quem fala com você é uma das nossas consultoras, pelo WhatsApp ou telefone que você informar.",
+  },
+  {
+    numero: "3",
+    titulo: "Você recebe a apresentação e a proposta com valores",
+    desc: "Conhece o espaço em detalhe e recebe os valores do Pacote Essência para a sua data.",
+  },
+];
+
 function LandingContato() {
   return (
-    <main className="flex min-h-screen flex-col bg-secondary/30 text-foreground">
-      <div className="flex flex-1 items-center justify-center px-4 py-10 sm:px-6 sm:py-14">
-        <div className="w-full max-w-xl">
-          <p className="text-center text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
-            Sítio Canto da Mata
+    <main className="min-h-screen bg-background text-foreground">
+      <Hero />
+      <Refugio />
+      <Cenarios />
+      <PacoteEssencia />
+      <Video />
+      <ComoFunciona />
+      <div className="mx-auto max-w-xl px-4 pb-4 sm:px-6">
+        <Contato />
+      </div>
+      <Rodape />
+    </main>
+  );
+}
+
+function Hero() {
+  return (
+    <section className="relative isolate">
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <picture>
+          <source
+            srcSet="/images/hero-venue-700.avif 700w, /images/hero-venue-1400.avif 1400w"
+            sizes="100vw"
+            type="image/avif"
+          />
+          <source
+            srcSet="/images/hero-venue-700.webp 700w, /images/hero-venue-1400.webp 1400w"
+            sizes="100vw"
+            type="image/webp"
+          />
+          <img
+            src="/images/hero-venue-1400.webp"
+            alt="Cerimônia à beira do lago no Sítio Canto da Mata"
+            width={1400}
+            height={1050}
+            fetchPriority="high"
+            decoding="async"
+            className="h-full w-full object-cover"
+          />
+        </picture>
+        <div className="absolute inset-0 bg-primary/55" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-background" />
+      </div>
+      <div
+        className="mx-auto max-w-2xl px-6 pt-16 pb-24 text-center text-primary-foreground sm:pt-24 sm:pb-32"
+        style={{ textShadow: "0 2px 16px rgba(0,0,0,0.45)" }}
+      >
+        <span className="text-[11px] uppercase tracking-[0.24em] text-primary-foreground/85">
+          Sítio Canto da Mata
+        </span>
+        <h1 className="mt-4 font-serif text-3xl leading-tight sm:text-5xl">
+          Um casamento no quintal, com a natureza de anfitriã
+        </h1>
+        <p className="mx-auto mt-4 max-w-lg text-sm text-primary-foreground/90 sm:text-base">
+          Espaço para celebrações de até 100 convidados, a 60 minutos de São Paulo,
+          com buffet, decoração e um único evento por dia.
+        </p>
+        <div className="mt-8">
+          <a
+            href="#contato"
+            className="inline-block rounded-full bg-primary-foreground px-8 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary transition hover:bg-primary-foreground/90"
+          >
+            Receber a proposta
+          </a>
+          <p className="mt-3 text-xs text-primary-foreground/80">
+            Resposta de uma consultora em até 24h
           </p>
-          <Contato />
         </div>
       </div>
-      <footer className="border-t border-border/60 bg-background">
-        <div className="mx-auto max-w-xl px-6 py-6 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Sítio Canto da Mata
+    </section>
+  );
+}
+
+function Refugio() {
+  return (
+    <section className="mx-auto max-w-3xl px-6 py-14 text-center sm:py-20">
+      <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+        Nossa história
+      </span>
+      <h2 className="mt-3 font-serif text-2xl text-primary sm:text-3xl">
+        Um refúgio com alma e memórias
+      </h2>
+      <p className="mt-5 text-base leading-relaxed text-foreground/80">
+        Uma antiga fazenda dos anos 1980, que cultivamos com o carinho de quem cuida do
+        próprio quintal. Aqui o tempo desacelera: o cheiro da terra se mistura ao do café
+        fresco e a brisa da Mata Atlântica embala sonhos. Celebrar o amor de um jeito
+        simples e sincero, com a natureza como anfitriã.
+      </p>
+      <dl className="mt-10 grid gap-6 sm:grid-cols-3">
+        {NUMEROS.map((n) => (
+          <div key={n.valor}>
+            <dt className="font-serif text-2xl text-primary">{n.valor}</dt>
+            <dd className="mt-1 text-sm leading-relaxed text-foreground/70">{n.texto}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  );
+}
+
+function Cenarios() {
+  return (
+    <section className="border-y border-border/60 bg-secondary/40 py-14 sm:py-20">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="text-center">
+          <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+            O espaço
+          </span>
+          <h2 className="mt-3 font-serif text-2xl text-primary sm:text-3xl">
+            Onde a magia acontece
+          </h2>
         </div>
-      </footer>
-    </main>
+        <div className="mt-10 grid gap-6 sm:grid-cols-3">
+          {CENARIOS.map((c) => (
+            <article key={c.titulo} className="overflow-hidden rounded-2xl border border-border/60 bg-card">
+              <div className="aspect-[4/3] overflow-hidden bg-muted">
+                <picture>
+                  <source srcSet={c.avif} type="image/avif" />
+                  <source srcSet={c.webp} type="image/webp" />
+                  <img
+                    src={c.webp}
+                    alt={c.titulo}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full object-cover"
+                  />
+                </picture>
+              </div>
+              <div className="p-5">
+                <h3 className="font-serif text-lg text-primary">{c.titulo}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-foreground/75">{c.desc}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PacoteEssencia() {
+  return (
+    <section className="mx-auto max-w-3xl px-6 py-14 sm:py-20">
+      <div className="text-center">
+        <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+          Pacote Essência
+        </span>
+        <h2 className="mt-3 font-serif text-2xl text-primary sm:text-3xl">
+          A celebração completa, com o coração no quintal
+        </h2>
+        <p className="mt-3 text-sm text-foreground/75">
+          Um pacote que já resolve o essencial do seu dia — e continua sendo seu para
+          personalizar.
+        </p>
+      </div>
+
+      <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+        {PACOTE.map((item) => (
+          <li
+            key={item}
+            className="flex items-start gap-3 rounded-xl border border-border/60 bg-card p-4 text-sm leading-relaxed text-foreground/80"
+          >
+            <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" strokeWidth={2.5} />
+            {item}
+          </li>
+        ))}
+      </ul>
+
+      <div className="mt-6 grid gap-3 sm:grid-cols-2">
+        <div className="rounded-xl border border-border/60 bg-secondary/40 p-4">
+          <h3 className="font-serif text-base text-primary">Dois menus, servidos com afeto</h3>
+          <p className="mt-1.5 text-sm leading-relaxed text-foreground/75">
+            Brasileirinho, com strogonoff e acompanhamentos de casa, ou Família, com massas
+            e molhos suculentos. Louças, talheres e equipe inclusos.
+          </p>
+        </div>
+        <div className="rounded-xl border border-border/60 bg-secondary/40 p-4">
+          <h3 className="font-serif text-base text-primary">Celebrações diurnas</h3>
+          <p className="mt-1.5 text-sm leading-relaxed text-foreground/75">
+            Com início entre 9h e 15h, para aproveitar a luz natural — a melhor moldura
+            para as fotos e para um almoço festivo ao ar livre.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Video() {
+  const [tocando, setTocando] = useState(false);
+
+  return (
+    <section className="border-y border-border/60 bg-secondary/40 py-14 sm:py-20">
+      <div className="mx-auto max-w-3xl px-6 text-center">
+        <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+          Um passeio pelo sítio
+        </span>
+        <h2 className="mt-3 font-serif text-2xl text-primary sm:text-3xl">
+          Veja o lugar antes de conhecer
+        </h2>
+
+        {/* O vídeo é vertical, então fica numa coluna estreita. Só é baixado
+            quando a pessoa clica: até lá, o que carrega é a foto de capa. */}
+        <div className="mx-auto mt-8 w-full max-w-[380px] overflow-hidden rounded-2xl border border-border/60 bg-muted">
+          <div className="relative aspect-[9/16]">
+            {tocando ? (
+              <video
+                src="/videos/sitio-canto-da-mata.mp4"
+                className="h-full w-full object-cover"
+                controls
+                autoPlay
+                playsInline
+              />
+            ) : (
+              <button
+                type="button"
+                onClick={() => setTocando(true)}
+                aria-label="Reproduzir o vídeo do Sítio Canto da Mata"
+                className="group h-full w-full"
+              >
+                <picture>
+                  <source srcSet="/images/galeria/galeria-1.avif" type="image/avif" />
+                  <source srcSet="/images/galeria/galeria-1.webp" type="image/webp" />
+                  <img
+                    src="/images/galeria/galeria-1.webp"
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full object-cover"
+                  />
+                </picture>
+                <span className="absolute inset-0 flex items-center justify-center bg-primary/25 transition group-hover:bg-primary/35">
+                  <span className="flex h-16 w-16 items-center justify-center rounded-full bg-primary-foreground/90 text-primary shadow-soft">
+                    <Play className="ml-1 h-7 w-7" fill="currentColor" strokeWidth={0} />
+                  </span>
+                </span>
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ComoFunciona() {
+  return (
+    <section className="mx-auto max-w-3xl px-6 py-14 sm:py-20">
+      <div className="text-center">
+        <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+          Como funciona
+        </span>
+        <h2 className="mt-3 font-serif text-2xl text-primary sm:text-3xl">
+          O que acontece depois que você envia
+        </h2>
+      </div>
+      <ol className="mt-8 grid gap-4">
+        {PASSOS.map((p) => (
+          <li key={p.numero} className="flex gap-4 rounded-2xl border border-border/60 bg-card p-5">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary font-serif text-base text-primary-foreground">
+              {p.numero}
+            </span>
+            <div>
+              <h3 className="font-serif text-lg text-primary">{p.titulo}</h3>
+              <p className="mt-1 text-sm leading-relaxed text-foreground/75">{p.desc}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
+function Rodape() {
+  return (
+    <footer className="border-t border-border/60 bg-background">
+      <div className="mx-auto max-w-3xl px-6 py-8 text-center text-xs text-muted-foreground">
+        © {new Date().getFullYear()} Sítio Canto da Mata · São Lourenço da Serra, SP
+      </div>
+    </footer>
   );
 }
 
@@ -172,11 +489,12 @@ function Contato() {
 
       <div className="overflow-hidden rounded-2xl border border-border/60 bg-card shadow-soft">
         <div className="p-6 sm:p-8">
-          <h1 className="font-serif text-2xl text-primary sm:text-3xl">
+          <h2 className="font-serif text-2xl text-primary sm:text-3xl">
             Dê o primeiro passo para conhecer nosso espaço
-          </h1>
+          </h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Preencha seus dados e comece a planejar o seu casamento com o Sítio Canto da Mata.
+            Preencha seus dados e receba a proposta completa, com os valores para o seu
+            número de convidados.
           </p>
 
           {enviado ? (
