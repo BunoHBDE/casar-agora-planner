@@ -619,15 +619,6 @@ function Contato({
                 </Field>
               </div>
 
-              <Field label="Em qual fase do planejamento você está?">
-                <select name="fase" value={fase} onChange={(e) => setFase(e.target.value)} className={inputCls}>
-                  <option value="">Selecione uma opção</option>
-                  <option value="inicial">Estou na fase inicial, apenas pesquisando valores</option>
-                  <option value="visitas">Já comecei as visitas, mas continuo pesquisando os locais</option>
-                  <option value="ultimas_visitas">Estou fazendo as últimas visitas e pronta para fechar</option>
-                </select>
-              </Field>
-
               <Field label="Nome *">
                 <input
                   required
@@ -668,6 +659,15 @@ function Contato({
                   />
                 </Field>
               </div>
+
+              <Field label="Em qual fase do planejamento você está?">
+                <select name="fase" value={fase} onChange={(e) => setFase(e.target.value)} className={inputCls}>
+                  <option value="">Selecione uma opção</option>
+                  <option value="inicial">Estou na fase inicial, apenas pesquisando valores</option>
+                  <option value="visitas">Já comecei as visitas, mas continuo pesquisando os locais</option>
+                  <option value="ultimas_visitas">Estou fazendo as últimas visitas e pronta para fechar</option>
+                </select>
+              </Field>
 
               {/* O botão segue clicável mesmo com campos em branco: assim o
                   clique aciona a validação do navegador, que aponta o
