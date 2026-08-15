@@ -122,77 +122,46 @@ const PASSOS = [
 ];
 
 function LandingContato() {
+  // O envio é compartilhado pelos dois formulários: quem preenche o do topo
+  // vê a confirmação também no do fim, e ninguém manda o mesmo lead duas
+  // vezes por ter rolado a página depois de enviar.
+  const [enviado, setEnviado] = useState(false);
+
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <Hero />
+      {/* Um único destino para os dois formulários: nomes de iframe repetidos
+          na mesma página não são resolvidos de forma confiável. */}
+      <iframe name="proposta-sink" title="proposta-sink" style={{ display: "none" }} />
+
+      <section className="mx-auto max-w-xl px-4 pt-10 pb-2 sm:px-6 sm:pt-14">
+        <p className="text-center text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+          Sítio Canto da Mata
+        </p>
+        <h1 className="mt-4 text-center font-serif text-2xl leading-snug text-primary sm:text-3xl">
+          Um lugar preparado para transformar o seu casamento em memória para a vida toda.
+        </h1>
+        <p className="mt-3 text-center text-base text-foreground/80">
+          Dê o primeiro passo para conhecer nosso espaço
+        </p>
+        <Contato idPrefixo="topo" enviado={enviado} aoEnviar={() => setEnviado(true)} />
+      </section>
+
       <Refugio />
       <Cenarios />
       <PacoteEssencia />
       <Video />
       <ComoFunciona />
-      <div className="mx-auto max-w-xl px-4 pb-4 sm:px-6">
-        <Contato />
+
+      <div id="contato" className="mx-auto max-w-xl px-4 pb-4 sm:px-6">
+        <Contato
+          idPrefixo="fim"
+          titulo="Dê o primeiro passo para conhecer nosso espaço"
+          enviado={enviado}
+          aoEnviar={() => setEnviado(true)}
+        />
       </div>
       <Rodape />
     </main>
-  );
-}
-
-function Hero() {
-  return (
-    <section className="relative isolate">
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <picture>
-          <source
-            srcSet="/images/hero-venue-700.avif 700w, /images/hero-venue-1400.avif 1400w"
-            sizes="100vw"
-            type="image/avif"
-          />
-          <source
-            srcSet="/images/hero-venue-700.webp 700w, /images/hero-venue-1400.webp 1400w"
-            sizes="100vw"
-            type="image/webp"
-          />
-          <img
-            src="/images/hero-venue-1400.webp"
-            alt="Cerimônia à beira do lago no Sítio Canto da Mata"
-            width={1400}
-            height={1050}
-            fetchPriority="high"
-            decoding="async"
-            className="h-full w-full object-cover"
-          />
-        </picture>
-        <div className="absolute inset-0 bg-primary/55" />
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-background" />
-      </div>
-      <div
-        className="mx-auto max-w-2xl px-6 pt-16 pb-24 text-center text-primary-foreground sm:pt-24 sm:pb-32"
-        style={{ textShadow: "0 2px 16px rgba(0,0,0,0.45)" }}
-      >
-        <span className="text-[11px] uppercase tracking-[0.24em] text-primary-foreground/85">
-          Sítio Canto da Mata
-        </span>
-        <h1 className="mt-4 font-serif text-3xl leading-tight sm:text-5xl">
-          Um casamento no quintal, com a natureza de anfitriã
-        </h1>
-        <p className="mx-auto mt-4 max-w-lg text-sm text-primary-foreground/90 sm:text-base">
-          Espaço para celebrações de até 100 convidados, a 60 minutos de São Paulo,
-          com buffet, decoração e um único evento por dia.
-        </p>
-        <div className="mt-8">
-          <a
-            href="#contato"
-            className="inline-block rounded-full bg-primary-foreground px-8 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary transition hover:bg-primary-foreground/90"
-          >
-            Receber a proposta
-          </a>
-          <p className="mt-3 text-xs text-primary-foreground/80">
-            Resposta de uma consultora em até 24h
-          </p>
-        </div>
-      </div>
-    </section>
   );
 }
 
@@ -429,7 +398,17 @@ function Rodape() {
   );
 }
 
-function Contato() {
+function Contato({
+  idPrefixo,
+  titulo,
+  enviado,
+  aoEnviar,
+}: {
+  idPrefixo: string;
+  titulo?: string;
+  enviado: boolean;
+  aoEnviar: () => void;
+}) {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [telefone, setTelefone] = useState("");
@@ -440,7 +419,6 @@ function Contato() {
   const [dataModo, setDataModo] = useState<"aproximado" | "exata">("aproximado");
   const [erroDataExata, setErroDataExata] = useState(false);
   const [fase, setFase] = useState("");
-  const [enviado, setEnviado] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const dataExataBtnRef = useRef<HTMLButtonElement>(null);
@@ -503,19 +481,17 @@ function Contato() {
       if (eventoDaFase) empurrarParaGTM(eventoDaFase, { convidados: totalConvidados, fase });
     }
     formRef.current?.submit();
-    setEnviado(true);
+    aoEnviar();
   }
 
   return (
-    <section id="contato" className="mt-4">
-      <iframe name="proposta-sink" title="proposta-sink" style={{ display: "none" }} />
-
+    <section className="mt-6">
       <div className="overflow-hidden rounded-2xl border border-border/60 bg-card shadow-soft">
         <div className="p-6 sm:p-8">
-          <h2 className="font-serif text-2xl text-primary sm:text-3xl">
-            Dê o primeiro passo para conhecer nosso espaço
-          </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
+          {titulo && (
+            <h2 className="font-serif text-2xl text-primary sm:text-3xl">{titulo}</h2>
+          )}
+          <p className={`text-sm text-muted-foreground ${titulo ? "mt-2" : ""}`}>
             Preencha seus dados e receba a proposta completa, com os valores para o seu
             número de convidados.
           </p>
@@ -540,47 +516,8 @@ function Contato() {
                   de LGPD estava na tela no momento do envio. */}
               <input type="hidden" name="consentimento_lgpd" value="sim" />
 
-              <Field label="Nome *">
-                <input
-                  required
-                  name="nome"
-                  autoComplete="name"
-                  value={nome}
-                  onChange={(e) => setNome(e.target.value)}
-                  className={inputCls}
-                  placeholder="Informe seu nome completo"
-                />
-              </Field>
-
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="E-mail *">
-                  <input
-                    required
-                    type="email"
-                    inputMode="email"
-                    name="email"
-                    autoComplete="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className={inputCls}
-                    placeholder="Informe seu melhor e-mail"
-                  />
-                </Field>
-                <Field label="Telefone *">
-                  <input
-                    required
-                    type="tel"
-                    inputMode="tel"
-                    name="celular"
-                    autoComplete="tel"
-                    value={telefone}
-                    onChange={(e) => setTelefone(maskTelefone(e.target.value))}
-                    className={inputCls}
-                    placeholder="Informe seu telefone"
-                  />
-                </Field>
-              </div>
-
+              {/* A ordem começa pelas perguntas sobre a festa e termina nos
+                  dados pessoais. */}
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="Data desejada *">
                   <div className="mb-2 inline-flex rounded-full border border-input p-0.5 text-xs">
@@ -668,7 +605,7 @@ function Contato() {
                 <Field label="Convidados *">
                   <input
                     required
-                    id="numero-convidados"
+                    id={`${idPrefixo}-convidados`}
                     type="text"
                     inputMode="numeric"
                     pattern="[0-9]*"
@@ -693,6 +630,47 @@ function Contato() {
                   <option value="ultimas_visitas">Estou fazendo as últimas visitas e pronta para fechar</option>
                 </select>
               </Field>
+
+              <Field label="Nome *">
+                <input
+                  required
+                  name="nome"
+                  autoComplete="name"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                  className={inputCls}
+                  placeholder="Informe seu nome completo"
+                />
+              </Field>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="E-mail *">
+                  <input
+                    required
+                    type="email"
+                    inputMode="email"
+                    name="email"
+                    autoComplete="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className={inputCls}
+                    placeholder="Informe seu melhor e-mail"
+                  />
+                </Field>
+                <Field label="Telefone *">
+                  <input
+                    required
+                    type="tel"
+                    inputMode="tel"
+                    name="celular"
+                    autoComplete="tel"
+                    value={telefone}
+                    onChange={(e) => setTelefone(maskTelefone(e.target.value))}
+                    className={inputCls}
+                    placeholder="Informe seu telefone"
+                  />
+                </Field>
+              </div>
 
               {/* O botão segue clicável mesmo com campos em branco: assim o
                   clique aciona a validação do navegador, que aponta o
