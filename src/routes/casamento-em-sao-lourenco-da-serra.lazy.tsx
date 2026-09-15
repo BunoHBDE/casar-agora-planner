@@ -18,6 +18,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { ptBR } from "date-fns/locale";
 import { GOOGLE_MAPS_ICON, WAZE_ICON } from "@/assets/map-icons";
 import { BAIRRO_SITIO, FAQ_ITEMS, TEMPO_CENTRO_SLS, VIA_ACESSO_SP } from "./casamento-em-sao-lourenco-da-serra";
+import { CamposOrigem } from "@/components/campos-origem";
 
 export const Route = createLazyFileRoute("/casamento-em-sao-lourenco-da-serra")({
   component: CasamentoSaoLourencoDaSerra,
@@ -536,6 +537,7 @@ function CTAFinal() {
             >
               <input type="hidden" name="data_exata" value={dataExataStr} />
               <input type="hidden" name="origem" value="casamento-sao-lourenco-da-serra" />
+              <CamposOrigem />
 
               <Field label="Nome *">
                 <input

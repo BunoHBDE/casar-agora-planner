@@ -5,6 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { ptBR } from "date-fns/locale";
 import { aplicarCorrespondenciaAvancada } from "@/lib/meta-pixel";
+import { CamposOrigem } from "@/components/campos-origem";
 
 export const Route = createLazyFileRoute("/lp-contato")({
   component: LandingContato,
@@ -511,6 +512,7 @@ function Contato({
               {/* Mantém a coluna da planilha preenchida: registra que o aviso
                   de LGPD estava na tela no momento do envio. */}
               <input type="hidden" name="consentimento_lgpd" value="sim" />
+              <CamposOrigem />
 
               {/* A ordem começa pelas perguntas sobre a festa e termina nos
                   dados pessoais. */}

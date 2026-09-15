@@ -6,6 +6,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { ptBR } from "date-fns/locale";
 import { GOOGLE_MAPS_ICON, WAZE_ICON } from "@/assets/map-icons";
 import { aplicarCorrespondenciaAvancada } from "@/lib/meta-pixel";
+import { CamposOrigem } from "@/components/campos-origem";
 
 const HERO_IMAGE_URL = "/images/hero-venue-1400.webp";
 const HERO_SRCSET_AVIF = "/images/hero-venue-700.avif 700w, /images/hero-venue-1400.avif 1400w";
@@ -500,6 +501,8 @@ function CTAFinal() {
               className="mt-6 grid gap-4"
             >
               <input type="hidden" name="data_exata" value={dataExataStr} />
+              <input type="hidden" name="origem" value="home" />
+              <CamposOrigem />
 
               <Field label="Nome *">
                 <input

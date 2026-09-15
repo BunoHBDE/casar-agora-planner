@@ -1,6 +1,7 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import heroAsset from "@/assets/hero-venue.jpg.asset.json";
+import { CamposOrigem } from "@/components/campos-origem";
 
 export const Route = createLazyFileRoute("/lp")({
   component: Landing,
@@ -133,6 +134,8 @@ function Landing() {
           className="rounded-2xl border border-border/60 bg-card p-5 shadow-soft sm:p-8"
         >
           <input ref={tokenInputRef} type="hidden" name="g-recaptcha-response" />
+          <input type="hidden" name="origem" value="lp" />
+          <CamposOrigem />
 
           <h2 className="font-serif text-xl text-primary sm:text-2xl">Receba a planilha gratuita</h2>
           <p className="mt-1 text-sm text-muted-foreground">Leva menos de 1 minuto.</p>

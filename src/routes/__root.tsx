@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { META_PIXEL_ID } from "../lib/meta-pixel";
+import { capturarOrigem } from "../lib/origem-trafego";
 
 function NotFoundComponent() {
   return (
@@ -226,6 +227,13 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  // A origem é capturada já na entrada, e não só quando um formulário
+  // aparece: a pessoa pode chegar pelo anúncio numa página e enviar o lead
+  // em outra, quando a query string do clique já ficou para trás.
+  useEffect(() => {
+    capturarOrigem();
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
