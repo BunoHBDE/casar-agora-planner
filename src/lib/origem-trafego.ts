@@ -1,13 +1,13 @@
 // Origem de tráfego do lead (UTMs + identificadores de clique de anúncio).
 //
 // A captura acontece na entrada da pessoa no site e fica guardada na
-// sessionStorage: quem chega por um anúncio pode navegar por várias páginas
-// antes de preencher o formulário, e sem esse registro a informação de
-// campanha se perderia no caminho.
+// localStorage por 30 dias: quem clica no anúncio muitas vezes não preenche
+// o formulário na mesma visita — volta dias depois, digitando o endereço ou
+// pela busca, e nessa volta a URL já não traz mais nada da campanha.
 //
 // Regra de sobrescrita: uma URL que traz chaves de origem sempre vence (é um
 // clique novo, de uma campanha possivelmente diferente). Uma navegação sem
-// chaves nenhuma nunca apaga o que já foi capturado.
+// chaves nenhuma nunca apaga o que já foi capturado, até o registro vencer.
 export const CHAVES = [
   "utm_source",
   "utm_medium",
@@ -29,6 +29,16 @@ export type OrigemTrafego = Record<CampoOrigem, string>;
 
 const CHAVE_STORAGE = "origem_trafego";
 
+// Janela de atribuição: 30 dias contados a partir do clique que trouxe as
+// chaves, sem renovar a cada visita — senão uma campanha antiga acompanharia
+// para sempre quem volta ao site com frequência.
+const VALIDADE_DIAS = 30;
+const VALIDADE_MS = VALIDADE_DIAS * 24 * 60 * 60 * 1000;
+
+// Carimbo de quando o registro foi gravado. Fica só na storage: não é um dos
+// CAMPOS_ORIGEM, então não vira campo oculto nem coluna na planilha.
+const CAMPO_CARIMBO = "capturado_em";
+
 function origemVazia(): OrigemTrafego {
   return CAMPOS_ORIGEM.reduce((acc, campo) => {
     acc[campo] = "";
@@ -36,18 +46,29 @@ function origemVazia(): OrigemTrafego {
   }, {} as OrigemTrafego);
 }
 
-// O acesso à sessionStorage pode lançar (modo privado, cookies de terceiros
+// O acesso à localStorage pode lançar (modo privado, cookies de terceiros
 // bloqueados, iframe sem permissão). Nesse caso o formulário continua
 // funcionando: os campos de origem apenas saem vazios.
+//
+// Um registro vencido conta como inexistente: é descartado na leitura e a
+// próxima visita grava um no lugar.
 function lerRegistro(): OrigemTrafego | null {
   try {
-    const bruto = window.sessionStorage.getItem(CHAVE_STORAGE);
+    const bruto = window.localStorage.getItem(CHAVE_STORAGE);
     if (!bruto) return null;
     const dados: unknown = JSON.parse(bruto);
     if (!dados || typeof dados !== "object") return null;
+    const salvo = dados as Record<string, unknown>;
+
+    // Sem carimbo válido não dá para saber a idade do registro — descartar é
+    // mais seguro do que carregar uma campanha de origem desconhecida.
+    const capturadoEm = salvo[CAMPO_CARIMBO];
+    if (typeof capturadoEm !== "number" || !Number.isFinite(capturadoEm)) return null;
+    if (Date.now() - capturadoEm > VALIDADE_MS) return null;
+
     const registro = origemVazia();
     for (const campo of CAMPOS_ORIGEM) {
-      const valor = (dados as Record<string, unknown>)[campo];
+      const valor = salvo[campo];
       registro[campo] = typeof valor === "string" ? valor : "";
     }
     return registro;
@@ -58,7 +79,8 @@ function lerRegistro(): OrigemTrafego | null {
 
 function gravarRegistro(registro: OrigemTrafego) {
   try {
-    window.sessionStorage.setItem(CHAVE_STORAGE, JSON.stringify(registro));
+    const comCarimbo = { ...registro, [CAMPO_CARIMBO]: Date.now() };
+    window.localStorage.setItem(CHAVE_STORAGE, JSON.stringify(comCarimbo));
   } catch {
     // Sem storage disponível não há o que fazer além de seguir em frente.
   }
@@ -84,8 +106,8 @@ export function capturarOrigem(): void {
   // tratá-la como ausente evita apagar um registro bom com valores em branco.
   const temChave = CHAVES.some((chave) => (params.get(chave) ?? "").trim() !== "");
 
-  // Sem chaves na URL e com registro já salvo: preserva o que foi capturado
-  // na entrada, que é justamente o ponto de guardar na sessão.
+  // Sem chaves na URL e com registro dentro da validade: preserva o que foi
+  // capturado no clique, que é justamente o ponto de guardar isso.
   if (!temChave && lerRegistro()) return;
 
   gravarRegistro(registroDaUrl(params));
