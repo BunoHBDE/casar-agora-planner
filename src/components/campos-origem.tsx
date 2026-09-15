@@ -7,7 +7,7 @@ import { CAMPOS_ORIGEM, capturarOrigem, lerOrigem, type OrigemTrafego } from "@/
 //
 // O capturarOrigem() daqui é necessário além do que roda no __root: os
 // efeitos dos filhos rodam antes do efeito do root, então sem esta chamada o
-// primeiro render com valores pegaria a sessionStorage ainda vazia.
+// primeiro render com valores pegaria a localStorage ainda vazia.
 export function CamposOrigem() {
   // Antes do mount não há window: os campos saem com valor vazio no HTML do
   // servidor e no primeiro render do cliente, e só então são preenchidos —
