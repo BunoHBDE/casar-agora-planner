@@ -25,8 +25,8 @@ const LIMITE_CONVIDADOS = 100;
 
 // Cada recorte é um disparo próprio do evento padrão Lead, com o seu
 // content_name — mesmo padrão de /lp e /lp2, em que cada formulário tem o
-// seu. O primeiro cobre todos os envios; os outros quatro saem junto,
-// quando o lead se encaixa no recorte.
+// seu. O primeiro cobre todos os envios; os outros saem junto, quando o
+// lead se encaixa no recorte.
 const CONTENT_NAME_TODOS = "formulario_proposta_lp_contato";
 const CONTENT_NAME_ATE_100 = "formulario_proposta_lp_contato_ate_100";
 const CONTENT_NAME_POR_FASE: Record<string, string> = {
@@ -34,6 +34,12 @@ const CONTENT_NAME_POR_FASE: Record<string, string> = {
   visitas: "formulario_proposta_lp_contato_ate_100_visitas",
   ultimas_visitas: "formulario_proposta_lp_contato_ate_100_ultimas_visitas",
 };
+
+// Lead quente: até 100 convidados e já na fase de visitas ou de últimas
+// visitas. É um disparo único que junta as duas fases, para a campanha
+// otimizar para um só evento em vez de dois.
+const CONTENT_NAME_LEAD_QUENTE = "formulario_proposta_lp_contato_lead_quente";
+const FASES_LEAD_QUENTE = new Set(["visitas", "ultimas_visitas"]);
 
 function dispararLead(contentName: string) {
   if (typeof window === "undefined") return;
@@ -49,6 +55,7 @@ const GTM_EVENTO_POR_FASE: Record<string, string> = {
   visitas: "lead_100_convidados_fase_visitas",
   ultimas_visitas: "lead_100_convidados_fase_ultimas_visitas",
 };
+const GTM_EVENTO_LEAD_QUENTE = "lead_quente";
 
 function empurrarParaGTM(evento: string, dados: Record<string, unknown>) {
   if (typeof window === "undefined") return;
@@ -461,6 +468,7 @@ function Contato({
     aplicarCorrespondenciaAvancada({ nome, email, telefone });
     const totalConvidados = Number.parseInt(convidados, 10) || 0;
     const ate100 = totalConvidados > 0 && totalConvidados <= LIMITE_CONVIDADOS;
+    const leadQuente = ate100 && FASES_LEAD_QUENTE.has(fase);
 
     // Lead de todos os envios.
     dispararLead(CONTENT_NAME_TODOS);
@@ -470,6 +478,7 @@ function Contato({
       const contentNameDaFase = CONTENT_NAME_POR_FASE[fase];
       if (contentNameDaFase) dispararLead(contentNameDaFase);
     }
+    if (leadQuente) dispararLead(CONTENT_NAME_LEAD_QUENTE);
 
     empurrarParaGTM("lead_form_lp_contato_submit", {
       form_name: "proposta_lp_contato",
@@ -481,6 +490,7 @@ function Contato({
       const eventoDaFase = GTM_EVENTO_POR_FASE[fase];
       if (eventoDaFase) empurrarParaGTM(eventoDaFase, { convidados: totalConvidados, fase });
     }
+    if (leadQuente) empurrarParaGTM(GTM_EVENTO_LEAD_QUENTE, { convidados: totalConvidados, fase });
     formRef.current?.submit();
     aoEnviar();
   }
