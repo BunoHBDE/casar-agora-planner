@@ -53,19 +53,19 @@ const DIFERENCIAIS = [
 
 const GALERIA_WEBP = [
   "/images/galeria/galeria-1.webp",
-  "/images/galeria/galeria-2.webp",
+  "/images/galeria/galeria-7.webp",
   "/images/galeria/galeria-3.webp",
-  "/images/galeria/galeria-4.webp",
-  "/images/galeria/galeria-5.webp",
-  "/images/galeria/galeria-6.webp",
+  "/images/galeria/galeria-8.webp",
+  "/images/galeria/galeria-9.webp",
+  "/images/galeria/galeria-10.webp",
 ];
 const GALERIA_AVIF = [
   "/images/galeria/galeria-1.avif",
-  "/images/galeria/galeria-2.avif",
+  "/images/galeria/galeria-7.avif",
   "/images/galeria/galeria-3.avif",
-  "/images/galeria/galeria-4.avif",
-  "/images/galeria/galeria-5.avif",
-  "/images/galeria/galeria-6.avif",
+  "/images/galeria/galeria-8.avif",
+  "/images/galeria/galeria-9.avif",
+  "/images/galeria/galeria-10.avif",
 ];
 const GALERIA = GALERIA_WEBP;
 
