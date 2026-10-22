@@ -432,7 +432,13 @@ function Contato({
   const dataExataBtnRef = useRef<HTMLButtonElement>(null);
 
   const maskTelefone = (raw: string) => {
-    const digits = raw.replace(/\D/g, "").slice(0, 11);
+    // Há quem digite o código do país (55) antes do DDD. Com o limite de 11
+    // dígitos, os últimos números do telefone eram cortados. Por isso o 55
+    // só sai quando passa de 11 dígitos: pelo tamanho, e não pelo prefixo,
+    // o DDD 55 (Santa Maria/RS) continua valendo.
+    let digits = raw.replace(/\D/g, "");
+    if (digits.length > 11 && digits.startsWith("55")) digits = digits.slice(2);
+    digits = digits.slice(0, 11);
     if (digits.length <= 2) return `(${digits}`;
     if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
@@ -524,8 +530,20 @@ function Contato({
               <input type="hidden" name="consentimento_lgpd" value="sim" />
               <CamposOrigem />
 
-              {/* A ordem começa pelas perguntas sobre a festa e termina nos
-                  dados pessoais. */}
+              {/* A ordem começa pelo nome, segue pelas perguntas sobre a
+                  festa e termina nos demais dados de contato. */}
+              <Field label="Nome *">
+                <input
+                  required
+                  name="nome"
+                  autoComplete="name"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                  className={inputCls}
+                  placeholder="Informe seu nome completo"
+                />
+              </Field>
+
               <Field label="NÚMERO DE CONVIDADOS *">
                 <input
                   required
@@ -533,13 +551,12 @@ function Contato({
                   type="text"
                   inputMode="numeric"
                   pattern="[0-9]*"
-                  // Sendo o primeiro campo do formulário — sem nenhum campo de
-                  // texto antes para dar contexto —, um input só de números
-                  // sozinho é lido por engano pelo teclado do Android (Gboard)
-                  // como possível número de cartão, que oferece o
-                  // autopreenchimento por cima da página, fora do controle do
-                  // autoComplete="off". O token "one-time-code" sinaliza que é
-                  // um campo de código curto, o que neutraliza essa sugestão.
+                  // Um input só de números pode ser lido por engano pelo
+                  // teclado do Android (Gboard) como possível número de
+                  // cartão, que oferece o autopreenchimento por cima da
+                  // página, fora do controle do autoComplete="off". O token
+                  // "one-time-code" sinaliza que é um campo de código curto,
+                  // o que neutraliza essa sugestão.
                   autoComplete="one-time-code"
                   aria-autocomplete="none"
                   data-lpignore="true"
@@ -637,18 +654,6 @@ function Contato({
                   )}
                 </Field>
               </div>
-
-              <Field label="Nome *">
-                <input
-                  required
-                  name="nome"
-                  autoComplete="name"
-                  value={nome}
-                  onChange={(e) => setNome(e.target.value)}
-                  className={inputCls}
-                  placeholder="Informe seu nome completo"
-                />
-              </Field>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="E-mail *">
