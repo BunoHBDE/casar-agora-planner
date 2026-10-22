@@ -160,7 +160,7 @@ function Hero() {
         <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-background" />
       </div>
       <div
-        className="mx-auto max-w-3xl px-6 pt-32 pb-40 text-center text-primary-foreground sm:pt-40 sm:pb-48"
+        className="mx-auto max-w-3xl px-6 pt-28 pb-32 text-center text-primary-foreground sm:pt-36 sm:pb-40"
         style={{ textShadow: "0 2px 16px rgba(0,0,0,0.45)" }}
       >
         <span className="text-[11px] uppercase tracking-[0.28em] text-primary-foreground/85">
@@ -193,7 +193,7 @@ function Hero() {
 
 function Sobre() {
   return (
-    <section id="sobre" className="mx-auto max-w-3xl px-6 py-20 text-center sm:py-28">
+    <section id="sobre" className="mx-auto max-w-3xl px-6 py-14 text-center sm:py-20">
       <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">Sobre o espaço</span>
       <h2 className="mt-4 font-serif text-3xl text-primary sm:text-4xl">
         O Sítio Canto da Mata
@@ -214,14 +214,14 @@ function Sobre() {
 
 function Estrutura() {
   return (
-    <section id="estrutura" className="border-y border-border/60 bg-secondary/40 py-20 sm:py-28">
+    <section id="estrutura" className="border-y border-border/60 bg-secondary/40 py-14 sm:py-20">
       <div className="mx-auto max-w-6xl px-6">
         <div className="text-center">
           <h2 className="mt-4 font-serif text-3xl text-primary sm:text-4xl">
             Estrutura
           </h2>
         </div>
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {DIFERENCIAIS.map((d) => (
             <article
               key={d.titulo}
@@ -256,7 +256,7 @@ function Galeria() {
   }, [aberta]);
 
   return (
-    <section id="galeria" className="mx-auto max-w-6xl px-6 py-20 sm:py-28">
+    <section id="galeria" className="mx-auto max-w-6xl px-6 py-14 sm:py-20">
       <div className="text-center">
         <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">Galeria</span>
         <h2 className="mt-4 font-serif text-3xl text-primary sm:text-4xl">
@@ -266,7 +266,7 @@ function Galeria() {
           {"\n"}
         </p>
       </div>
-      <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {GALERIA_WEBP.map((src, i) => (
           <button
             key={i}
@@ -348,7 +348,7 @@ function Galeria() {
 function Planilha() {
   return (
     <section id="planilha" className="bg-primary text-primary-foreground">
-      <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 px-6 py-16 text-center sm:flex-row sm:justify-between sm:text-left">
+      <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 px-6 py-12 text-center sm:flex-row sm:justify-between sm:text-left">
         <div className="max-w-lg">
           <span className="text-[11px] uppercase tracking-[0.24em] text-primary-foreground/70">
             Planilha gratuita
@@ -373,7 +373,7 @@ function Planilha() {
 
 function Localizacao() {
   return (
-    <section id="localizacao" className="mx-auto max-w-3xl px-6 py-20 text-center sm:py-28">
+    <section id="localizacao" className="mx-auto max-w-3xl px-6 py-14 text-center sm:py-20">
       <span className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">Localização</span>
       <h2 className="mt-4 font-serif text-3xl text-primary sm:text-4xl">
         Fácil de chegar, longe da correria.
@@ -479,7 +479,7 @@ function CTAFinal() {
   }
 
   return (
-    <section id="contato" className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-24">
+    <section id="contato" className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
       <iframe name="proposta-sink" title="proposta-sink" style={{ display: "none" }} />
       <div className="grid overflow-hidden rounded-2xl border border-border/60 bg-card shadow-soft sm:grid-cols-[1.4fr_1fr]">
         {/* Formulário */}
