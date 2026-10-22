@@ -439,7 +439,13 @@ function CTAFinal() {
   const formRef = useRef<HTMLFormElement>(null);
 
   const maskTelefone = (raw: string) => {
-    const digits = raw.replace(/\D/g, "").slice(0, 11);
+    // Há quem digite o código do país (55) antes do DDD. Com o limite de 11
+    // dígitos, os últimos números do telefone eram cortados. Por isso o 55
+    // só sai quando passa de 11 dígitos: pelo tamanho, e não pelo prefixo,
+    // o DDD 55 (Santa Maria/RS) continua valendo.
+    let digits = raw.replace(/\D/g, "");
+    if (digits.length > 11 && digits.startsWith("55")) digits = digits.slice(2);
+    digits = digits.slice(0, 11);
     if (digits.length <= 2) return `(${digits}`;
     if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
