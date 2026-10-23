@@ -204,11 +204,12 @@ function LandingContato() {
   );
 }
 
-// No desktop o texto fica no alto da foto: ela estica até a altura do
-// formulário e, em monitores mais baixos, o pé dela fica abaixo da dobra.
+// O texto fica no alto da foto. No celular, isso deixa livre a parte de
+// baixo (o altar e o lago), logo acima do formulário; no desktop, a foto
+// estica até a altura do formulário e o pé dela pode ficar abaixo da dobra.
 function FotoDestaques() {
   return (
-    <div className="relative isolate flex h-[70svh] flex-col justify-end overflow-hidden lg:h-auto lg:justify-start">
+    <div className="relative isolate flex h-[70svh] flex-col overflow-hidden lg:h-auto">
       <picture className="absolute inset-0 -z-10">
         <source
           srcSet="/images/hero-venue-700.avif 700w, /images/hero-venue-1400.avif 1400w"
@@ -227,12 +228,12 @@ function FotoDestaques() {
           fetchPriority="high"
         />
       </picture>
-      {/* Escurece só o lado da foto onde fica o texto (embaixo no celular, em
-          cima no desktop), para o restante da imagem continuar visível. */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-primary/85 via-primary/35 via-50% to-transparent lg:from-primary/90 lg:via-primary/45 lg:via-50% lg:bg-gradient-to-b" />
+      {/* Escurece só a parte de cima, onde fica o texto, para o restante da
+          imagem continuar visível. */}
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/85 via-primary/35 via-50% to-transparent lg:from-primary/90 lg:via-primary/45" />
 
       <div
-        className="px-5 pb-6 text-primary-foreground sm:px-8 sm:pb-8 lg:px-12 lg:pt-12 lg:pb-0"
+        className="px-5 pt-6 text-primary-foreground sm:px-8 sm:pt-8 lg:px-12 lg:pt-12"
         style={{ textShadow: "0 2px 12px rgba(0,0,0,0.35)" }}
       >
         <p className="text-[11px] uppercase tracking-[0.24em] text-primary-foreground/85">
