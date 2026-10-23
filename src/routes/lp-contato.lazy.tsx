@@ -388,7 +388,7 @@ function PacoteEssencia() {
             alt: "Altar com arco de flores sobre o deck, à beira do lago e cercado pela mata",
             titulo: "Celebrações diurnas",
             texto:
-              "Com início entre 9h e 15h, para aproveitar a luz natural ,a melhor moldura para as fotos e para um almoço festivo ao ar livre.",
+              "Com início entre 9h e 15h, para aproveitar a luz natural, a melhor moldura para as fotos e para um almoço festivo ao ar livre.",
           },
         ].map((card) => (
           <div key={card.nome} className="flex flex-col gap-3">
