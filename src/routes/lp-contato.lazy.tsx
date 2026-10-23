@@ -394,16 +394,16 @@ function PacoteEssencia() {
 
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
         <div className="rounded-xl border border-border/60 bg-secondary/40 p-4">
-          <h3 className="font-serif text-base text-primary">Dois menus, servidos com afeto</h3>
+          <h3 className="font-serif text-base text-primary">Duas opções de menu</h3>
           <p className="mt-1.5 text-sm leading-relaxed text-foreground/75">
-            Brasileirinho, com strogonoff e acompanhamentos de casa, ou Família, com massas
+            Brasileirinho, com strogonoff e acompanhamentos da casa, ou Família, com massas
             e molhos suculentos. Louças, talheres e equipe inclusos.
           </p>
         </div>
         <div className="rounded-xl border border-border/60 bg-secondary/40 p-4">
           <h3 className="font-serif text-base text-primary">Celebrações diurnas</h3>
           <p className="mt-1.5 text-sm leading-relaxed text-foreground/75">
-            Com início entre 9h e 15h, para aproveitar a luz natural — a melhor moldura
+            Com início entre 9h e 15h, para aproveitar a luz natural ,a melhor moldura
             para as fotos e para um almoço festivo ao ar livre.
           </p>
         </div>
