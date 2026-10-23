@@ -1,6 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
-import { Check, MessageCircle, Play } from "lucide-react";
+import { Check, MapPin, MessageCircle, Play, Users, UtensilsCrossed, Waves } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { ptBR } from "date-fns/locale";
@@ -75,13 +75,31 @@ function trackWhatsappClick() {
   }
 }
 
-// Pontos curtos sobre a foto do topo: o que o espaço oferece, para o lead
-// entender a proposta antes mesmo de rolar a página.
+// Pontos sobre a foto do topo: o que o espaço oferece, para o lead entender
+// a proposta antes mesmo de rolar a página. No celular, onde a foto divide a
+// tela com o formulário, entram as versões curtas, em cards; no desktop, as
+// frases completas, em lista.
 const DESTAQUES = [
-  "Cerimônia à beira do lago e festa no mesmo lugar",
-  "Até 100 convidados, com um único evento por dia",
-  "Buffet, decoração com flores e equipe inclusos",
-  "50 mil m² de mata, a 60 minutos de São Paulo",
+  {
+    icone: Waves,
+    curto: "Cerimônia no lago",
+    longo: "Cerimônia à beira do lago e festa no mesmo lugar",
+  },
+  {
+    icone: Users,
+    curto: "Até 100 pessoas",
+    longo: "Até 100 convidados, com um único evento por dia",
+  },
+  {
+    icone: UtensilsCrossed,
+    curto: "Buffet e decoração",
+    longo: "Buffet, decoração com flores e equipe inclusos",
+  },
+  {
+    icone: MapPin,
+    curto: "60 min de SP",
+    longo: "50 mil m² de mata, a 60 minutos de São Paulo",
+  },
 ];
 
 const NUMEROS = [
@@ -211,7 +229,7 @@ function FotoDestaques() {
       </picture>
       {/* Escurece só o lado da foto onde fica o texto (embaixo no celular, em
           cima no desktop), para o restante da imagem continuar visível. */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-primary/90 via-primary/45 to-transparent lg:bg-gradient-to-b" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-primary/85 via-primary/35 via-50% to-transparent lg:from-primary/90 lg:via-primary/45 lg:via-50% lg:bg-gradient-to-b" />
 
       <div
         className="px-5 pb-6 text-primary-foreground sm:px-8 sm:pb-8 lg:px-12 lg:pt-12 lg:pb-0"
@@ -220,16 +238,33 @@ function FotoDestaques() {
         <p className="text-[11px] uppercase tracking-[0.24em] text-primary-foreground/85">
           Sítio Canto da Mata
         </p>
-        <h1 className="mt-2 max-w-lg font-serif text-xl leading-snug sm:text-2xl lg:text-3xl">
-          Um lugar preparado para transformar o seu casamento em memória para a vida toda.
+        <h1 className="mt-2 max-w-lg font-serif text-2xl leading-snug lg:text-3xl">
+          <span className="lg:hidden">Seu casamento no campo, do jeito que você sonhou.</span>
+          <span className="hidden lg:inline">
+            Um lugar preparado para transformar o seu casamento em memória para a vida toda.
+          </span>
         </h1>
-        <ul className="mt-4 grid gap-2 text-sm sm:gap-2.5 sm:text-base">
-          {DESTAQUES.map((item) => (
-            <li key={item} className="flex items-start gap-2.5">
+
+        <ul className="mt-4 grid max-w-lg grid-cols-2 gap-2 lg:hidden">
+          {DESTAQUES.map(({ icone: Icone, curto }) => (
+            <li
+              key={curto}
+              className="flex items-center gap-2 rounded-xl border border-primary-foreground/25 bg-primary-foreground/15 px-2.5 py-2.5 text-xs font-medium leading-tight backdrop-blur-md sm:px-3 sm:text-sm"
+              style={{ textShadow: "none" }}
+            >
+              <Icone className="h-4 w-4 shrink-0" strokeWidth={2} />
+              {curto}
+            </li>
+          ))}
+        </ul>
+
+        <ul className="mt-4 hidden gap-2.5 text-base lg:grid">
+          {DESTAQUES.map(({ longo }) => (
+            <li key={longo} className="flex items-start gap-2.5">
               <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-foreground/20">
                 <Check className="h-3 w-3" strokeWidth={3} />
               </span>
-              {item}
+              {longo}
             </li>
           ))}
         </ul>
