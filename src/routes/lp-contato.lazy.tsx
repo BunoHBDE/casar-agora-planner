@@ -116,16 +116,16 @@ const CENARIOS = [
     avif: "/images/lp-contato/altar-lago-700.avif",
   },
   {
-    titulo: "Área gourmet e piscina",
-    desc: "A sala de estar da celebração: ampla, integrada e cheia de vida.",
-    webp: "/images/galeria/galeria-4.webp",
-    avif: "/images/galeria/galeria-4.avif",
+    titulo: "Decoração com a cara de vocês",
+    desc: "Flores, cores e detalhes personalizados, que refletem a personalidade do casal.",
+    webp: "/images/lp-contato/mesa-doces-700.webp",
+    avif: "/images/lp-contato/mesa-doces-700.avif",
   },
   {
     titulo: "Mesas sob a pérgola",
     desc: "O almoço de domingo que vira festa, à sombra e com a mata em volta.",
-    webp: "/images/lp-contato/mesa-posta-700.webp",
-    avif: "/images/lp-contato/mesa-posta-700.avif",
+    webp: "/images/lp-contato/mesa-pergola-700.webp",
+    avif: "/images/lp-contato/mesa-pergola-700.avif",
   },
 ];
 
