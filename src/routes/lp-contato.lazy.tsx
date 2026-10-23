@@ -75,6 +75,15 @@ function trackWhatsappClick() {
   }
 }
 
+// Pontos curtos sobre a foto do topo: o que o espaço oferece, para o lead
+// entender a proposta antes mesmo de rolar a página.
+const DESTAQUES = [
+  "Cerimônia à beira do lago e festa no mesmo lugar",
+  "Até 100 convidados, com um único evento por dia",
+  "Buffet, decoração com flores e equipe inclusos",
+  "50 mil m² de mata, a 60 minutos de São Paulo",
+];
+
 const NUMEROS = [
   { valor: "50 mil m²", texto: "de mata preservada como moldura do seu “sim”" },
   { valor: "60 min", texto: "de São Paulo, num refúgio de paz" },
@@ -141,17 +150,21 @@ function LandingContato() {
           na mesma página não são resolvidos de forma confiável. */}
       <iframe name="proposta-sink" title="proposta-sink" style={{ display: "none" }} />
 
-      <section className="mx-auto max-w-xl px-4 pt-10 pb-2 sm:px-6 sm:pt-14">
-        <p className="text-center text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
-          Sítio Canto da Mata
-        </p>
-        <h1 className="mt-3 text-center font-serif text-lg leading-snug text-primary sm:text-xl">
-          Um lugar preparado para transformar o seu casamento em memória para a vida toda.
-        </h1>
-        <p className="mt-1.5 text-center text-sm text-foreground/80">
-          Dê o primeiro passo para conhecer nosso espaço
-        </p>
-        <Contato idPrefixo="topo" enviado={enviado} aoEnviar={() => setEnviado(true)} />
+      {/* Tela dividida: foto com os destaques do espaço à esquerda e o
+          formulário à direita. No celular a foto ocupa 70% da altura da tela,
+          para que o começo do formulário já apareça logo abaixo dela. */}
+      <section className="lg:grid lg:min-h-svh lg:grid-cols-2">
+        <FotoDestaques />
+        <div className="px-4 pb-2 sm:px-6 lg:flex lg:items-center lg:px-10 lg:pt-4 lg:pb-10">
+          <div className="mx-auto w-full max-w-xl">
+            <Contato
+              idPrefixo="topo"
+              titulo="Dê o primeiro passo para conhecer nosso espaço"
+              enviado={enviado}
+              aoEnviar={() => setEnviado(true)}
+            />
+          </div>
+        </div>
       </section>
 
       <Refugio />
@@ -170,6 +183,56 @@ function LandingContato() {
       </div>
       <Rodape />
     </main>
+  );
+}
+
+function FotoDestaques() {
+  return (
+    <div className="relative isolate flex h-[70svh] flex-col justify-end overflow-hidden lg:h-auto">
+      <picture className="absolute inset-0 -z-10">
+        <source
+          srcSet="/images/hero-venue-700.avif 700w, /images/hero-venue-1400.avif 1400w"
+          sizes="(min-width: 1024px) 50vw, 100vw"
+          type="image/avif"
+        />
+        <source
+          srcSet="/images/hero-venue-700.webp 700w, /images/hero-venue-1400.webp 1400w"
+          sizes="(min-width: 1024px) 50vw, 100vw"
+          type="image/webp"
+        />
+        <img
+          src="/images/hero-venue-1400.webp"
+          alt="Cerimônia montada à beira do lago no Sítio Canto da Mata"
+          className="h-full w-full object-cover"
+          fetchPriority="high"
+        />
+      </picture>
+      {/* Escurece só a metade de baixo, onde fica o texto: o altar e a mata
+          continuam visíveis no alto da foto. */}
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-primary/90 via-primary/45 to-transparent" />
+
+      <div
+        className="px-5 pb-6 text-primary-foreground sm:px-8 sm:pb-8 lg:px-12 lg:pb-12"
+        style={{ textShadow: "0 2px 12px rgba(0,0,0,0.35)" }}
+      >
+        <p className="text-[11px] uppercase tracking-[0.24em] text-primary-foreground/85">
+          Sítio Canto da Mata
+        </p>
+        <h1 className="mt-2 max-w-lg font-serif text-xl leading-snug sm:text-2xl lg:text-3xl">
+          Um lugar preparado para transformar o seu casamento em memória para a vida toda.
+        </h1>
+        <ul className="mt-4 grid gap-2 text-sm sm:gap-2.5 sm:text-base">
+          {DESTAQUES.map((item) => (
+            <li key={item} className="flex items-start gap-2.5">
+              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-foreground/20">
+                <Check className="h-3 w-3" strokeWidth={3} />
+              </span>
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 }
 
