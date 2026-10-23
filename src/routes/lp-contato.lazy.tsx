@@ -186,9 +186,12 @@ function LandingContato() {
   );
 }
 
+// No desktop a foto tem a altura da tela e fica fixa enquanto o formulário
+// rola: se ela esticasse até a altura do formulário, os destaques, que ficam
+// embaixo, sairiam da tela em monitores mais baixos.
 function FotoDestaques() {
   return (
-    <div className="relative isolate flex h-[70svh] flex-col justify-end overflow-hidden lg:h-auto">
+    <div className="relative isolate flex h-[70svh] flex-col justify-end overflow-hidden lg:sticky lg:top-0 lg:h-svh lg:self-start">
       <picture className="absolute inset-0 -z-10">
         <source
           srcSet="/images/hero-venue-700.avif 700w, /images/hero-venue-1400.avif 1400w"
