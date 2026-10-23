@@ -369,44 +369,48 @@ function PacoteEssencia() {
         ))}
       </ul>
 
-      {/* Duas fotos de decoração e mesa de bolo: mostram na prática o que a
-          lista de itens promete. */}
+      {/* Cada foto fica junto do seu card: no desktop, lado a lado; no
+          celular, a foto logo acima do texto que ela ilustra. */}
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
         {[
-          { nome: "bolo-flores", alt: "Mesa de bolo com arranjos de flores laranja e pink" },
-          { nome: "bolo-branco", alt: "Mesa de bolo com cortina de samambaias e flores brancas" },
-        ].map((foto) => (
-          <div key={foto.nome} className="aspect-[4/3] overflow-hidden rounded-xl bg-muted">
-            <picture>
-              <source srcSet={`/images/lp-contato/${foto.nome}-700.avif`} type="image/avif" />
-              <source srcSet={`/images/lp-contato/${foto.nome}-700.webp`} type="image/webp" />
-              <img
-                src={`/images/lp-contato/${foto.nome}-700.webp`}
-                alt={foto.alt}
-                loading="lazy"
-                decoding="async"
-                className="h-full w-full object-cover"
-              />
-            </picture>
+          {
+            nome: "prato-posto",
+            // O prato fica na parte de baixo da foto vertical.
+            foco: "object-[50%_80%]",
+            alt: "Prato com guardanapo verde e taça de cristal na mesa posta com flores",
+            titulo: "Duas opções de menu",
+            texto:
+              "Brasileirinho, com strogonoff e acompanhamentos da casa, ou Família, com massas e molhos suculentos. Louças, talheres e equipe inclusos.",
+          },
+          {
+            nome: "altar-arco",
+            foco: "object-center",
+            alt: "Altar com arco de flores sobre o deck, à beira do lago e cercado pela mata",
+            titulo: "Celebrações diurnas",
+            texto:
+              "Com início entre 9h e 15h, para aproveitar a luz natural, a melhor moldura para as fotos e para um almoço festivo ao ar livre.",
+          },
+        ].map((card) => (
+          <div key={card.nome} className="flex flex-col gap-3">
+            <div className="aspect-[4/3] overflow-hidden rounded-xl bg-muted">
+              <picture>
+                <source srcSet={`/images/lp-contato/${card.nome}-700.avif`} type="image/avif" />
+                <source srcSet={`/images/lp-contato/${card.nome}-700.webp`} type="image/webp" />
+                <img
+                  src={`/images/lp-contato/${card.nome}-700.webp`}
+                  alt={card.alt}
+                  loading="lazy"
+                  decoding="async"
+                  className={`h-full w-full object-cover ${card.foco}`}
+                />
+              </picture>
+            </div>
+            <div className="flex-1 rounded-xl border border-border/60 bg-secondary/40 p-4">
+              <h3 className="font-serif text-base text-primary">{card.titulo}</h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-foreground/75">{card.texto}</p>
+            </div>
           </div>
         ))}
-      </div>
-
-      <div className="mt-3 grid gap-3 sm:grid-cols-2">
-        <div className="rounded-xl border border-border/60 bg-secondary/40 p-4">
-          <h3 className="font-serif text-base text-primary">Duas opções de menu</h3>
-          <p className="mt-1.5 text-sm leading-relaxed text-foreground/75">
-            Brasileirinho, com strogonoff e acompanhamentos da casa, ou Família, com massas
-            e molhos suculentos. Louças, talheres e equipe inclusos.
-          </p>
-        </div>
-        <div className="rounded-xl border border-border/60 bg-secondary/40 p-4">
-          <h3 className="font-serif text-base text-primary">Celebrações diurnas</h3>
-          <p className="mt-1.5 text-sm leading-relaxed text-foreground/75">
-            Com início entre 9h e 15h, para aproveitar a luz natural ,a melhor moldura
-            para as fotos e para um almoço festivo ao ar livre.
-          </p>
-        </div>
       </div>
     </section>
   );
