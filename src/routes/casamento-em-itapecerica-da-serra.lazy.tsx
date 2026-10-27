@@ -24,8 +24,7 @@ export const Route = createLazyFileRoute("/casamento-em-itapecerica-da-serra")({
   component: CasamentoItapecericaDaSerra,
 });
 
-const WHATSAPP_URL =
-  "https://wa.me/5511933197671?text=Ol%C3%A1%2C%20quero%20agendar%20uma%20visita%20ao%20S%C3%ADtio%20Canto%20da%20Mata";
+const WHATSAPP_NUMERO = "5511933197671";
 
 // Mesmo evento customizado do restante do site ("whatsapp_click"), com um
 // content_name próprio para diferenciar o clique vindo desta página local nas
@@ -134,13 +133,11 @@ function TopoMinimo() {
           Sítio Canto da Mata
         </Link>
         <a
-          href={WHATSAPP_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={trackWhatsappClick}
+          href="#contato"
+          onClick={trackAgendarVisitaClick}
           className="rounded-full border border-primary/30 px-4 py-2 text-xs font-medium uppercase tracking-[0.1em] text-primary transition hover:bg-primary/10"
         >
-          WhatsApp
+          Agende uma visita
         </a>
       </div>
     </header>
@@ -209,15 +206,6 @@ function Hero() {
             className="w-full rounded-full bg-primary-foreground px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary transition hover:bg-primary-foreground/90 sm:w-auto"
           >
             Agende uma visita
-          </a>
-          <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={trackWhatsappClick}
-            className="w-full rounded-full border border-primary-foreground/70 px-6 py-3.5 text-sm font-medium uppercase tracking-[0.14em] text-primary-foreground transition hover:bg-primary-foreground/10 sm:w-auto"
-          >
-            Falar no WhatsApp
           </a>
         </div>
       </div>
@@ -493,6 +481,14 @@ function CTAFinal() {
     ? dataExata.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" })
     : "";
 
+  // O WhatsApp já abre com o nome de quem preencheu, para o time reconhecer
+  // o lead que acabou de chegar na planilha.
+  const primeiroNome = nome.trim().split(/\s+/)[0] ?? "";
+  const whatsappTexto = primeiroNome
+    ? `Olá, sou ${primeiroNome}. Acabei de preencher o formulário e quero agendar uma visita ao Sítio Canto da Mata`
+    : "Olá, quero agendar uma visita ao Sítio Canto da Mata";
+  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(whatsappTexto)}`;
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     // content_name/event próprios diferenciam este Lead (vindo da página local
@@ -521,7 +517,7 @@ function CTAFinal() {
       </div>
 
       <iframe name="proposta-sink-itapecerica" title="proposta-sink-itapecerica" style={{ display: "none" }} />
-      <div className="grid overflow-hidden rounded-2xl border border-border/60 bg-card shadow-soft sm:grid-cols-[1.4fr_1fr]">
+      <div className={`grid overflow-hidden rounded-2xl border border-border/60 bg-card shadow-soft ${enviado ? "sm:grid-cols-[1.4fr_1fr]" : ""}`}>
         <div className="p-6 sm:p-10">
           <h3 className="font-serif text-2xl text-primary sm:text-3xl">Receba uma proposta personalizada</h3>
           <p className="mt-2 text-sm text-muted-foreground">
@@ -695,20 +691,25 @@ function CTAFinal() {
           )}
         </div>
 
-        {/* Banner WhatsApp */}
-        <a
-          href={WHATSAPP_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={trackWhatsappClick}
-          className="flex flex-col items-center justify-center gap-3 bg-primary p-8 text-center text-primary-foreground transition hover:bg-primary/90"
-        >
-          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-foreground/15">
-            <MessageCircle className="h-7 w-7" strokeWidth={1.75} />
-          </span>
-          <p className="font-serif text-lg leading-snug">Prefere falar direto no WhatsApp?</p>
-          <p className="text-sm text-primary-foreground/85">Clique aqui e fale agora com nosso time.</p>
-        </a>
+        {/* Banner do WhatsApp: só aparece depois que a pessoa envia os dados,
+            para que o contato direto não substitua o lead. */}
+        {enviado && (
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={trackWhatsappClick}
+            className="flex flex-col items-center justify-center gap-3 bg-primary p-8 text-center text-primary-foreground transition hover:bg-primary/90"
+          >
+            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-foreground/15">
+              <MessageCircle className="h-7 w-7" strokeWidth={1.75} />
+            </span>
+            <p className="font-serif text-lg leading-snug">Quer adiantar a conversa?</p>
+            <p className="text-sm text-primary-foreground/85">
+              Clique aqui e fale agora com o nosso time no WhatsApp.
+            </p>
+          </a>
+        )}
       </div>
     </section>
   );
@@ -737,9 +738,6 @@ function Footer() {
           <Link to="/" className="hover:text-primary">
             Início
           </Link>
-          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" onClick={trackWhatsappClick} className="hover:text-primary">
-            WhatsApp
-          </a>
           <Link to="/lp" className="hover:text-primary">
             Planilha grátis
           </Link>
