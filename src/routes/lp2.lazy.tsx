@@ -2,6 +2,7 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { ClipboardList, Palette, Users, Clock } from "lucide-react";
 import { CamposOrigem } from "@/components/campos-origem";
+import { aplicarCorrespondenciaAvancada } from "@/lib/meta-pixel";
 
 export const Route = createLazyFileRoute("/lp2")({
   component: Landing,
@@ -151,6 +152,14 @@ function Landing() {
       } catch (err) {
         console.warn("reCAPTCHA execute falhou, seguindo sem token:", err);
       }
+      // Correspondência avançada: precisa vir antes do Lead, para que ele já
+      // saia com os dados de contato associados.
+      const dados = new FormData(form);
+      aplicarCorrespondenciaAvancada({
+        nome: String(dados.get("nome") ?? ""),
+        email: String(dados.get("email") ?? ""),
+        telefone: String(dados.get("celular") ?? ""),
+      });
       // content_name diferencia este Lead (variante lp2 do teste A/B) do Lead
       // da landing page original (/lp) nas Conversões Personalizadas do Meta.
       if (typeof window.fbq !== "undefined") {

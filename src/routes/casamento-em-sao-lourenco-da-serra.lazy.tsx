@@ -19,6 +19,8 @@ import { ptBR } from "date-fns/locale";
 import { GOOGLE_MAPS_ICON, WAZE_ICON } from "@/assets/map-icons";
 import { BAIRRO_SITIO, FAQ_ITEMS, TEMPO_CENTRO_SLS, VIA_ACESSO_SP } from "./casamento-em-sao-lourenco-da-serra";
 import { CamposOrigem } from "@/components/campos-origem";
+import { aplicarCorrespondenciaAvancada } from "@/lib/meta-pixel";
+import { dispararLeadsDaProposta } from "@/lib/lead-proposta";
 
 export const Route = createLazyFileRoute("/casamento-em-sao-lourenco-da-serra")({
   component: CasamentoSaoLourencoDaSerra,
@@ -461,6 +463,7 @@ function CTAFinal() {
   const [fase, setFase] = useState("");
   const [enviado, setEnviado] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+  const jaEnviouRef = useRef(false);
 
   const maskTelefone = (raw: string) => {
     // Há quem digite o código do país (55) antes do DDD. Com o limite de 11
@@ -489,16 +492,17 @@ function CTAFinal() {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    // content_name/event próprios diferenciam este Lead (vindo da página local
-    // de São Lourenço da Serra) do Lead do formulário da home e das outras
-    // páginas de localidade nas Conversões Personalizadas do Meta e no GTM.
-    if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
-      (window as any).fbq("track", "Lead", { content_name: "formulario_proposta_sao_lourenco" });
-    }
-    if (typeof window !== "undefined") {
-      (window as any).dataLayer = (window as any).dataLayer || [];
-      (window as any).dataLayer.push({ event: "lead_form_sao_lourenco_submit", form_name: "proposta_sao_lourenco" });
-    }
+    // Trava contra envio repetido: sem ela, dois cliques em sequência muito
+    // rápida contariam a mesma pessoa duas vezes nos eventos do Meta. É uma
+    // ref, e não o estado, porque a ref muda na hora, antes de re-renderizar.
+    if (jaEnviouRef.current) return;
+    jaEnviouRef.current = true;
+    // Correspondência avançada: precisa vir antes dos eventos, para que eles
+    // já saiam com os dados de contato associados.
+    aplicarCorrespondenciaAvancada({ nome, email, telefone });
+    // Lead de todos os envios e Leads dos recortes (até 100 convidados, fase,
+    // lead quente), com nomes próprios desta página no Meta e no GTM.
+    dispararLeadsDaProposta({ pagina: "sao_lourenco", convidados, fase });
     formRef.current?.submit();
     setEnviado(true);
   }
