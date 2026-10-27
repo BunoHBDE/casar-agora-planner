@@ -16,7 +16,7 @@ export const Route = createLazyFileRoute("/")({
   component: Home,
 });
 
-const WHATSAPP_URL = "https://wa.me/5511933197671?text=Ol%C3%A1%2C%20quero%20agendar%20uma%20visita%20ao%20S%C3%ADtio%20Canto%20da%20Mata";
+const WHATSAPP_NUMERO = "5511933197671";
 const INSTAGRAM_URL = "https://www.instagram.com/sitiocantodamata100";
 
 // Evento customizado para o GTM: gatilho "Evento personalizado" com o
@@ -455,6 +455,14 @@ function CTAFinal() {
     ? dataExata.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" })
     : "";
 
+  // O WhatsApp já abre com o nome de quem preencheu, para o time reconhecer
+  // o lead que acabou de chegar na planilha.
+  const primeiroNome = nome.trim().split(/\s+/)[0] ?? "";
+  const whatsappTexto = primeiroNome
+    ? `Olá, sou ${primeiroNome}. Acabei de preencher o formulário e quero agendar uma visita ao Sítio Canto da Mata`
+    : "Olá, quero agendar uma visita ao Sítio Canto da Mata";
+  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(whatsappTexto)}`;
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!WEBHOOK_URL_PROPOSTA) {
@@ -481,7 +489,7 @@ function CTAFinal() {
   return (
     <section id="contato" className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
       <iframe name="proposta-sink" title="proposta-sink" style={{ display: "none" }} />
-      <div className="grid overflow-hidden rounded-2xl border border-border/60 bg-card shadow-soft sm:grid-cols-[1.4fr_1fr]">
+      <div className={`grid overflow-hidden rounded-2xl border border-border/60 bg-card shadow-soft ${enviado ? "sm:grid-cols-[1.4fr_1fr]" : ""}`}>
         {/* Formulário */}
         <div className="p-6 sm:p-10">
           <h2 className="font-serif text-2xl text-primary sm:text-3xl">
@@ -658,20 +666,25 @@ function CTAFinal() {
           )}
         </div>
 
-        {/* Banner WhatsApp */}
-        <a
-          href={WHATSAPP_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={trackWhatsappClick}
-          className="flex flex-col items-center justify-center gap-3 bg-primary p-8 text-center text-primary-foreground transition hover:bg-primary/90"
-        >
-          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-foreground/15">
-            <MessageCircle className="h-7 w-7" strokeWidth={1.75} />
-          </span>
-          <p className="font-serif text-lg leading-snug">Prefere falar direto no WhatsApp?</p>
-          <p className="text-sm text-primary-foreground/85">Clique aqui e fale agora com nosso time.</p>
-        </a>
+        {/* Banner do WhatsApp: só aparece depois que a pessoa envia os dados,
+            para que o contato direto não substitua o lead. */}
+        {enviado && (
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={trackWhatsappClick}
+            className="flex flex-col items-center justify-center gap-3 bg-primary p-8 text-center text-primary-foreground transition hover:bg-primary/90"
+          >
+            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-foreground/15">
+              <MessageCircle className="h-7 w-7" strokeWidth={1.75} />
+            </span>
+            <p className="font-serif text-lg leading-snug">Quer adiantar a conversa?</p>
+            <p className="text-sm text-primary-foreground/85">
+              Clique aqui e fale agora com o nosso time no WhatsApp.
+            </p>
+          </a>
+        )}
       </div>
     </section>
   );
@@ -699,9 +712,6 @@ function Footer() {
         <div className="flex gap-5">
           <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="hover:text-primary">
             Instagram
-          </a>
-          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" onClick={trackWhatsappClick} className="hover:text-primary">
-            WhatsApp
           </a>
           <Link to="/lp" className="hover:text-primary">Planilha grátis</Link>
         </div>
